@@ -13,6 +13,25 @@
 		B441FA731B974E0D00B55627 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B441FA721B974E0D00B55627 /* Images.xcassets */; };
 		B441FA761B974E0D00B55627 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B441FA741B974E0D00B55627 /* LaunchScreen.xib */; };
 		B441FA821B974E0D00B55627 /* TwoOfOneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B441FA811B974E0D00B55627 /* TwoOfOneTests.swift */; };
+		B48111F01B9759F100E2A4F3 /* JFSCNView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48111EF1B9759F100E2A4F3 /* JFSCNView.swift */; };
+		B48111FE1B9989C600E2A4F3 /* tile0.png in Resources */ = {isa = PBXBuildFile; fileRef = B48111F81B9989C600E2A4F3 /* tile0.png */; };
+		B48111FF1B9989C600E2A4F3 /* tile50.png in Resources */ = {isa = PBXBuildFile; fileRef = B48111F91B9989C600E2A4F3 /* tile50.png */; };
+		B48112001B9989C600E2A4F3 /* tile100.png in Resources */ = {isa = PBXBuildFile; fileRef = B48111FA1B9989C600E2A4F3 /* tile100.png */; };
+		B48112011B9989C600E2A4F3 /* tileA.png in Resources */ = {isa = PBXBuildFile; fileRef = B48111FB1B9989C600E2A4F3 /* tileA.png */; };
+		B48112021B9989C600E2A4F3 /* tileB.png in Resources */ = {isa = PBXBuildFile; fileRef = B48111FC1B9989C600E2A4F3 /* tileB.png */; };
+		B48112031B9989C600E2A4F3 /* tileC.png in Resources */ = {isa = PBXBuildFile; fileRef = B48111FD1B9989C600E2A4F3 /* tileC.png */; };
+		B48112061B9B7C0F00E2A4F3 /* JFSCNNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48112051B9B7C0F00E2A4F3 /* JFSCNNode.swift */; };
+		B48112521B9DEE5900E2A4F3 /* JFUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48112511B9DEE5900E2A4F3 /* JFUtils.swift */; };
+		B481125D1B9DF00600E2A4F3 /* Karte01.png in Resources */ = {isa = PBXBuildFile; fileRef = B48112531B9DF00600E2A4F3 /* Karte01.png */; };
+		B481125E1B9DF00600E2A4F3 /* Karte02.png in Resources */ = {isa = PBXBuildFile; fileRef = B48112541B9DF00600E2A4F3 /* Karte02.png */; };
+		B481125F1B9DF00600E2A4F3 /* Karte03.png in Resources */ = {isa = PBXBuildFile; fileRef = B48112551B9DF00600E2A4F3 /* Karte03.png */; };
+		B48112601B9DF00600E2A4F3 /* Karte04.png in Resources */ = {isa = PBXBuildFile; fileRef = B48112561B9DF00600E2A4F3 /* Karte04.png */; };
+		B48112611B9DF00600E2A4F3 /* Karte05.png in Resources */ = {isa = PBXBuildFile; fileRef = B48112571B9DF00600E2A4F3 /* Karte05.png */; };
+		B48112621B9DF00600E2A4F3 /* Karte06.png in Resources */ = {isa = PBXBuildFile; fileRef = B48112581B9DF00600E2A4F3 /* Karte06.png */; };
+		B48112631B9DF00600E2A4F3 /* Karte07.png in Resources */ = {isa = PBXBuildFile; fileRef = B48112591B9DF00600E2A4F3 /* Karte07.png */; };
+		B48112641B9DF00600E2A4F3 /* Karte08.png in Resources */ = {isa = PBXBuildFile; fileRef = B481125A1B9DF00600E2A4F3 /* Karte08.png */; };
+		B48112651B9DF00600E2A4F3 /* Karte09.png in Resources */ = {isa = PBXBuildFile; fileRef = B481125B1B9DF00600E2A4F3 /* Karte09.png */; };
+		B48112661B9DF00600E2A4F3 /* Karte10.png in Resources */ = {isa = PBXBuildFile; fileRef = B481125C1B9DF00600E2A4F3 /* Karte10.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +55,25 @@
 		B441FA7B1B974E0D00B55627 /* TwoOfOneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwoOfOneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B441FA801B974E0D00B55627 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B441FA811B974E0D00B55627 /* TwoOfOneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoOfOneTests.swift; sourceTree = "<group>"; };
+		B48111EF1B9759F100E2A4F3 /* JFSCNView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JFSCNView.swift; sourceTree = "<group>"; };
+		B48111F81B9989C600E2A4F3 /* tile0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile0.png; path = Images/tile0.png; sourceTree = "<group>"; };
+		B48111F91B9989C600E2A4F3 /* tile50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile50.png; path = Images/tile50.png; sourceTree = "<group>"; };
+		B48111FA1B9989C600E2A4F3 /* tile100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile100.png; path = Images/tile100.png; sourceTree = "<group>"; };
+		B48111FB1B9989C600E2A4F3 /* tileA.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tileA.png; path = Images/tileA.png; sourceTree = "<group>"; };
+		B48111FC1B9989C600E2A4F3 /* tileB.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tileB.png; path = Images/tileB.png; sourceTree = "<group>"; };
+		B48111FD1B9989C600E2A4F3 /* tileC.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tileC.png; path = Images/tileC.png; sourceTree = "<group>"; };
+		B48112051B9B7C0F00E2A4F3 /* JFSCNNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JFSCNNode.swift; path = custom/JFSCNNode.swift; sourceTree = "<group>"; };
+		B48112511B9DEE5900E2A4F3 /* JFUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JFUtils.swift; path = Utils/JFUtils.swift; sourceTree = "<group>"; };
+		B48112531B9DF00600E2A4F3 /* Karte01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Karte01.png; path = Images/TIleSets/Karte01.png; sourceTree = "<group>"; };
+		B48112541B9DF00600E2A4F3 /* Karte02.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Karte02.png; path = Images/TIleSets/Karte02.png; sourceTree = "<group>"; };
+		B48112551B9DF00600E2A4F3 /* Karte03.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Karte03.png; path = Images/TIleSets/Karte03.png; sourceTree = "<group>"; };
+		B48112561B9DF00600E2A4F3 /* Karte04.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Karte04.png; path = Images/TIleSets/Karte04.png; sourceTree = "<group>"; };
+		B48112571B9DF00600E2A4F3 /* Karte05.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Karte05.png; path = Images/TIleSets/Karte05.png; sourceTree = "<group>"; };
+		B48112581B9DF00600E2A4F3 /* Karte06.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Karte06.png; path = Images/TIleSets/Karte06.png; sourceTree = "<group>"; };
+		B48112591B9DF00600E2A4F3 /* Karte07.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Karte07.png; path = Images/TIleSets/Karte07.png; sourceTree = "<group>"; };
+		B481125A1B9DF00600E2A4F3 /* Karte08.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Karte08.png; path = Images/TIleSets/Karte08.png; sourceTree = "<group>"; };
+		B481125B1B9DF00600E2A4F3 /* Karte09.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Karte09.png; path = Images/TIleSets/Karte09.png; sourceTree = "<group>"; };
+		B481125C1B9DF00600E2A4F3 /* Karte10.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Karte10.png; path = Images/TIleSets/Karte10.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +115,8 @@
 		B441FA681B974E0D00B55627 /* TwoOfOne */ = {
 			isa = PBXGroup;
 			children = (
+				B48112501B9DEE3B00E2A4F3 /* Utils */,
+				B48112041B9B7BF400E2A4F3 /* custom */,
 				B441FA6B1B974E0D00B55627 /* AppDelegate.swift */,
 				B441FA6D1B974E0D00B55627 /* ViewController.swift */,
 				B441FA6F1B974E0D00B55627 /* Main.storyboard */,
@@ -90,6 +130,7 @@
 		B441FA691B974E0D00B55627 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B48111F11B98AA4D00E2A4F3 /* Images */,
 				B441FA6A1B974E0D00B55627 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -110,6 +151,54 @@
 				B441FA801B974E0D00B55627 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B48111F11B98AA4D00E2A4F3 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				B48112071B9DEDB800E2A4F3 /* TileSets */,
+				B48111F81B9989C600E2A4F3 /* tile0.png */,
+				B48111F91B9989C600E2A4F3 /* tile50.png */,
+				B48111FA1B9989C600E2A4F3 /* tile100.png */,
+				B48111FB1B9989C600E2A4F3 /* tileA.png */,
+				B48111FC1B9989C600E2A4F3 /* tileB.png */,
+				B48111FD1B9989C600E2A4F3 /* tileC.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+		B48112041B9B7BF400E2A4F3 /* custom */ = {
+			isa = PBXGroup;
+			children = (
+				B48111EF1B9759F100E2A4F3 /* JFSCNView.swift */,
+				B48112051B9B7C0F00E2A4F3 /* JFSCNNode.swift */,
+			);
+			name = custom;
+			sourceTree = "<group>";
+		};
+		B48112071B9DEDB800E2A4F3 /* TileSets */ = {
+			isa = PBXGroup;
+			children = (
+				B48112531B9DF00600E2A4F3 /* Karte01.png */,
+				B48112541B9DF00600E2A4F3 /* Karte02.png */,
+				B48112551B9DF00600E2A4F3 /* Karte03.png */,
+				B48112561B9DF00600E2A4F3 /* Karte04.png */,
+				B48112571B9DF00600E2A4F3 /* Karte05.png */,
+				B48112581B9DF00600E2A4F3 /* Karte06.png */,
+				B48112591B9DF00600E2A4F3 /* Karte07.png */,
+				B481125A1B9DF00600E2A4F3 /* Karte08.png */,
+				B481125B1B9DF00600E2A4F3 /* Karte09.png */,
+				B481125C1B9DF00600E2A4F3 /* Karte10.png */,
+			);
+			name = TileSets;
+			sourceTree = "<group>";
+		};
+		B48112501B9DEE3B00E2A4F3 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				B48112511B9DEE5900E2A4F3 /* JFUtils.swift */,
+			);
+			name = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -192,9 +281,25 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B48112011B9989C600E2A4F3 /* tileA.png in Resources */,
+				B48112661B9DF00600E2A4F3 /* Karte10.png in Resources */,
 				B441FA711B974E0D00B55627 /* Main.storyboard in Resources */,
+				B48112651B9DF00600E2A4F3 /* Karte09.png in Resources */,
+				B48112611B9DF00600E2A4F3 /* Karte05.png in Resources */,
 				B441FA761B974E0D00B55627 /* LaunchScreen.xib in Resources */,
+				B48112641B9DF00600E2A4F3 /* Karte08.png in Resources */,
+				B481125E1B9DF00600E2A4F3 /* Karte02.png in Resources */,
+				B48111FE1B9989C600E2A4F3 /* tile0.png in Resources */,
+				B48112601B9DF00600E2A4F3 /* Karte04.png in Resources */,
+				B481125D1B9DF00600E2A4F3 /* Karte01.png in Resources */,
+				B48112021B9989C600E2A4F3 /* tileB.png in Resources */,
+				B48111FF1B9989C600E2A4F3 /* tile50.png in Resources */,
+				B481125F1B9DF00600E2A4F3 /* Karte03.png in Resources */,
 				B441FA731B974E0D00B55627 /* Images.xcassets in Resources */,
+				B48112631B9DF00600E2A4F3 /* Karte07.png in Resources */,
+				B48112001B9989C600E2A4F3 /* tile100.png in Resources */,
+				B48112031B9989C600E2A4F3 /* tileC.png in Resources */,
+				B48112621B9DF00600E2A4F3 /* Karte06.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,7 +318,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B441FA6E1B974E0D00B55627 /* ViewController.swift in Sources */,
+				B48112061B9B7C0F00E2A4F3 /* JFSCNNode.swift in Sources */,
+				B48111F01B9759F100E2A4F3 /* JFSCNView.swift in Sources */,
 				B441FA6C1B974E0D00B55627 /* AppDelegate.swift in Sources */,
+				B48112521B9DEE5900E2A4F3 /* JFUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,6 +519,7 @@
 				B441FA871B974E0D00B55627 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B441FA881B974E0D00B55627 /* Build configuration list for PBXNativeTarget "TwoOfOneTests" */ = {
 			isa = XCConfigurationList;
@@ -419,6 +528,7 @@
 				B441FA8A1B974E0D00B55627 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
