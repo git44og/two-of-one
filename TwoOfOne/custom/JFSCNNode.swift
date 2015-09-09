@@ -92,7 +92,7 @@ class JFSCNNode : SCNNode {
             for rowId in 0...(tileRows - 1) {
                 // creating tile
                 let tile = SCNShape(path: path, extrusionDepth: 0.05)
-                let tileNode = JFTileNode()
+                let tileNode = JFTileNode(x: colId, y: rowId)
                 tileNode.position = SCNVector3(
                     x: Float(position.x),
                     y: (Float(rowId) - (Float(tileRows - 1) / 2)) * tileSpacing,
@@ -176,12 +176,15 @@ class JFSCNNode : SCNNode {
         for i in 0...0 {
             let face = SCNMaterial()
             face.diffuse.contents = active ? UIImage(named: "tile100") : UIImage(named: "Karte\(tileIdStr)")
+            face.shininess = 0
+            face.specular.contents = UIImage(named: "tileA")
+            //face.emission.contents = UIImage(named: "tileA")
             materialFaces += [face]
             let face2 = SCNMaterial()
-            face2.diffuse.contents = UIImage(named: "tile50")
+            face2.diffuse.contents = UIImage(named: "tileA")
             materialFaces += [face2]
             let face3 = SCNMaterial()
-            face3.diffuse.contents = UIImage(named: "tile100")
+            face3.diffuse.contents = UIImage(named: "tileA")
             materialFaces += [face3]
             materialFaces += [face3]
             materialFaces += [face3]
@@ -191,38 +194,140 @@ class JFSCNNode : SCNNode {
     }
 }
 
+enum JFTileNodeFaceType:Int {
+    case root = 0
+    case open = 1
+    case closed
+}
+
 class JFTileNode: SCNNode {
     
     var turned:Bool = false {
         didSet {
-            if(turned != oldValue) {
-                self.didTurn()
-            }
+            //if(turned != oldValue) {
+            //    self.didTurn()
+            //}
         }
     }
-    
     var baseAngle:Float = 0
+    var typeId:Int = 0
+    var nodeId:CGPoint
     
-    override init() {
+    var tileNodes:[JFTileNodeFaceType:SCNNode] = [:]
+    
+    init(x:Int, y:Int) {
+        
+        self.nodeId = CGPoint(x: x, y: y)
         
         super.init()
         
         let path = UIBezierPath(roundedRect: CGRect(x: -0.5, y: -0.5, width: 1.0, height: 1.0), cornerRadius: 0.1)
         let tile = SCNShape(path: path, extrusionDepth: 0.05)
         self.geometry = tile
-        self.addFaces()
+        self.addFaces(self, type: JFTileNodeFaceType.root)
+        
+        for faceType in [JFTileNodeFaceType.open, JFTileNodeFaceType.closed] {
+            let tileShape = SCNShape(path: path, extrusionDepth: 0.05)
+            let tileNode = SCNNode(geometry: tileShape)
+            self.addFaces(tileNode, type: faceType)
+            self.addChildNode(tileNode)
+            self.tileNodes[faceType] = tileNode
+        }
+        
+        self.adjustNodesVisibility()
     }
     
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func flip() {
+    func flip(animated:Bool = true) {
         self.turned = !self.turned
+        if(animated) {
+            self.didTurn()
+        }
+    }
+    
+    func adjustNodesVisibility() {
+        self.tileNodes[JFTileNodeFaceType.open]?.opacity = self.turned ? 1.0 : 0.0
+        self.tileNodes[JFTileNodeFaceType.closed]?.opacity = self.turned ? 0.0 : 1.0
     }
     
     func didTurn() {
         
+        let rotationDuration:NSTimeInterval = 0.3
+        
+        // get half rotation in correct direction
+        let rotationAngleInt:CGFloat = (self.turned ? 1 : -1)
+        let rotationAngle:CGFloat = CGFloat(M_PI) * rotationAngleInt
+        
+        // find timing when tile faces have to change
+        var timing:NSTimeInterval = 0.5
+        if let parent = self.parentNode as? JFSCNNode {
+
+            // get angle based on position of tile relative to camera
+            let positionAbsolute = SCNVector3(
+                x:(parent.position.x + self.position.x),
+                y:(parent.position.y + self.position.y),
+                z:(parent.position.z + self.position.z))
+            let perpectveAngle = atan(positionAbsolute.x / positionAbsolute.z)
+            
+            // get initial global angle of tile by adding local tile angle, groupNode angle, global tile position
+            let rootAngle = parent.rotation.w * ((parent.rotation.y > 0) ? 1 : -1) + self.baseAngle - perpectveAngle
+            
+            // get angle at which small side of tile faces camera
+            let rootAngleInt = rootAngle / Float(M_PI)
+            let targetAngleInt:Float = self.turned ? ceil(rootAngleInt + 0.5) - 0.5 : floor(rootAngleInt + 0.5) - 0.5
+            timing = 1 - (NSTimeInterval(targetAngleInt) - NSTimeInterval(rootAngleInt)) / NSTimeInterval(rotationAngleInt)
+            
+            // get 0.5 or 1.5
+            // root = [0,2[
+            /*
+            0 -> 0.5
+            0.2 -> 0.3 / 0.7
+            0.4 -> 0.1 / 0.9
+            1.4 -> 0.1 / 0.9
+            rootAngleInt + (rotationAngle * timing) = F() 0.5 | -0.5 | 1.5 ...
+            (F() - rootAngleInt) / rotationAngle
+            0 -> 0.5 / -0.5
+            0.4 -> 0.5 / -0.5
+            1.4 -> 1.5 / 0.5
+            
+            
+            1.4 -> 2.8 > 3.8 > ceil > 4 > 3 > 1.5
+            1.4 -> 2.8 > 3.8 > floor > 3 > 2 > 1
+            0.9 -> 1.8 > 2.8 > ceil > 3 > 2 > 1
+            0.9 -> 1.8 > 2.8 > floor > 2 > 1 > 0.5
+            
+            1.4 -> 1.9 > ceil > 2 > 1.5
+            1.4 -> 1.9 > floor > 1 > 0.5
+            0.9 -> 1.4 > ceil > 2 > 1.5
+            0.9 -> 1.4 > floor > 1 > 0.5
+            0.0 -> 0.5 > ceil > 1 > 0.5
+            0.0 -> 0.5 > floor > 0 > -0.5
+            2.0 -> 2.5 > ceil > 3 > 2.5
+            2.0 -> 2.5 > floor > 2 > 1.5
+            */
+            
+            //println("rootAngle:\(rootAngleInt) timing:\(timing) tmp1:\(targetAngleInt)")
+        }
+        
+        // run aminations
+        let rotationAction = SCNAction.rotateByAngle(rotationAngle, aroundAxis: SCNVector3(x: 0, y: 1, z: 0), duration: rotationDuration)
+        rotationAction.timingMode = SCNActionTimingMode.Linear
+        self.runAction(rotationAction)
+        
+        let nodeToHide = self.turned ? self.tileNodes[JFTileNodeFaceType.closed] : self.tileNodes[JFTileNodeFaceType.open]
+        nodeToHide?.runAction(SCNAction.sequence([
+            SCNAction.waitForDuration(rotationDuration * timing),
+            SCNAction.fadeOutWithDuration(0)]))
+        
+        let nodeToShow = self.turned ? self.tileNodes[JFTileNodeFaceType.open] : self.tileNodes[JFTileNodeFaceType.closed]
+        nodeToShow?.runAction(SCNAction.sequence([
+            SCNAction.waitForDuration(rotationDuration * timing),
+            SCNAction.fadeInWithDuration(0)]))
+        
+        /*
         let oldAngle = self.rotation.w
         var newAngle:Float = self.turned ? baseAngle + Float(M_PI) : baseAngle
         let currentPos = self.position
@@ -231,48 +336,67 @@ class JFTileNode: SCNNode {
         let moveMatrix = SCNMatrix4MakeTranslation(currentPos.x, currentPos.y, currentPos.z)
         
         SCNTransaction.begin()
-        SCNTransaction.setAnimationDuration(0.3)
-        
-        self.transform = SCNMatrix4Mult(rotateMatrix, moveMatrix)
-        
-        SCNTransaction.setAnimationTimingFunction(CAMediaTimingFunction(controlPoints: 0.42, 0.0, 0.58, 1.0))
+        SCNTransaction.setAnimationDuration(0.15)
         SCNTransaction.setCompletionBlock({ () -> Void in
-            println(">> after:\(self.rotation.w)")
-            /*
-            var newAngle = self.rotation.w
-            if(self.rotation.w > Float(M_PI) * 2) {
-                newAngle = self.rotation.w - Float(M_PI) * 2
-            } else if(self.rotation.w < Float(M_PI) * -2) {
-                newAngle = self.rotation.w + Float(M_PI) * 2
-            }
-            println(">> old:\(self.rotation.w) new:\(newAngle)")
-            let rotateMatrix = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
-            let moveMatrix = SCNMatrix4MakeTranslation(currentPos.x, currentPos.y, currentPos.z)
-            self.transform = SCNMatrix4Mult(rotateMatrix, moveMatrix)
-            */
+            self.adjustNodesVisibility()
         })
         SCNTransaction.commit()
-
+        
+        
+        SCNTransaction.begin()
+        SCNTransaction.setAnimationDuration(0.3)
+        self.transform = SCNMatrix4Mult(rotateMatrix, moveMatrix)
+        SCNTransaction.setAnimationTimingFunction(CAMediaTimingFunction(controlPoints: 0.42, 0.0, 0.58, 1.0))
+        SCNTransaction.setCompletionBlock({ () -> Void in
+        })
+        
+        SCNTransaction.commit()
+        */
     }
 
-    func addFaces() {
+    func addFaces(node:SCNNode, type:JFTileNodeFaceType) {
         
-        let tileId = JFrand(10) + 1
-        var tileIdStr = (tileId < 10) ? "0\(tileId)" : String(tileId)
+        switch(type) {
+        case .root:
+            var materialFaces:[SCNMaterial] = Array()
+            let face = SCNMaterial()
+            face.diffuse.contents = UIImage(named: "tile0")
+            materialFaces += [face]
+            node.geometry?.materials = materialFaces
+            break
+        case .open:
+            let tileId = JFrand(10) + 1
+            var tileIdStr = (tileId < 10) ? "0\(tileId)" : String(tileId)
+            
+            var materialFaces:[SCNMaterial] = Array()
+            let face = SCNMaterial()
+            face.diffuse.contents = UIImage(named: "Karte\(tileIdStr)")
+            materialFaces += [face]
+            materialFaces += [face]
+            let face3 = SCNMaterial()
+            face3.diffuse.contents = UIImage(named: "tile100")
+            //face3.reflective.contents = UIImage(named: "tileB")
+            materialFaces += [face3]
+            materialFaces += [face3]
+            materialFaces += [face3]
+            materialFaces += [face3]
+            node.geometry?.materials = materialFaces
+            break
+        case .closed:
+            var materialFaces:[SCNMaterial] = Array()
+            let face = SCNMaterial()
+            face.diffuse.contents = UIImage(named: "tile50")
+            materialFaces += [face]
+            materialFaces += [face]
 
-        var materialFaces:[SCNMaterial] = Array()
-        let face = SCNMaterial()
-        face.diffuse.contents = UIImage(named: "Karte\(tileIdStr)")
-        materialFaces += [face]
-        let face2 = SCNMaterial()
-        face2.diffuse.contents = UIImage(named: "tile50")
-        materialFaces += [face2]
-        let face3 = SCNMaterial()
-        face3.diffuse.contents = UIImage(named: "tile100")
-        materialFaces += [face3]
-        materialFaces += [face3]
-        materialFaces += [face3]
-        materialFaces += [face3]
-        self.geometry?.materials = materialFaces
+            let face3 = SCNMaterial()
+            face3.diffuse.contents = UIImage(named: "tile100")
+            materialFaces += [face3]
+            materialFaces += [face3]
+            materialFaces += [face3]
+            materialFaces += [face3]
+            node.geometry?.materials = materialFaces
+            break
+        }
     }
 }

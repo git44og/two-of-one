@@ -45,7 +45,7 @@ class ViewController: UIViewController {
         omniLightNode.light = SCNLight()
         omniLightNode.light!.type = SCNLightTypeOmni
         omniLightNode.light!.color = UIColor(white: 0.75, alpha: 1.0)
-        omniLightNode.position = SCNVector3Make(0, 50, 50)
+        omniLightNode.position = SCNVector3Make(50, 0, 50)
         scene.rootNode.addChildNode(omniLightNode)
         
         // camera
@@ -53,7 +53,7 @@ class ViewController: UIViewController {
         cameraNode.camera = SCNCamera()
         //cameraNode.camera?.usesOrthographicProjection = true
         cameraNode.camera?.yFov = 20
-        cameraNode.position = SCNVector3Make(0, 0, 21)
+        //cameraNode.position = SCNVector3Make(0, 0, 21)
         scene.rootNode.addChildNode(cameraNode)
         
         self.sceneSizeFactor = (Float)(sceneView.frame.size.height / sceneView.frame.size.width * 1.35)
@@ -61,6 +61,7 @@ class ViewController: UIViewController {
         // group
         let groupNode = JFSCNNode()
         //groupNode.rotation = SCNVector4(x: 1, y: 0, z: 0, w: Float(M_PI / -4))
+        groupNode.position = SCNVector3(x: 0, y: 0, z: -21)
         scene.rootNode.addChildNode(groupNode)
         groupNode.generateTileNodes()
         groupNode.adjustTransparency()
@@ -101,12 +102,14 @@ class ViewController: UIViewController {
     func tapGesture(sender: UITapGestureRecognizer) {
         let translation = sender.locationInView(sender.view!)
         if let objs = self.sceneView.hitTest(translation, options: nil) {
-            if(objs.count > 0) {
+            var i = 0
+            var nodeFound = false
+            while((i < objs.count) && !nodeFound) {
                 let nearestObject = objs[0] as! SCNHitTestResult
-                let hitNode = nearestObject.node as! JFTileNode
-                hitNode.flip()
-//                self.nodeActive(hitNode, active: true)
-//                println("tap x:\(translation.x) y:\(translation.y) hit:\(hitNode.name)")
+                if let hitNode = nearestObject.node as? JFTileNode {
+                    hitNode.flip()
+                    nodeFound = true
+                }
             }
         }
     }
@@ -114,14 +117,15 @@ class ViewController: UIViewController {
     func panGesture(sender: UIPanGestureRecognizer) {
         
         let translation = sender.translationInView(sender.view!)
-        
+        var oldPosZ = geometryNode.position.z
+
         var newAngle = (Float)(translation.x) * self.sceneSizeFactor * (Float)(M_PI) / 180.0
         newAngle += currentAngle
         let rotateMatrix = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
         
         var newPos = (Float)(translation.x) * self.sceneSizeFactor * (Float)(M_PI) / 100.0
         newPos += currentPos
-        let moveMatrix = SCNMatrix4MakeTranslation(newPos, 0, 0)
+        let moveMatrix = SCNMatrix4MakeTranslation(newPos, 0, oldPosZ)
         geometryNode.transform = SCNMatrix4Mult(rotateMatrix, moveMatrix)
         
         var nowDouble = NSDate().timeIntervalSince1970
@@ -162,7 +166,7 @@ class ViewController: UIViewController {
             newPos = missingDistance + currentPos
             
             let rotateMatrix = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
-            let moveMatrix = SCNMatrix4MakeTranslation(newPos, 0, 0)
+            let moveMatrix = SCNMatrix4MakeTranslation(newPos, 0, oldPosZ)
             geometryNode.transform = SCNMatrix4Mult(rotateMatrix, moveMatrix)
             
             SCNTransaction.setAnimationTimingFunction(CAMediaTimingFunction(controlPoints: 0.42, 0.0, 0.58, 1.0))

@@ -116,7 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				B48112501B9DEE3B00E2A4F3 /* Utils */,
-				B48112041B9B7BF400E2A4F3 /* custom */,
+				B48112041B9B7BF400E2A4F3 /* Custom */,
 				B441FA6B1B974E0D00B55627 /* AppDelegate.swift */,
 				B441FA6D1B974E0D00B55627 /* ViewController.swift */,
 				B441FA6F1B974E0D00B55627 /* Main.storyboard */,
@@ -167,13 +167,13 @@
 			name = Images;
 			sourceTree = "<group>";
 		};
-		B48112041B9B7BF400E2A4F3 /* custom */ = {
+		B48112041B9B7BF400E2A4F3 /* Custom */ = {
 			isa = PBXGroup;
 			children = (
 				B48111EF1B9759F100E2A4F3 /* JFSCNView.swift */,
 				B48112051B9B7C0F00E2A4F3 /* JFSCNNode.swift */,
 			);
-			name = custom;
+			name = Custom;
 			sourceTree = "<group>";
 		};
 		B48112071B9DEDB800E2A4F3 /* TileSets */ = {
