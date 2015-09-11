@@ -45,6 +45,10 @@ let tileSpacing:Float = 1.1
 class JFSCNNode : SCNNode {
     
     var nodesByCol:[[SCNNode]] = []
+    var currentPosition: Float = 0
+    var currentAngle: Float = 0
+    var sceneSize: CGSize
+    var sceneSizeFactor: Float
     
     override var transform: SCNMatrix4 {
         didSet {
@@ -53,14 +57,34 @@ class JFSCNNode : SCNNode {
         }
     }
     
+    override var position: SCNVector3 {
+        didSet {
+            self.currentPosition = self.position.x
+        }
+    }
+    
+    override var rotation: SCNVector4 {
+        didSet {
+            self.currentAngle = self.rotation.w
+        }
+    }
+    
     override init() {
+        self.sceneSize = CGSize()
+        self.sceneSizeFactor = 1
         super.init()
     }
     
-    init(geometry: SCNGeometry) {
+    init(sceneSize:CGSize) {
+        self.sceneSize = sceneSize
+        self.sceneSizeFactor = (Float)(sceneSize.height / sceneSize.width * 1.35)
         super.init()
-        self.geometry = geometry
     }
+    
+//    init(geometry: SCNGeometry, sceneSize:CGSize) {
+//        super.init()
+//        self.geometry = geometry
+//    }
     
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -140,6 +164,57 @@ class JFSCNNode : SCNNode {
         let angleIntPerQuarter = (self.rotation.w / Float(M_PI)) * (Float(tileNum) / 2) // 45deg == 1 | 90deg == 2
     }
     
+    //MARK: Rolling transformation
+    
+    func rollTransformation(translationX:CGFloat) {
+        
+        // get angle based on distance
+        var deltaAngle = (Float)(translationX) * self.sceneSizeFactor * (Float)(M_PI) / 180.0
+        var newAngle = self.currentAngle + deltaAngle
+        let rotateMatrix = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
+        
+        // get position based on distance
+        var deltaPos = (Float)(translationX) * self.sceneSizeFactor * (Float)(M_PI) / 100.0
+        var newPos = self.currentPosition + deltaPos
+        let moveMatrix = SCNMatrix4MakeTranslation(newPos, 0, self.position.z)
+        
+        // transform node
+        self.transform = SCNMatrix4Mult(rotateMatrix, moveMatrix)
+        
+        self.currentAngle = newAngle
+        self.currentPosition = newPos
+    }
+    
+    func rollToRestingPosition(animated:Bool = true) {
+        
+        let angleIntPerQuarter = (self.currentAngle / Float(M_PI)) * (Float(tileNum) / 2)
+        // get delta to next integer angle
+        let missingAngleIntPerQuarter = round(angleIntPerQuarter) - angleIntPerQuarter
+        // translate back into rad
+        let missingAngleRad = (missingAngleIntPerQuarter * Float(M_PI) / (Float(tileNum) / 2))
+        let newAngle = self.currentAngle + missingAngleRad
+        let rotateMatrix = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
+        
+        // get delta distance based on delta angle
+        let missingDistance = missingAngleRad * 180 / 100
+        var newPos = self.currentPosition + missingDistance
+        let moveMatrix = SCNMatrix4MakeTranslation(newPos, 0, self.position.z)
+        //println("angle:\(newAngle) \(missingAngleIntPerQuarter) miss:\(missingAngleRad)")
+        
+        SCNTransaction.begin()
+        if(animated) {
+            SCNTransaction.setAnimationDuration(0.3)
+        }
+        self.transform = SCNMatrix4Mult(rotateMatrix, moveMatrix)
+        
+        SCNTransaction.setAnimationTimingFunction(CAMediaTimingFunction(controlPoints: 0.42, 0.0, 0.58, 1.0))
+        SCNTransaction.setCompletionBlock({ () -> Void in
+            self.currentAngle = newAngle
+            self.currentPosition = newPos
+        })
+        SCNTransaction.commit()
+
+    }
     
     //MARK: deprecated
     func checkAngle() {
@@ -280,8 +355,6 @@ class JFTileNode: SCNNode {
             let targetAngleInt:Float = self.turned ? ceil(rootAngleInt + 0.5) - 0.5 : floor(rootAngleInt + 0.5) - 0.5
             timing = 1 - (NSTimeInterval(targetAngleInt) - NSTimeInterval(rootAngleInt)) / NSTimeInterval(rotationAngleInt)
             
-            // get 0.5 or 1.5
-            // root = [0,2[
             /*
             0 -> 0.5
             0.2 -> 0.3 / 0.7
@@ -293,20 +366,10 @@ class JFTileNode: SCNNode {
             0.4 -> 0.5 / -0.5
             1.4 -> 1.5 / 0.5
             
-            
             1.4 -> 2.8 > 3.8 > ceil > 4 > 3 > 1.5
             1.4 -> 2.8 > 3.8 > floor > 3 > 2 > 1
             0.9 -> 1.8 > 2.8 > ceil > 3 > 2 > 1
             0.9 -> 1.8 > 2.8 > floor > 2 > 1 > 0.5
-            
-            1.4 -> 1.9 > ceil > 2 > 1.5
-            1.4 -> 1.9 > floor > 1 > 0.5
-            0.9 -> 1.4 > ceil > 2 > 1.5
-            0.9 -> 1.4 > floor > 1 > 0.5
-            0.0 -> 0.5 > ceil > 1 > 0.5
-            0.0 -> 0.5 > floor > 0 > -0.5
-            2.0 -> 2.5 > ceil > 3 > 2.5
-            2.0 -> 2.5 > floor > 2 > 1.5
             */
             
             //println("rootAngle:\(rootAngleInt) timing:\(timing) tmp1:\(targetAngleInt)")
@@ -326,32 +389,6 @@ class JFTileNode: SCNNode {
         nodeToShow?.runAction(SCNAction.sequence([
             SCNAction.waitForDuration(rotationDuration * timing),
             SCNAction.fadeInWithDuration(0)]))
-        
-        /*
-        let oldAngle = self.rotation.w
-        var newAngle:Float = self.turned ? baseAngle + Float(M_PI) : baseAngle
-        let currentPos = self.position
-        
-        let rotateMatrix = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
-        let moveMatrix = SCNMatrix4MakeTranslation(currentPos.x, currentPos.y, currentPos.z)
-        
-        SCNTransaction.begin()
-        SCNTransaction.setAnimationDuration(0.15)
-        SCNTransaction.setCompletionBlock({ () -> Void in
-            self.adjustNodesVisibility()
-        })
-        SCNTransaction.commit()
-        
-        
-        SCNTransaction.begin()
-        SCNTransaction.setAnimationDuration(0.3)
-        self.transform = SCNMatrix4Mult(rotateMatrix, moveMatrix)
-        SCNTransaction.setAnimationTimingFunction(CAMediaTimingFunction(controlPoints: 0.42, 0.0, 0.58, 1.0))
-        SCNTransaction.setCompletionBlock({ () -> Void in
-        })
-        
-        SCNTransaction.commit()
-        */
     }
 
     func addFaces(node:SCNNode, type:JFTileNodeFaceType) {

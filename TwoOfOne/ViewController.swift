@@ -20,10 +20,8 @@ class ViewController: UIViewController {
     // Gestures
     var currentAngle: Float = 0.0
     var currentPos: Float = 0.0
-    //var prevDate: Int64 = 0
-    //var prevTranslation: CGPoint = CGPoint()
-    //var currDate: Int64 = 0
-    //var currTranslation: CGPoint = CGPoint()
+    var currentPanTranslation: CGFloat = 0
+    
     var sceneSizeFactor:Float = 1.0
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +30,6 @@ class ViewController: UIViewController {
     
     override func viewDidAppear(animated: Bool) {
         let scene = SCNScene()
-        
         
         // light
         let ambientLightNode = SCNNode()
@@ -59,7 +56,7 @@ class ViewController: UIViewController {
         self.sceneSizeFactor = (Float)(sceneView.frame.size.height / sceneView.frame.size.width * 1.35)
         
         // group
-        let groupNode = JFSCNNode()
+        let groupNode = JFSCNNode(sceneSize: sceneView.frame.size)
         //groupNode.rotation = SCNVector4(x: 1, y: 0, z: 0, w: Float(M_PI / -4))
         groupNode.position = SCNVector3(x: 0, y: 0, z: -21)
         scene.rootNode.addChildNode(groupNode)
@@ -116,94 +113,32 @@ class ViewController: UIViewController {
     
     func panGesture(sender: UIPanGestureRecognizer) {
         
+        if(sender.state == UIGestureRecognizerState.Began) {
+            self.currentPanTranslation = 0
+        }
+        
+        // get distance moved
         let translation = sender.translationInView(sender.view!)
-        var oldPosZ = geometryNode.position.z
+        let deltaTranslation = translation.x - currentPanTranslation
+        self.currentPanTranslation = translation.x
 
-        var newAngle = (Float)(translation.x) * self.sceneSizeFactor * (Float)(M_PI) / 180.0
-        newAngle += currentAngle
-        let rotateMatrix = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
+        self.geometryNode.rollTransformation(deltaTranslation)
         
-        var newPos = (Float)(translation.x) * self.sceneSizeFactor * (Float)(M_PI) / 100.0
-        newPos += currentPos
-        let moveMatrix = SCNMatrix4MakeTranslation(newPos, 0, oldPosZ)
-        geometryNode.transform = SCNMatrix4Mult(rotateMatrix, moveMatrix)
-        
-        var nowDouble = NSDate().timeIntervalSince1970
-        println("tx:\(translation.x) ty:\(translation.y) time:\(Int64(nowDouble*1000))")
         if(sender.state == UIGestureRecognizerState.Ended) {
             
-            // missing degrees
-            //let tmpPi = (newAngle / Float(M_PI)) // -> full circle = 2
-            let angleIntPerQuarter = (newAngle / Float(M_PI)) * (Float(tileNum) / 2) // 45deg == 1 | 90deg == 2
-            let missingAngleIntPerQuarter = round(angleIntPerQuarter) - angleIntPerQuarter
-            //let misPi = misInt / 4
-            let missingAngleRad = missingAngleIntPerQuarter / 4 * Float(M_PI)
-            let missingDistance = missingAngleRad * 180 / 100
-            //println("angle:\(newAngle) \(tmpPi) miss:\(misPi)")
-
+            self.geometryNode.rollToRestingPosition(animated: true)
             /*
-            let currDate = Int64(NSDate().timeIntervalSince1970 * 1000)
-            var v:CGPoint
-            //println("vx:\(self.prevDate) vy:\(currDate)")
-            if(self.prevDate + 100 < currDate) {
-                v = CGPoint(x: 0, y: 0)
-            } else {
-                let m = CGFloat(translation.x - self.prevTranslation.x)
-                let s = CGFloat(currDate) - CGFloat(self.prevDate)
-                v = CGPoint(
-                    x:m * 1000 / s,
-                    y:CGFloat(0))
-            }
-            //println("vx:\(v.x) vy:\(v.y)")
-            */
+            var jump = CAKeyframeAnimation(keyPath: "position.y")
             
-            self.currentAngle = newAngle
-            self.currentPos = newPos
-            
-            SCNTransaction.begin()
-            SCNTransaction.setAnimationDuration(0.3)
-            newAngle = missingAngleRad + currentAngle
-            newPos = missingDistance + currentPos
-            
-            let rotateMatrix = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
-            let moveMatrix = SCNMatrix4MakeTranslation(newPos, 0, oldPosZ)
-            geometryNode.transform = SCNMatrix4Mult(rotateMatrix, moveMatrix)
-            
-            SCNTransaction.setAnimationTimingFunction(CAMediaTimingFunction(controlPoints: 0.42, 0.0, 0.58, 1.0))
-            SCNTransaction.setCompletionBlock({ () -> Void in
-                self.currentAngle = newAngle
-                self.currentPos = newPos
-                //self.geometryNode.checkAngle()
-                //println("vx:\(v.x) vy:\(v.y)")
-            })
-            SCNTransaction.commit()
-
-            
-            /*
-            var maintainSpeed = CAKeyframeAnimation(keyPath: "position.x")
-            
+            let easeIn  = CAMediaTimingFunction(controlPoints: 0.35, 0.0, 1.0,  1.0)
             let easeOut = CAMediaTimingFunction(controlPoints: 0.0,  1.0, 0.65, 1.0)
             
-            //maintainSpeed.values   = [CGFloat(self.currentPos), CGFloat(self.currentPos) + (50 * 0.031415)];
-            //maintainSpeed.values   = [0, 10 * 0.031415]; // = 170x
-            maintainSpeed.values   = [CGFloat(self.currentPos), CGFloat(self.currentPos) + CGFloat(v.x * v.x / 1000 * 0.031415)];
-            maintainSpeed.keyTimes = [0.0, 1.000000];
-            maintainSpeed.timingFunctions = [easeOut];
-            //maintainSpeed.duration = CFTimeInterval(v.x / 100);
-            maintainSpeed.duration = CFTimeInterval(1);
-            geometryNode.addAnimation(maintainSpeed, forKey: "jump and bounce")
+            jump.values   = [0.000000, 0.433333, 0.000000, 0.124444, 0.000000, 0.035111, 0.000000];
+            jump.keyTimes = [0.000000, 0.255319, 0.531915, 0.680851, 0.829788, 0.914894, 1.000000];
+            jump.timingFunctions = [easeOut,  easeIn,  easeOut,  easeIn,   easeOut,   easeIn  ];
+            jump.duration = 0.783333;
+            geometryNode.addAnimation(jump, forKey: "jump and bounce")
             */
-//            var jump = CAKeyframeAnimation(keyPath: "position.y")
-            
-//            let easeIn  = CAMediaTimingFunction(controlPoints: 0.35, 0.0, 1.0,  1.0)
-//            let easeOut = CAMediaTimingFunction(controlPoints: 0.0,  1.0, 0.65, 1.0)
-//            
-//            jump.values   = [0.000000, 0.433333, 0.000000, 0.124444, 0.000000, 0.035111, 0.000000];
-//            jump.keyTimes = [0.000000, 0.255319, 0.531915, 0.680851, 0.829788, 0.914894, 1.000000];
-//            jump.timingFunctions = [easeOut,  easeIn,  easeOut,  easeIn,   easeOut,   easeIn  ];
-//            jump.duration = 0.783333;
-//            geometryNode.addAnimation(jump, forKey: "jump and bounce")
-            //geometryNode.removeAllAnimations()
             
         }
         /*
