@@ -11,24 +11,10 @@ import SceneKit
 
 
 /*
-rotate y^2+x^2 = r^2
-
-50px^2+?^2=r^2
-
 sin = gegnkathete / hypo
 sin(a) = z / radius
 cos = ankathete / hypo
 tan = gegen / an
-
-
-alpha = 30.35
-gegen = 50
-1) gegen/atan(30.35) = radius
-
-2) x-y
-hyp=radius
-x=asin/hypo
-yacos/hypo
 */
 
 
@@ -45,6 +31,7 @@ let tileSpacing:Float = 1.1
 class JFSCNNode : SCNNode {
     
     var nodesByCol:[[SCNNode]] = []
+    var shapeRadius: Float = 0
     var currentPosition: Float = 0
     var currentAngle: Float = 0
     var sceneSize: CGSize
@@ -98,8 +85,8 @@ class JFSCNNode : SCNNode {
         // calculation
         let tileWidthRad = tileWidthDeg * (Float(M_PI) / 180)
         let tileAngleRad = Float(M_PI) * (2 / Float(tileNum))
-        let radius = Float(tileWidth) / tan(tileWidthRad)
-
+        self.shapeRadius = Float(tileWidth) / tan(tileWidthRad)
+        
         //for colId in 0...5 {
         for colId in 0...(tileNum - 1) {
             
@@ -107,8 +94,8 @@ class JFSCNNode : SCNNode {
             
             let angle = tileAngleRad * Float(colId)
             let position = CGPoint(
-                x: CGFloat(sin(angle)) * CGFloat(radius),
-                y: CGFloat(cos(angle)) * CGFloat(radius))
+                x: CGFloat(sin(angle)) * CGFloat(self.shapeRadius),
+                y: CGFloat(cos(angle)) * CGFloat(self.shapeRadius))
             
             //println("radius:\(radius) angle:\(angle) x:\(position.x) y:\(position.y)")
             
@@ -164,6 +151,7 @@ class JFSCNNode : SCNNode {
         let angleIntPerQuarter = (self.rotation.w / Float(M_PI)) * (Float(tileNum) / 2) // 45deg == 1 | 90deg == 2
     }
     
+    
     //MARK: Rolling transformation
     
     func rollTransformation(translationX:CGFloat) {
@@ -174,7 +162,7 @@ class JFSCNNode : SCNNode {
         let rotateMatrix = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
         
         // get position based on distance
-        var deltaPos = (Float)(translationX) * self.sceneSizeFactor * (Float)(M_PI) / 100.0
+        var deltaPos = deltaAngle * self.shapeRadius
         var newPos = self.currentPosition + deltaPos
         let moveMatrix = SCNMatrix4MakeTranslation(newPos, 0, self.position.z)
         
@@ -196,7 +184,7 @@ class JFSCNNode : SCNNode {
         let rotateMatrix = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
         
         // get delta distance based on delta angle
-        let missingDistance = missingAngleRad * 180 / 100
+        let missingDistance = missingAngleRad * self.shapeRadius
         var newPos = self.currentPosition + missingDistance
         let moveMatrix = SCNMatrix4MakeTranslation(newPos, 0, self.position.z)
         //println("angle:\(newAngle) \(missingAngleIntPerQuarter) miss:\(missingAngleRad)")
@@ -213,61 +201,10 @@ class JFSCNNode : SCNNode {
             self.currentPosition = newPos
         })
         SCNTransaction.commit()
-
-    }
-    
-    //MARK: deprecated
-    func checkAngle() {
-        
-        let angleIntPerQuarter = (self.rotation.w / Float(M_PI)) * (Float(tileNum) / 2) // 45deg == 1 | 90deg == 2
-        println("angle \(self.rotation.w) | \(angleIntPerQuarter) y:\(self.rotation.y)")
-        
-        var angleId = Int(round(angleIntPerQuarter))
-        if(self.rotation.y > 0) {
-            angleId = angleId * -1 + 8
-        }
-        if(abs(angleIntPerQuarter - round(angleIntPerQuarter)) < 0.1) {
-            //println("angleId \(angleId) [\(angleIntPerQuarter)]")
-            for col in 0...7 {
-                for node in self.nodesByCol[col] {
-                    self.nodeActive(node, active: (col == angleId))
-                }
-            }
-        } else {
-            for col in 0...7 {
-                for node in self.nodesByCol[col] {
-                    self.nodeActive(node, active: false)
-                }
-            }
-        }
-    }
-    
-    func nodeActive(node:SCNNode, active:Bool) {
-        var materialFaces:[SCNMaterial] = Array()
-        
-        let tileId = JFrand(35) + 1
-        var tileIdStr = (tileId < 10) ? "0\(tileId)" : String(tileId)
-        
-        for i in 0...0 {
-            let face = SCNMaterial()
-            face.diffuse.contents = active ? UIImage(named: "tile100") : UIImage(named: "Karte\(tileIdStr)")
-            face.shininess = 0
-            face.specular.contents = UIImage(named: "tileA")
-            //face.emission.contents = UIImage(named: "tileA")
-            materialFaces += [face]
-            let face2 = SCNMaterial()
-            face2.diffuse.contents = UIImage(named: "tileA")
-            materialFaces += [face2]
-            let face3 = SCNMaterial()
-            face3.diffuse.contents = UIImage(named: "tileA")
-            materialFaces += [face3]
-            materialFaces += [face3]
-            materialFaces += [face3]
-            materialFaces += [face3]
-        }
-        node.geometry?.materials = materialFaces
     }
 }
+
+
 
 enum JFTileNodeFaceType:Int {
     case root = 0

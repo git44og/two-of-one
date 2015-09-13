@@ -99,6 +99,29 @@ class ViewController: UIViewController {
     func tapGesture(sender: UITapGestureRecognizer) {
         let translation = sender.locationInView(sender.view!)
         if let objs = self.sceneView.hitTest(translation, options: nil) {
+            if(objs.count == 0) {
+                
+                let path = UIBezierPath(roundedRect: CGRect(x: -0.5, y: -0.5, width: 1.0, height: 1.0), cornerRadius: 0.1)
+                let tile = SCNShape(path: path, extrusionDepth: 0.05)
+
+                let exp = SCNParticleSystem()
+                exp.loops = false
+                exp.birthRate = 50
+                exp.emissionDuration = 0.1
+                exp.spreadingAngle = 180
+                exp.particleDiesOnCollision = true
+                exp.particleLifeSpan = 0.3
+                exp.particleLifeSpanVariation = 0.3
+                exp.particleVelocity = 5
+                exp.particleVelocityVariation = 3
+                exp.particleSize = 0.05
+                exp.stretchFactor = 0.05
+                exp.particleColor = UIColor.blueColor()
+                exp.emitterShape = tile
+                sceneView.scene?.addParticleSystem(exp, withTransform: SCNMatrix4MakeTranslation(0, 0, -20))
+                //sceneView.scene?.addParticleSystem(exp, withTransform: SCNMatrix4MakeRotation(0, 0, 0, 0))
+                
+            }
             var i = 0
             var nodeFound = false
             while((i < objs.count) && !nodeFound) {
