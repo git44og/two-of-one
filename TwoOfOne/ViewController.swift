@@ -99,6 +99,7 @@ class ViewController: UIViewController {
     func tapGesture(sender: UITapGestureRecognizer) {
         let translation = sender.locationInView(sender.view!)
         if let objs = self.sceneView.hitTest(translation, options: nil) {
+            /*
             if(objs.count == 0) {
                 
                 let path = UIBezierPath(roundedRect: CGRect(x: -0.5, y: -0.5, width: 1.0, height: 1.0), cornerRadius: 0.1)
@@ -122,6 +123,7 @@ class ViewController: UIViewController {
                 //sceneView.scene?.addParticleSystem(exp, withTransform: SCNMatrix4MakeRotation(0, 0, 0, 0))
                 
             }
+            */
             var i = 0
             var nodeFound = false
             while((i < objs.count) && !nodeFound) {
