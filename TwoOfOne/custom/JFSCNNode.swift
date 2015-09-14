@@ -224,8 +224,10 @@ class JFTileNode: SCNNode {
     var baseAngle:Float = 0
     var typeId:Int = 0
     var nodeId:CGPoint
-    
     var tileNodes:[JFTileNodeFaceType:SCNNode] = [:]
+    
+    //MARK: tmp
+    var vanished:Bool = false
     
     init(x:Int, y:Int) {
         
@@ -328,6 +330,39 @@ class JFTileNode: SCNNode {
             SCNAction.fadeInWithDuration(0)]))
     }
 
+    func explode() {
+        let path = UIBezierPath(roundedRect: CGRect(x: -0.5, y: -0.5, width: 1.0, height: 1.0), cornerRadius: 0.1)
+        let tile = SCNShape(path: path, extrusionDepth: 0.05)
+        
+        let exp = SCNParticleSystem()
+        exp.loops = false
+        exp.birthRate = 1000
+        exp.birthDirection = SCNParticleBirthDirection.Random
+        exp.emissionDuration = 0.05
+        exp.spreadingAngle = 0
+        exp.particleDiesOnCollision = true
+        exp.particleLifeSpan = 0.125
+        exp.particleLifeSpanVariation = 0.125
+        exp.particleVelocity = 30
+        exp.particleVelocityVariation = 10
+        exp.particleSize = 0.1
+        exp.particleColor = UIColor.lightGrayColor()
+        exp.particleImage = UIImage(named: "explosion")
+        exp.imageSequenceRowCount = 4
+        exp.imageSequenceColumnCount = 4
+        exp.imageSequenceFrameRate = 128
+        exp.emitterShape = tile
+        self.addParticleSystem(exp)
+        
+        self.vanished = true
+        self.runAction(SCNAction.sequence([
+            SCNAction.waitForDuration(0.1),
+            SCNAction.fadeOutWithDuration(0)]), completionHandler: { () -> Void in
+                self.hidden = true
+        })
+
+    }
+    
     func addFaces(node:SCNNode, type:JFTileNodeFaceType) {
         
         switch(type) {

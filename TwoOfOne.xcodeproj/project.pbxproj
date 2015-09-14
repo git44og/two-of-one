@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27B67B791BA693C900C86E7F /* explosion.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B67B781BA693C900C86E7F /* explosion.png */; };
 		B441FA6C1B974E0D00B55627 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B441FA6B1B974E0D00B55627 /* AppDelegate.swift */; };
 		B441FA6E1B974E0D00B55627 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B441FA6D1B974E0D00B55627 /* ViewController.swift */; };
 		B441FA711B974E0D00B55627 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B441FA6F1B974E0D00B55627 /* Main.storyboard */; };
@@ -45,6 +46,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		27B67B781BA693C900C86E7F /* explosion.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = explosion.png; path = Images/Explosion/explosion.png; sourceTree = "<group>"; };
 		B441FA661B974E0D00B55627 /* TwoOfOne.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwoOfOne.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B441FA6A1B974E0D00B55627 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B441FA6B1B974E0D00B55627 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				B48112071B9DEDB800E2A4F3 /* TileSets */,
+				27B67B781BA693C900C86E7F /* explosion.png */,
 				B48111F81B9989C600E2A4F3 /* tile0.png */,
 				B48111F91B9989C600E2A4F3 /* tile50.png */,
 				B48111FA1B9989C600E2A4F3 /* tile100.png */,
@@ -290,6 +293,7 @@
 				B48112641B9DF00600E2A4F3 /* Karte08.png in Resources */,
 				B481125E1B9DF00600E2A4F3 /* Karte02.png in Resources */,
 				B48111FE1B9989C600E2A4F3 /* tile0.png in Resources */,
+				27B67B791BA693C900C86E7F /* explosion.png in Resources */,
 				B48112601B9DF00600E2A4F3 /* Karte04.png in Resources */,
 				B481125D1B9DF00600E2A4F3 /* Karte01.png in Resources */,
 				B48112021B9989C600E2A4F3 /* tileB.png in Resources */,

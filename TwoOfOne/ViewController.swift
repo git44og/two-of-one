@@ -23,6 +23,10 @@ class ViewController: UIViewController {
     var currentPanTranslation: CGFloat = 0
     
     var sceneSizeFactor:Float = 1.0
+    
+    //MARK:tmp
+    var turnedNodes:[JFTileNode] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -99,6 +103,8 @@ class ViewController: UIViewController {
     func tapGesture(sender: UITapGestureRecognizer) {
         let translation = sender.locationInView(sender.view!)
         if let objs = self.sceneView.hitTest(translation, options: nil) {
+            
+            
             /*
             if(objs.count == 0) {
                 
@@ -107,31 +113,46 @@ class ViewController: UIViewController {
 
                 let exp = SCNParticleSystem()
                 exp.loops = false
-                exp.birthRate = 50
-                exp.emissionDuration = 0.1
+                exp.birthRate = 1000
+                exp.emissionDuration = 0
                 exp.spreadingAngle = 180
                 exp.particleDiesOnCollision = true
-                exp.particleLifeSpan = 0.3
-                exp.particleLifeSpanVariation = 0.3
-                exp.particleVelocity = 5
+                exp.particleLifeSpan = 0.25
+                exp.particleLifeSpanVariation = 0.5
+                exp.particleVelocity = 50
                 exp.particleVelocityVariation = 3
-                exp.particleSize = 0.05
-                exp.stretchFactor = 0.05
-                exp.particleColor = UIColor.blueColor()
+                exp.particleSize = 0.1
+                //exp.particleColor = UIColor.lightGrayColor()
+                exp.particleImage = UIImage(named: "explosion")
+                exp.imageSequenceRowCount = 4
+                exp.imageSequenceColumnCount = 4
+                exp.imageSequenceFrameRate = 64
                 exp.emitterShape = tile
                 sceneView.scene?.addParticleSystem(exp, withTransform: SCNMatrix4MakeTranslation(0, 0, -20))
                 //sceneView.scene?.addParticleSystem(exp, withTransform: SCNMatrix4MakeRotation(0, 0, 0, 0))
-                
             }
             */
+            
+            
             var i = 0
             var nodeFound = false
             while((i < objs.count) && !nodeFound) {
-                let nearestObject = objs[0] as! SCNHitTestResult
+                let nearestObject = objs[i] as! SCNHitTestResult
                 if let hitNode = nearestObject.node as? JFTileNode {
                     hitNode.flip()
+                    self.turnedNodes.append(hitNode)
                     nodeFound = true
                 }
+                i++
+            }
+        }
+        
+        if(turnedNodes.count >= 2) {
+            execDelay(1) {
+                for hitNode in self.turnedNodes {
+                    hitNode.explode()
+                }
+                self.turnedNodes = []
             }
         }
     }
