@@ -236,6 +236,7 @@ class JFTileNode: SCNNode {
     var typeId:Int = 0
     var nodeId:CGPoint
     var tileNodes:[JFTileNodeFaceType:SCNNode] = [:]
+    let explosionImage = UIImage(named: "explosion")
     
     //MARK: tmp
     var vanished:Bool = false
@@ -360,10 +361,11 @@ class JFTileNode: SCNNode {
         exp.particleVelocityVariation = 10
         exp.particleSize = 0.1
         exp.particleColor = blueColor
-        exp.particleImage = UIImage(named: "explosion")
+        exp.particleImage = explosionImage
         exp.imageSequenceRowCount = 4
         exp.imageSequenceColumnCount = 4
         exp.imageSequenceFrameRate = 128
+        exp.dampingFactor = 5.0
         exp.emitterShape = tile
         self.addParticleSystem(exp)
         
