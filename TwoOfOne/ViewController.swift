@@ -104,42 +104,14 @@ class ViewController: UIViewController {
         let translation = sender.locationInView(sender.view!)
         if let objs = self.sceneView.hitTest(translation, options: nil) {
             
-            
-            /*
-            if(objs.count == 0) {
-                
-                let path = UIBezierPath(roundedRect: CGRect(x: -0.5, y: -0.5, width: 1.0, height: 1.0), cornerRadius: 0.1)
-                let tile = SCNShape(path: path, extrusionDepth: 0.05)
-
-                let exp = SCNParticleSystem()
-                exp.loops = false
-                exp.birthRate = 1000
-                exp.emissionDuration = 0
-                exp.spreadingAngle = 180
-                exp.particleDiesOnCollision = true
-                exp.particleLifeSpan = 0.25
-                exp.particleLifeSpanVariation = 0.5
-                exp.particleVelocity = 50
-                exp.particleVelocityVariation = 3
-                exp.particleSize = 0.1
-                //exp.particleColor = UIColor.lightGrayColor()
-                exp.particleImage = UIImage(named: "explosion")
-                exp.imageSequenceRowCount = 4
-                exp.imageSequenceColumnCount = 4
-                exp.imageSequenceFrameRate = 64
-                exp.emitterShape = tile
-                sceneView.scene?.addParticleSystem(exp, withTransform: SCNMatrix4MakeTranslation(0, 0, -20))
-                //sceneView.scene?.addParticleSystem(exp, withTransform: SCNMatrix4MakeRotation(0, 0, 0, 0))
-            }
-            */
-            
-            
             var i = 0
             var nodeFound = false
             while((i < objs.count) && !nodeFound) {
                 let nearestObject = objs[i] as! SCNHitTestResult
                 if let hitNode = nearestObject.node as? JFTileNode {
-                    if(hitNode.turned) {
+                    if(hitNode.lock) {
+                        // tile locked
+                    } else if(hitNode.turned) {
                         hitNode.flip()
                         for j in 0...(self.turnedNodes.count - 1) {
                             if(self.turnedNodes[j] == hitNode) {
@@ -158,11 +130,30 @@ class ViewController: UIViewController {
         }
         
         if(turnedNodes.count >= 2) {
-            execDelay(1) {
-                for hitNode in self.turnedNodes {
-                    hitNode.explode()
-                }
+            if(self.turnedNodes[0].isPairWithTile(self.turnedNodes[1])) {
+                let tile1 = self.turnedNodes[0]
+                let tile2 = self.turnedNodes[1]
                 self.turnedNodes = []
+                tile1.lock = true
+                tile2.lock = true
+                execDelay(1) {
+                    tile1.explode()
+                    tile2.explode()
+                }
+            } else {
+                let tile1 = self.turnedNodes[0]
+                let tile2 = self.turnedNodes[1]
+                self.turnedNodes = []
+                tile1.lock = true
+                tile2.lock = true
+                execDelay(1) {
+                    tile1.flip(completion: { () -> Void in
+                        tile1.lock = false
+                    })
+                    tile2.flip(completion: { () -> Void in
+                        tile2.lock = false
+                    })
+                }
             }
         }
     }

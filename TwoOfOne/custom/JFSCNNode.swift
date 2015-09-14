@@ -79,6 +79,16 @@ class JFSCNNode : SCNNode {
     
     func generateTileNodes() {
         
+        // generate tileMap
+        var tileMap:[Int] = []
+        for colId in 0...(tileNum - 1) {
+            for rowId in 0...(tileRows - 1) {
+                let tileId:Int = ((tileRows * colId) + rowId) / 2
+                tileMap.append(tileId)
+            }
+        }
+        let shuffledTileMap = shuffleList(tileMap)
+        
         // shape
         let path = UIBezierPath(roundedRect: CGRect(x: tileWidth / -2, y: tileWidth / 2, width: tileWidth, height: tileWidth), cornerRadius: 0.1)
         
@@ -103,7 +113,7 @@ class JFSCNNode : SCNNode {
             for rowId in 0...(tileRows - 1) {
                 // creating tile
                 let tile = SCNShape(path: path, extrusionDepth: 0.05)
-                let tileNode = JFTileNode(x: colId, y: rowId)
+                let tileNode = JFTileNode(x: colId, y: rowId, id: shuffledTileMap[((tileRows * colId) + rowId)])
                 tileNode.position = SCNVector3(
                     x: Float(position.x),
                     y: (Float(rowId) - (Float(tileRows - 1) / 2)) * tileSpacing,
@@ -205,6 +215,7 @@ class JFSCNNode : SCNNode {
 }
 
 
+let blueColor = UIColor(red: 35/255, green: 153/255, blue: 218/255, alpha: 1)
 
 enum JFTileNodeFaceType:Int {
     case root = 0
@@ -228,10 +239,12 @@ class JFTileNode: SCNNode {
     
     //MARK: tmp
     var vanished:Bool = false
+    var lock:Bool = false
     
-    init(x:Int, y:Int) {
+    init(x:Int, y:Int, id:Int) {
         
         self.nodeId = CGPoint(x: x, y: y)
+        self.typeId = id
         
         super.init()
         
@@ -255,10 +268,10 @@ class JFTileNode: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func flip(animated:Bool = true) {
+    func flip(animated:Bool = true, completion: (() -> Void)! = nil) {
         self.turned = !self.turned
         if(animated) {
-            self.didTurn()
+            self.didTurn(completion)
         }
     }
     
@@ -267,7 +280,7 @@ class JFTileNode: SCNNode {
         self.tileNodes[JFTileNodeFaceType.closed]?.opacity = self.turned ? 0.0 : 1.0
     }
     
-    func didTurn() {
+    func didTurn(completion: (() -> Void)!) {
         
         let rotationDuration:NSTimeInterval = 0.3
         
@@ -317,7 +330,7 @@ class JFTileNode: SCNNode {
         // run aminations
         let rotationAction = SCNAction.rotateByAngle(rotationAngle, aroundAxis: SCNVector3(x: 0, y: 1, z: 0), duration: rotationDuration)
         rotationAction.timingMode = SCNActionTimingMode.Linear
-        self.runAction(rotationAction)
+        self.runAction(rotationAction, completionHandler: completion)
         
         let nodeToHide = self.turned ? self.tileNodes[JFTileNodeFaceType.closed] : self.tileNodes[JFTileNodeFaceType.open]
         nodeToHide?.runAction(SCNAction.sequence([
@@ -346,7 +359,7 @@ class JFTileNode: SCNNode {
         exp.particleVelocity = 30
         exp.particleVelocityVariation = 10
         exp.particleSize = 0.1
-        exp.particleColor = UIColor.lightGrayColor()
+        exp.particleColor = blueColor
         exp.particleImage = UIImage(named: "explosion")
         exp.imageSequenceRowCount = 4
         exp.imageSequenceColumnCount = 4
@@ -374,7 +387,7 @@ class JFTileNode: SCNNode {
             node.geometry?.materials = materialFaces
             break
         case .open:
-            let tileId = JFrand(10) + 1
+            let tileId = (self.typeId % 10 + 1)
             var tileIdStr = (tileId < 10) ? "0\(tileId)" : String(tileId)
             
             var materialFaces:[SCNMaterial] = Array()
@@ -407,5 +420,9 @@ class JFTileNode: SCNNode {
             node.geometry?.materials = materialFaces
             break
         }
+    }
+    
+    func isPairWithTile(tile:JFTileNode) -> Bool {
+        return (self.typeId % 10) == (tile.typeId % 10)
     }
 }
