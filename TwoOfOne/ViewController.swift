@@ -139,9 +139,19 @@ class ViewController: UIViewController {
             while((i < objs.count) && !nodeFound) {
                 let nearestObject = objs[i] as! SCNHitTestResult
                 if let hitNode = nearestObject.node as? JFTileNode {
-                    hitNode.flip()
-                    self.turnedNodes.append(hitNode)
-                    nodeFound = true
+                    if(hitNode.turned) {
+                        hitNode.flip()
+                        for j in 0...(self.turnedNodes.count - 1) {
+                            if(self.turnedNodes[j] == hitNode) {
+                                self.turnedNodes.removeAtIndex(j)
+                            }
+                        }
+                        nodeFound = true
+                    } else {
+                        hitNode.flip()
+                        self.turnedNodes.append(hitNode)
+                        nodeFound = true
+                    }
                 }
                 i++
             }
