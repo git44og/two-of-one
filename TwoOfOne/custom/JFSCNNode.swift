@@ -20,11 +20,14 @@ tan = gegen / an
 
 
 // config
-let tileWidth:CGFloat = 1
-let tileWidthDeg:Float = 30.35
-let tileNum:Int = 10
+let tileWidth:Float = 5
+let cylinderHeight:Float = 33.0
 let tileRows:Int = 6
-let tileSpacing:Float = 1.1
+let tileCols:Int = 6
+
+//let tileWidthDeg:Float = 30.35
+//let tileSpacing:Float = 1.1
+
 
 
 
@@ -73,15 +76,32 @@ class JFSCNNode : SCNNode {
 //        self.geometry = geometry
 //    }
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     func generateTileNodes() {
         
+        /*
+        let tileWidth:CGFloat = 6
+        let cylinderHeight:CGFloat = 66.0
+        let tileRows:Int = 10
+        let tileCols:Int = 6
+        */
+        // gap between tiles
+        let tileGap = (cylinderHeight - (tileWidth * Float(tileRows))) / (Float(tileRows) - 1)
+        // circumsize of cylinder
+        let circumsize = (tileWidth * Float(tileCols)) + (tileGap * (Float(tileCols) - 1))
+        // cylinder radius
+        self.shapeRadius = circumsize / (2 * Float(M_PI))
+        // corner radius
+        let cornerRadius = tileWidth / 10
+        // angle between columns
+        let tileAngleRad = Float(M_PI) * (2 / Float(tileCols))
+
         // generate tileMap
         var tileMap:[Int] = []
-        for colId in 0...(tileNum - 1) {
+        for colId in 0...(tileCols - 1) {
             for rowId in 0...(tileRows - 1) {
                 let tileId:Int = ((tileRows * colId) + rowId) / 2
                 tileMap.append(tileId)
@@ -90,15 +110,12 @@ class JFSCNNode : SCNNode {
         let shuffledTileMap = shuffleList(tileMap)
         
         // shape
-        let path = UIBezierPath(roundedRect: CGRect(x: tileWidth / -2, y: tileWidth / 2, width: tileWidth, height: tileWidth), cornerRadius: 0.1)
+        let path = UIBezierPath(roundedRect: CGRect(x: CGFloat(tileWidth) / -2, y: CGFloat(tileWidth) / 2, width: CGFloat(tileWidth), height: CGFloat(tileWidth)), cornerRadius: CGFloat(cornerRadius))
         
         // calculation
-        let tileWidthRad = tileWidthDeg * (Float(M_PI) / 180)
-        let tileAngleRad = Float(M_PI) * (2 / Float(tileNum))
-        self.shapeRadius = Float(tileWidth) / tan(tileWidthRad)
+        //let tileWidthRad = tileWidthDeg * (Float(M_PI) / 180)
         
-        //for colId in 0...5 {
-        for colId in 0...(tileNum - 1) {
+        for colId in 0...(tileCols - 1) {
             
             self.nodesByCol.append([])
             
@@ -109,14 +126,14 @@ class JFSCNNode : SCNNode {
             
             //println("radius:\(radius) angle:\(angle) x:\(position.x) y:\(position.y)")
             
-            //for rowId in 3...3 {
             for rowId in 0...(tileRows - 1) {
                 // creating tile
                 let tile = SCNShape(path: path, extrusionDepth: 0.05)
-                let tileNode = JFTileNode(x: colId, y: rowId, id: shuffledTileMap[((tileRows * colId) + rowId)])
+                let tileNode = JFTileNode(x: colId, y: rowId, id: shuffledTileMap[((tileRows * colId) + rowId)], size:CGSize(width: CGFloat(tileWidth), height: CGFloat(tileWidth)), cornerRadius:CGFloat(cornerRadius))
                 tileNode.position = SCNVector3(
                     x: Float(position.x),
-                    y: (Float(rowId) - (Float(tileRows - 1) / 2)) * tileSpacing,
+                    y: ((Float(rowId) - (Float(tileRows - 1) / 2)) * (tileWidth + tileGap)),
+                    //y: ((Float(rowId) * tileWidth) - (Float(tileRows - 1) / 2)) * tileGap,
                     z: Float(position.y))
                 tileNode.rotation = SCNVector4(x: 0, y: 1, z: 0, w: angle)
                 tileNode.baseAngle = angle
@@ -135,6 +152,7 @@ class JFSCNNode : SCNNode {
         
         // calculation
         // duplicate calculation
+        /*
         let tileWidthRad = tileWidthDeg * (Float(M_PI) / 180)
         let tileAngleRad = Float(M_PI) * (2 / Float(tileNum))
         let radius = Float(tileWidth) / tan(tileWidthRad)
@@ -159,6 +177,7 @@ class JFSCNNode : SCNNode {
         
         
         let angleIntPerQuarter = (self.rotation.w / Float(M_PI)) * (Float(tileNum) / 2) // 45deg == 1 | 90deg == 2
+        */
     }
     
     
@@ -167,13 +186,13 @@ class JFSCNNode : SCNNode {
     func rollTransformation(translationX:CGFloat) {
         
         // get angle based on distance
-        var deltaAngle = (Float)(translationX) * self.sceneSizeFactor * (Float)(M_PI) / 180.0
-        var newAngle = self.currentAngle + deltaAngle
+        let deltaAngle = (Float)(translationX) * self.sceneSizeFactor * (Float)(M_PI) / 180.0
+        let newAngle = self.currentAngle + deltaAngle
         let rotateMatrix = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
         
         // get position based on distance
-        var deltaPos = deltaAngle * self.shapeRadius
-        var newPos = self.currentPosition + deltaPos
+        let deltaPos = deltaAngle * self.shapeRadius
+        let newPos = self.currentPosition + deltaPos
         let moveMatrix = SCNMatrix4MakeTranslation(newPos, 0, self.position.z)
         
         // transform node
@@ -185,17 +204,17 @@ class JFSCNNode : SCNNode {
     
     func rollToRestingPosition(animated:Bool = true) {
         
-        let angleIntPerQuarter = (self.currentAngle / Float(M_PI)) * (Float(tileNum) / 2)
+        let angleIntPerQuarter = (self.currentAngle / Float(M_PI)) * (Float(tileCols) / 2)
         // get delta to next integer angle
         let missingAngleIntPerQuarter = round(angleIntPerQuarter) - angleIntPerQuarter
         // translate back into rad
-        let missingAngleRad = (missingAngleIntPerQuarter * Float(M_PI) / (Float(tileNum) / 2))
+        let missingAngleRad = (missingAngleIntPerQuarter * Float(M_PI) / (Float(tileCols) / 2))
         let newAngle = self.currentAngle + missingAngleRad
         let rotateMatrix = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
         
         // get delta distance based on delta angle
         let missingDistance = missingAngleRad * self.shapeRadius
-        var newPos = self.currentPosition + missingDistance
+        let newPos = self.currentPosition + missingDistance
         let moveMatrix = SCNMatrix4MakeTranslation(newPos, 0, self.position.z)
         //println("angle:\(newAngle) \(missingAngleIntPerQuarter) miss:\(missingAngleRad)")
         
@@ -242,14 +261,14 @@ class JFTileNode: SCNNode {
     var vanished:Bool = false
     var lock:Bool = false
     
-    init(x:Int, y:Int, id:Int) {
+    init(x:Int, y:Int, id:Int, size:CGSize, cornerRadius:CGFloat) {
         
         self.nodeId = CGPoint(x: x, y: y)
         self.typeId = id
         
         super.init()
         
-        let path = UIBezierPath(roundedRect: CGRect(x: -0.5, y: -0.5, width: 1.0, height: 1.0), cornerRadius: 0.1)
+        let path = UIBezierPath(roundedRect: CGRect(x: size.width / -2, y: size.height / -2, width: size.width, height: size.height), cornerRadius: cornerRadius)
         let tile = SCNShape(path: path, extrusionDepth: 0.05)
         self.geometry = tile
         self.addFaces(self, type: JFTileNodeFaceType.root)
@@ -265,7 +284,7 @@ class JFTileNode: SCNNode {
         self.adjustNodesVisibility()
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -390,7 +409,7 @@ class JFTileNode: SCNNode {
             break
         case .open:
             let tileId = (self.typeId % 10 + 1)
-            var tileIdStr = (tileId < 10) ? "0\(tileId)" : String(tileId)
+            let tileIdStr = (tileId < 10) ? "0\(tileId)" : String(tileId)
             
             var materialFaces:[SCNMaterial] = Array()
             let face = SCNMaterial()

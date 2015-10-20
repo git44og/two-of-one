@@ -62,7 +62,7 @@ class ViewController: UIViewController {
         // group
         let groupNode = JFSCNNode(sceneSize: sceneView.frame.size)
         //groupNode.rotation = SCNVector4(x: 1, y: 0, z: 0, w: Float(M_PI / -4))
-        groupNode.position = SCNVector3(x: 0, y: 0, z: -21)
+        groupNode.position = SCNVector3(x: 0, y: 0, z: -81)
         scene.rootNode.addChildNode(groupNode)
         groupNode.generateTileNodes()
         groupNode.adjustTransparency()
@@ -102,8 +102,8 @@ class ViewController: UIViewController {
     //MARK: Gesture
     func tapGesture(sender: UITapGestureRecognizer) {
         let translation = sender.locationInView(sender.view!)
-        if let objs = self.sceneView.hitTest(translation, options: nil) {
-            
+        let objs = self.sceneView.hitTest(translation, options: nil)
+        if(objs.count > 0) {
             var i = 0
             var nodeFound = false
             while((i < objs.count) && !nodeFound) {
@@ -173,7 +173,7 @@ class ViewController: UIViewController {
         
         if(sender.state == UIGestureRecognizerState.Ended) {
             
-            self.geometryNode.rollToRestingPosition(animated: true)
+            self.geometryNode.rollToRestingPosition(true)
             /*
             var jump = CAKeyframeAnimation(keyPath: "position.y")
             
