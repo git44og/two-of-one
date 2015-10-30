@@ -20,8 +20,8 @@ tan = gegen / an
 
 
 // config
-let tileWidth:Float = 5
-let cylinderHeight:Float = 33.0
+let tileWidth:Float = 2
+let cylinderHeight:Float = 15.0
 let tileRows:Int = 6
 let tileCols:Int = 6
 
@@ -39,6 +39,7 @@ class JFSCNNode : SCNNode {
     var currentAngle: Float = 0
     var sceneSize: CGSize
     var sceneSizeFactor: Float
+    var circumsize:Float = 1
     
     override var transform: SCNMatrix4 {
         didSet {
@@ -91,9 +92,9 @@ class JFSCNNode : SCNNode {
         // gap between tiles
         let tileGap = (cylinderHeight - (tileWidth * Float(tileRows))) / (Float(tileRows) - 1)
         // circumsize of cylinder
-        let circumsize = (tileWidth * Float(tileCols)) + (tileGap * (Float(tileCols) - 1))
+        self.circumsize = (tileWidth * Float(tileCols)) + (tileGap * (Float(tileCols) - 1))
         // cylinder radius
-        self.shapeRadius = circumsize / (2 * Float(M_PI))
+        self.shapeRadius = self.circumsize / (2 * Float(M_PI))
         // corner radius
         let cornerRadius = tileWidth / 10
         // angle between columns
@@ -173,9 +174,6 @@ class JFSCNNode : SCNNode {
                 }
             }
         }
-        
-        
-        
         let angleIntPerQuarter = (self.rotation.w / Float(M_PI)) * (Float(tileNum) / 2) // 45deg == 1 | 90deg == 2
         */
     }
@@ -187,43 +185,49 @@ class JFSCNNode : SCNNode {
         
         // get angle based on distance
         let deltaAngle = (Float)(translationX) * self.sceneSizeFactor * (Float)(M_PI) / 180.0
-        let newAngle = self.currentAngle + deltaAngle
-        let rotateMatrix = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
-        
+        let newAngle = self.currentAngle - deltaAngle
+        //print("newAngle:\(newAngle) | currentAngle:\(self.currentAngle) | currentPosition:\(self.currentPosition) | shapeRadius:\(self.shapeRadius)")
+        let rotateLayDown = SCNMatrix4MakeRotation(Float(M_PI) / 2, 1, 0, 0)
+        let rotateRoll = SCNMatrix4MakeRotation(newAngle, 0, 0, 1)
+        let rotate = SCNMatrix4Mult(rotateLayDown, rotateRoll)
         // get position based on distance
         let deltaPos = deltaAngle * self.shapeRadius
         let newPos = self.currentPosition + deltaPos
-        let moveMatrix = SCNMatrix4MakeTranslation(newPos, 0, self.position.z)
+        let moveMatrix = SCNMatrix4MakeTranslation(newPos, self.position.y, 0)
         
+        // hit right wall
+        if((newPos > kWallDist) && (deltaPos > 0)) {
+            return
+        }
+        //hit left wall
+        if((newPos < -kWallDist) && (deltaPos < 0)) {
+            return
+        }
         // transform node
-        self.transform = SCNMatrix4Mult(rotateMatrix, moveMatrix)
+        self.transform = SCNMatrix4Mult(rotate, moveMatrix)
         
         self.currentAngle = newAngle
         self.currentPosition = newPos
     }
     
     func rollToRestingPosition(animated:Bool = true) {
-        
-        let angleIntPerQuarter = (self.currentAngle / Float(M_PI)) * (Float(tileCols) / 2)
-        // get delta to next integer angle
-        let missingAngleIntPerQuarter = round(angleIntPerQuarter) - angleIntPerQuarter
-        // translate back into rad
-        let missingAngleRad = (missingAngleIntPerQuarter * Float(M_PI) / (Float(tileCols) / 2))
-        let newAngle = self.currentAngle + missingAngleRad
-        let rotateMatrix = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
-        
+        let tileAngle = (Float(M_PI) * 2) / Float(tileCols)
+        let newAngle = round(self.currentAngle / tileAngle) * tileAngle
+        let missingAngle = self.currentAngle - newAngle
+        let rotateLayDown = SCNMatrix4MakeRotation(Float(M_PI) / 2, 1, 0, 0)
+        let rotateRoll = SCNMatrix4MakeRotation(newAngle, 0, 0, 1)
+        let rotate = SCNMatrix4Mult(rotateLayDown, rotateRoll)
         // get delta distance based on delta angle
-        let missingDistance = missingAngleRad * self.shapeRadius
+        let missingDistance = missingAngle * self.shapeRadius
         let newPos = self.currentPosition + missingDistance
-        let moveMatrix = SCNMatrix4MakeTranslation(newPos, 0, self.position.z)
-        //println("angle:\(newAngle) \(missingAngleIntPerQuarter) miss:\(missingAngleRad)")
+        //print("RTR newAngle:\(newAngle) | currentAngle:\(self.currentAngle) | currentPosition:\(self.currentPosition) | shapeRadius:\(self.shapeRadius)")
+        let moveMatrix = SCNMatrix4MakeTranslation(newPos, self.position.y, 0)
         
         SCNTransaction.begin()
         if(animated) {
             SCNTransaction.setAnimationDuration(0.3)
         }
-        self.transform = SCNMatrix4Mult(rotateMatrix, moveMatrix)
-        
+        self.transform = SCNMatrix4Mult(rotate, moveMatrix)
         SCNTransaction.setAnimationTimingFunction(CAMediaTimingFunction(controlPoints: 0.42, 0.0, 0.58, 1.0))
         SCNTransaction.setCompletionBlock({ () -> Void in
             self.currentAngle = newAngle
@@ -428,7 +432,7 @@ class JFTileNode: SCNNode {
         case .closed:
             var materialFaces:[SCNMaterial] = Array()
             let face = SCNMaterial()
-            face.diffuse.contents = UIImage(named: "tile50")
+            face.diffuse.contents = UIImage(named: "tile100")
             materialFaces += [face]
             materialFaces += [face]
 
