@@ -9,11 +9,11 @@
 import UIKit
 import SceneKit
 
-let usePhysics = false
+let usePhysics = true
 let kPhysicsElastic:Float = 20
 let kPhysicsZoom:Float = 17
 let kWallDist:Float = 10
-
+let kRestingSpeed:Float = 4
 
 class ViewController: UIViewController, SCNSceneRendererDelegate {
     
@@ -39,7 +39,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
     var hitWallLeft = false
     var hitWallRight = false
     var centerNode = SCNNode()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -101,7 +101,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         groupBody.angularVelocityFactor = SCNVector3Make(0, 0, 1)
         groupBody.friction = 1.0
         groupBody.rollingFriction = 0.0
-        groupBody.damping = 0.99999
+        groupBody.damping = 0.999999
         // cylinder view
         //MARK: usePhysics
         if(usePhysics) {
@@ -128,6 +128,19 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         sceneView.allowsCameraControl = false
         sceneView.delegate = self
         
+        //MARK: usePhysics
+        if(usePhysics) {
+            let shape = SCNSphere(radius: 1)
+            shape.firstMaterial?.diffuse.contents = UIColor(white: 0.5, alpha: 1)
+            self.centerNode = SCNNode(geometry: shape)
+            let gravityField = SCNPhysicsField.radialGravityField()
+            //let gravityField = SCNPhysicsField.springField()
+            gravityField.strength = 0
+            self.centerNode.physicsField = gravityField
+            self.centerNode.name = "gravity"
+            self.sceneView.scene?.rootNode.addChildNode(self.centerNode)
+            self.centerNode.opacity = 0.1
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -234,6 +247,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             self.panPaused = false
             self.hitWallLeft = false
             self.hitWallRight = false
+            self.centerNode.physicsField?.strength = 0
+            self.centerNode.opacity = 0.1
         }
         self.translationX = Float(sender.translationInView(sender.view!).x)
         
@@ -304,7 +319,17 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         // adjust angular velocity based on current velocity
         let angularVelocity:Float = geometryNode.physicsBody!.velocity.x / self.geometryNode.shapeRadius
         geometryNode.physicsBody?.angularVelocity = SCNVector4Make(0, 0, -1, angularVelocity)
+        
+        // add center weight node
+        if((!self.panActive) && ((self.geometryNode.physicsBody?.velocity.x > -kRestingSpeed) && (self.geometryNode.physicsBody?.velocity.x < kRestingSpeed))) {
+            let distBetweenFlatSpot = (self.geometryNode.shapeRadius * Float(M_PI) * 2) / Float(tileCols)
+            let targetPos = round(location.x / distBetweenFlatSpot) * distBetweenFlatSpot
+            self.centerNode.position = SCNVector3Make(targetPos, 0, 0)
+            self.centerNode.physicsBody?.resetTransform()
+            self.centerNode.physicsField?.strength = 10000
+            self.centerNode.opacity = 1
+            //print("v:\(self.geometryNode.physicsBody?.velocity)")
+        }
     }
-    
 }
 
