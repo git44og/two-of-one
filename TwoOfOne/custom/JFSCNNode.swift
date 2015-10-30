@@ -17,13 +17,20 @@ cos = ankathete / hypo
 tan = gegen / an
 */
 
-
+let tileConfig:[(row:Int, col:Int, tile:Float, corner:Float, height:Float)] =
+[
+    (row:4, col:6, tile:150, corner:9, height:660),
+    (row:5, col:8, tile:120, corner:7.5, height:660),
+    (row:6, col:10, tile:100, corner:6, height:660),
+]
+let configScale:Float = 0.023
 
 // config
-let tileWidth:Float = 2
-let cylinderHeight:Float = 15.0
-let tileRows:Int = 6
-let tileCols:Int = 6
+let configSet:Int = 2
+let tileWidth:Float = tileConfig[configSet].tile * configScale
+let cylinderHeight:Float = tileConfig[configSet].height * configScale
+let tileRows:Int = tileConfig[configSet].row
+let tileCols:Int = tileConfig[configSet].col
 
 //let tileWidthDeg:Float = 30.35
 //let tileSpacing:Float = 1.1
