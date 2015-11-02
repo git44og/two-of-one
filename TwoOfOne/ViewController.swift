@@ -44,21 +44,10 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
     }
     
     override func viewDidAppear(animated: Bool) {
+        
+        self.sceneSizeFactor = (Float)(sceneView.frame.size.height / sceneView.frame.size.width * 1.35)
+        
         let scene = SCNScene()
-        
-        // light
-        let ambientLightNode = SCNNode()
-        ambientLightNode.light = SCNLight()
-        ambientLightNode.light!.type = SCNLightTypeAmbient
-        ambientLightNode.light!.color = UIColor(white: 0.67, alpha: 1.0)
-        scene.rootNode.addChildNode(ambientLightNode)
-        
-        let omniLightNode = SCNNode()
-        omniLightNode.light = SCNLight()
-        omniLightNode.light!.type = SCNLightTypeOmni
-        omniLightNode.light!.color = UIColor(white: 0.75, alpha: 1.0)
-        omniLightNode.position = SCNVector3Make(50, 0, 50)
-        scene.rootNode.addChildNode(omniLightNode)
         
         // camera
         let cameraNode = SCNNode()
@@ -71,8 +60,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         cameraNode.transform = SCNMatrix4Mult(camRotate, camMove)
         scene.rootNode.addChildNode(cameraNode)
         
-        self.sceneSizeFactor = (Float)(sceneView.frame.size.height / sceneView.frame.size.width * 1.35)
-        
+        // lights
+        self.addLights(scene)
         
         // ground
         let groundGeometry = SCNFloor()
@@ -139,6 +128,55 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             self.sceneView.scene?.rootNode.addChildNode(self.centerNode)
             self.centerNode.opacity = 0.1
         }
+    }
+    
+    func addLights(scene:SCNScene) {
+        // light
+        let ambientLightNode = SCNNode()
+        ambientLightNode.light = SCNLight()
+        ambientLightNode.light!.type = SCNLightTypeAmbient
+        ambientLightNode.light!.color = UIColor(white: 0.67, alpha: 1.0)
+        //scene.rootNode.addChildNode(ambientLightNode)
+        
+        let omniLightNode = SCNNode()
+        omniLightNode.light = SCNLight()
+        omniLightNode.light!.type = SCNLightTypeOmni
+        omniLightNode.light!.color = UIColor(white: 1, alpha: 1.0)
+        omniLightNode.position = SCNVector3Make(50, 0, 50)
+        //scene.rootNode.addChildNode(omniLightNode)
+        
+        let spot1Light = SCNLight()
+        spot1Light.attenuationStartDistance = 50
+        spot1Light.attenuationEndDistance = 70
+        spot1Light.spotInnerAngle = 30
+        spot1Light.spotOuterAngle = 45
+        let spot1LightNode = SCNNode()
+        spot1LightNode.light = spot1Light
+        spot1LightNode.light!.type = SCNLightTypeSpot
+        spot1LightNode.light!.color = UIColor(white: 1, alpha: 1.0)
+        spot1LightNode.position = SCNVector3Make(10, 0, 10)
+        
+        let move1 = SCNMatrix4MakeTranslation(-15, 60, 0)
+        let rotate1 = SCNMatrix4MakeRotation(Float(M_PI) / -2, 1, 0, 0)
+        spot1LightNode.transform = SCNMatrix4Mult(rotate1, move1)
+        scene.rootNode.addChildNode(spot1LightNode)
+        
+        let spot2Light = SCNLight()
+        spot2Light.attenuationStartDistance = 50
+        spot2Light.attenuationEndDistance = 70
+        spot2Light.spotInnerAngle = 30
+        spot2Light.spotOuterAngle = 45
+        let spot2LightNode = SCNNode()
+        spot2LightNode.light = spot1Light
+        spot2LightNode.light!.type = SCNLightTypeSpot
+        spot2LightNode.light!.color = UIColor(white: 1, alpha: 1.0)
+        spot2LightNode.position = SCNVector3Make(10, 0, 10)
+        
+        let move2 = SCNMatrix4MakeTranslation(15, 60, 0)
+        let rotate2 = SCNMatrix4MakeRotation(Float(M_PI) / -2, 1, 0, 0)
+        spot2LightNode.transform = SCNMatrix4Mult(rotate2, move2)
+        scene.rootNode.addChildNode(spot2LightNode)
+
     }
     
     override func didReceiveMemoryWarning() {
