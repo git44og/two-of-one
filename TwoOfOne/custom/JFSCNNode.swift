@@ -23,7 +23,7 @@ let tileConfig:[(row:Int, col:Int, tile:Float, corner:Float, height:Float)] =
     (row:5, col:8, tile:120, corner:7.5, height:660),
     (row:6, col:10, tile:100, corner:6, height:660),
 ]
-let configScale:Float = 0.023
+let configScale:Float = 0.025
 
 // config
 let configSet:Int = 2
@@ -47,6 +47,7 @@ class JFSCNNode : SCNNode {
     var sceneSize: CGSize
     var sceneSizeFactor: Float
     var circumsize:Float = 1
+    var rollBoundaries:Float = 1
     
     override var transform: SCNMatrix4 {
         didSet {
@@ -96,10 +97,13 @@ class JFSCNNode : SCNNode {
         let tileRows:Int = 10
         let tileCols:Int = 6
         */
+        
         // gap between tiles
         let tileGap = (cylinderHeight - (tileWidth * Float(tileRows))) / (Float(tileRows) - 1)
         // circumsize of cylinder
         self.circumsize = (tileWidth * Float(tileCols)) + (tileGap * (Float(tileCols) - 1))
+        // distance to wall
+        self.rollBoundaries = (self.circumsize / 2) * 1.05
         // cylinder radius
         self.shapeRadius = self.circumsize / (2 * Float(M_PI))
         // corner radius
@@ -203,11 +207,11 @@ class JFSCNNode : SCNNode {
         let moveMatrix = SCNMatrix4MakeTranslation(newPos, self.position.y, 0)
         
         // hit right wall
-        if((newPos > kWallDist) && (deltaPos > 0)) {
+        if((newPos > self.rollBoundaries) && (deltaPos > 0)) {
             return
         }
         //hit left wall
-        if((newPos < -kWallDist) && (deltaPos < 0)) {
+        if((newPos < -self.rollBoundaries) && (deltaPos < 0)) {
             return
         }
         // transform node

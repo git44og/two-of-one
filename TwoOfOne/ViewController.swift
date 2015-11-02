@@ -12,8 +12,7 @@ import SceneKit
 let usePhysics = true
 let kPhysicsElastic:Float = 20
 let kPhysicsZoom:Float = 17
-let kWallDist:Float = 10
-let kRestingSpeed:Float = 4
+let kRestingSpeed:Float = 10
 
 class ViewController: UIViewController, SCNSceneRendererDelegate {
     
@@ -39,7 +38,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
     var hitWallLeft = false
     var hitWallRight = false
     var centerNode = SCNNode()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -68,7 +66,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         //cameraNode.camera?.usesOrthographicProjection = true
         cameraNode.camera?.yFov = 20
         cameraNode.camera?.zFar = 200
-        let camMove = SCNMatrix4MakeTranslation(0, 50, 0)
+        let camMove = SCNMatrix4MakeTranslation(0, 60, 0)
         let camRotate = SCNMatrix4MakeRotation(Float(M_PI) / -2, 1, 0, 0)
         cameraNode.transform = SCNMatrix4Mult(camRotate, camMove)
         scene.rootNode.addChildNode(cameraNode)
@@ -294,7 +292,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         }
         
         // collide with right wall
-        if((geometryNode.physicsBody!.velocity.x > 0) && (self.geometryNode.presentationNode.position.x > kWallDist)) {
+        if((geometryNode.physicsBody!.velocity.x > 0) && (self.geometryNode.presentationNode.position.x > self.geometryNode.rollBoundaries)) {
             //print("hit wall on the right")
             self.panPaused = true
             self.hitWallRight = true
@@ -303,7 +301,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         }
         
         // collide with left wall
-        if((geometryNode.physicsBody!.velocity.x < 0) && (self.geometryNode.presentationNode.position.x < -kWallDist)) {
+        if((geometryNode.physicsBody!.velocity.x < 0) && (self.geometryNode.presentationNode.position.x < -self.geometryNode.rollBoundaries)) {
             //print("hit wall on the left")
             self.panPaused = true
             self.hitWallLeft = true
