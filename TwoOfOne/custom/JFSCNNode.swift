@@ -31,10 +31,15 @@ let tileWidth:Float = tileConfig[configSet].tile * configScale
 let cylinderHeight:Float = tileConfig[configSet].height * configScale
 let tileRows:Int = tileConfig[configSet].row
 let tileCols:Int = tileConfig[configSet].col
-
-//let tileWidthDeg:Float = 30.35
-//let tileSpacing:Float = 1.1
-
+let kTileFrameStroke:CGFloat = 0.02
+let kTileCornerradius:CGFloat = 0.1
+let kTileExtrusion:CGFloat = 0.02
+let kTileColorOpenInner = UIColor(white: 0.5, alpha: 0.5)
+let kTileColorOpenOuter = UIColor(white: 0.5, alpha: 1)
+let kTileColorOpenFrame = UIColor(white: 0.5, alpha: 1)
+let kTileColorClosedInner = UIColor(white: 1, alpha: 0.5)
+let kTileColorClosedOuter = UIColor(white: 1, alpha: 1)
+let kTileColorClosedFrame = UIColor(white: 1, alpha: 1)
 
 
 
@@ -106,8 +111,6 @@ class JFSCNNode : SCNNode {
         self.rollBoundaries = (self.circumsize / 2) * 1.05
         // cylinder radius
         self.shapeRadius = self.circumsize / (2 * Float(M_PI))
-        // corner radius
-        let cornerRadius = tileWidth / 10
         // angle between columns
         let tileAngleRad = Float(M_PI) * (2 / Float(tileCols))
 
@@ -122,7 +125,6 @@ class JFSCNNode : SCNNode {
         let shuffledTileMap = shuffleList(tileMap)
         
         // shape
-        let path = UIBezierPath(roundedRect: CGRect(x: CGFloat(tileWidth) / -2, y: CGFloat(tileWidth) / 2, width: CGFloat(tileWidth), height: CGFloat(tileWidth)), cornerRadius: CGFloat(cornerRadius))
         
         // calculation
         //let tileWidthRad = tileWidthDeg * (Float(M_PI) / 180)
@@ -140,8 +142,7 @@ class JFSCNNode : SCNNode {
             
             for rowId in 0...(tileRows - 1) {
                 // creating tile
-                let tile = SCNShape(path: path, extrusionDepth: 0.05)
-                let tileNode = JFTileNode(x: colId, y: rowId, id: shuffledTileMap[((tileRows * colId) + rowId)], size:CGSize(width: CGFloat(tileWidth), height: CGFloat(tileWidth)), cornerRadius:CGFloat(cornerRadius))
+                let tileNode = JFTileNode(x: colId, y: rowId, id: shuffledTileMap[((tileRows * colId) + rowId)], size:CGSize(width: CGFloat(tileWidth), height: CGFloat(tileWidth)))
                 tileNode.position = SCNVector3(
                     x: Float(position.x),
                     y: ((Float(rowId) - (Float(tileRows - 1) / 2)) * (tileWidth + tileGap)),
@@ -252,7 +253,7 @@ class JFSCNNode : SCNNode {
 let blueColor = UIColor(red: 35/255, green: 153/255, blue: 218/255, alpha: 1)
 
 enum JFTileNodeFaceType:Int {
-    case root = 0
+    case transparent = 0
     case open = 1
     case closed
 }
@@ -276,25 +277,29 @@ class JFTileNode: SCNNode {
     var vanished:Bool = false
     var lock:Bool = false
     
-    init(x:Int, y:Int, id:Int, size:CGSize, cornerRadius:CGFloat) {
+    init(x:Int, y:Int, id:Int, size:CGSize) {
         
         self.nodeId = CGPoint(x: x, y: y)
         self.typeId = id
         
         super.init()
         
-        let path = UIBezierPath(roundedRect: CGRect(x: size.width / -2, y: size.height / -2, width: size.width, height: size.height), cornerRadius: cornerRadius)
-        let tile = SCNShape(path: path, extrusionDepth: 0.05)
-        self.geometry = tile
-        self.addFaces(self, type: JFTileNodeFaceType.root)
+        let extrusionDepth = size.width * kTileExtrusion
         
-        for faceType in [JFTileNodeFaceType.open, JFTileNodeFaceType.closed] {
-            let tileShape = SCNShape(path: path, extrusionDepth: 0.05)
-            let tileNode = SCNNode(geometry: tileShape)
-            self.addFaces(tileNode, type: faceType)
-            self.addChildNode(tileNode)
-            self.tileNodes[faceType] = tileNode
-        }
+        // open tile
+        let tileBaseShape = SCNBox(width: size.width, height: size.height, length: extrusionDepth, chamferRadius: 0)
+        tileBaseShape.firstMaterial?.diffuse.contents = UIColor.clearColor()
+        self.geometry = tileBaseShape
+        
+        self.addFaces(size)
+        
+//        for faceType in [JFTileNodeFaceType.open, JFTileNodeFaceType.closed] {
+//            let tileShape = SCNShape(path: path, extrusionDepth: 0.05)
+//            let tileNode = SCNNode(geometry: tileShape)
+//            self.addFaces(tileNode, type: faceType)
+//            self.addChildNode(tileNode)
+//            self.tileNodes[faceType] = tileNode
+//        }
         
         self.adjustNodesVisibility()
     }
@@ -317,7 +322,7 @@ class JFTileNode: SCNNode {
     
     func didTurn(completion: (() -> Void)!) {
         
-        let rotationDuration:NSTimeInterval = 0.3
+        let rotationDuration:NSTimeInterval = 1.3
         
         // get half rotation in correct direction
         let rotationAngleInt:CGFloat = (self.turned ? 1 : -1)
@@ -412,50 +417,113 @@ class JFTileNode: SCNNode {
 
     }
     
-    func addFaces(node:SCNNode, type:JFTileNodeFaceType) {
+    func openTileImage() -> UIImage {
+        let tileId = (self.typeId % 10 + 1)
+        let tileIdStr = (tileId < 10) ? "0\(tileId)" : String(tileId)
+        return UIImage(named: "Karte\(tileIdStr)")!
+    }
+    
+    func addFaces(size:CGSize) {
         
-        switch(type) {
-        case .root:
-            var materialFaces:[SCNMaterial] = Array()
-            let face = SCNMaterial()
-            face.diffuse.contents = UIImage(named: "tile0")
-            materialFaces += [face]
-            node.geometry?.materials = materialFaces
-            break
-        case .open:
-            let tileId = (self.typeId % 10 + 1)
-            let tileIdStr = (tileId < 10) ? "0\(tileId)" : String(tileId)
-            
-            var materialFaces:[SCNMaterial] = Array()
-            let face = SCNMaterial()
-            face.diffuse.contents = UIImage(named: "Karte\(tileIdStr)")
-            materialFaces += [face]
-            materialFaces += [face]
-            let face3 = SCNMaterial()
-            face3.diffuse.contents = UIImage(named: "tile100")
-            //face3.reflective.contents = UIImage(named: "tileB")
-            materialFaces += [face3]
-            materialFaces += [face3]
-            materialFaces += [face3]
-            materialFaces += [face3]
-            node.geometry?.materials = materialFaces
-            break
-        case .closed:
-            var materialFaces:[SCNMaterial] = Array()
-            let face = SCNMaterial()
-            face.diffuse.contents = UIImage(named: "tile100")
-            materialFaces += [face]
-            materialFaces += [face]
+        let stroke = size.width * kTileFrameStroke
+        let cornerRadius = size.width * kTileCornerradius
+        let extrusionDepth = size.width * kTileExtrusion
+        
+        let path = UIBezierPath(roundedRect: CGRect(x: size.width / -2, y: size.height / -2, width: size.width, height: size.height), cornerRadius: cornerRadius)
+        let pathOuter = bezierPathRoundedRectangle(size, stroke: stroke, cornerRadius: cornerRadius)
+        let pathInner = UIBezierPath(roundedRect: CGRect(x: size.width / -2, y: size.height / -2, width: size.width - (stroke * 2), height: size.height - (stroke * 2)), cornerRadius: cornerRadius - stroke)
+        
+        // closed node
+        let tileClosedNode = SCNNode()
+        // closed node frame
+        let tileClosedFrameShape = SCNShape(path: pathOuter, extrusionDepth: extrusionDepth)
+        tileClosedFrameShape.firstMaterial?.diffuse.contents = kTileColorClosedFrame
+        let tileClosedFrameNode = SCNNode(geometry: tileClosedFrameShape)
+        tileClosedNode.addChildNode(tileClosedFrameNode)
+        // closed node immer
+        let tileClosedInnerShape = SCNShape(path: pathInner, extrusionDepth: extrusionDepth)
+        tileClosedInnerShape.firstMaterial?.diffuse.contents = kTileColorClosedInner
+        let tileClosedInnerNode = SCNNode(geometry: tileClosedInnerShape)
+        tileClosedInnerNode.transform = SCNMatrix4MakeTranslation(Float(stroke), Float(stroke), 0)
+        tileClosedNode.addChildNode(tileClosedInnerNode)
+        self.tileNodes[JFTileNodeFaceType.closed] = tileClosedNode
+        self.addChildNode(tileClosedNode)
 
-            let face3 = SCNMaterial()
-            face3.diffuse.contents = UIImage(named: "tile100")
-            materialFaces += [face3]
-            materialFaces += [face3]
-            materialFaces += [face3]
-            materialFaces += [face3]
-            node.geometry?.materials = materialFaces
-            break
-        }
+        // open node
+        let tileOpenShape = SCNShape(path: path, extrusionDepth: extrusionDepth)
+        // open tile appearance
+        var materialFaces:[SCNMaterial] = Array()
+        let face = SCNMaterial()
+        face.diffuse.contents = self.openTileImage()
+        materialFaces += [face]
+        materialFaces += [face]
+        let face3 = SCNMaterial()
+        face3.diffuse.contents = kTileColorClosedFrame
+        materialFaces += [face3]
+        materialFaces += [face3]
+        materialFaces += [face3]
+        materialFaces += [face3]
+        tileOpenShape.materials = materialFaces
+        let tileOpenNode = SCNNode(geometry: tileOpenShape)
+        self.tileNodes[JFTileNodeFaceType.open] = tileOpenNode
+        self.addChildNode(tileOpenNode)
+        
+//        
+//        
+//        
+//        
+//        
+//        
+//        
+//        for faceType in [JFTileNodeFaceType.open, JFTileNodeFaceType.closed] {
+//            let tileShape = SCNShape(path: path, extrusionDepth: 0.05)
+//            let tileNode = SCNNode(geometry: tileShape)
+//            self.addFaces(tileNode, type: faceType)
+//            self.addChildNode(tileNode)
+//            self.tileNodes[faceType] = tileNode
+//        }
+//
+//        
+//        
+//        
+//        
+//        switch(type) {
+//        case .root:
+//            node.geometry?.firstMaterial?.diffuse.contents = UIColor.clearColor()
+//            break
+//        case .open:
+//            let tileId = (self.typeId % 10 + 1)
+//            let tileIdStr = (tileId < 10) ? "0\(tileId)" : String(tileId)
+//            
+//            var materialFaces:[SCNMaterial] = Array()
+//            let face = SCNMaterial()
+//            face.diffuse.contents = UIImage(named: "Karte\(tileIdStr)")
+//            materialFaces += [face]
+//            materialFaces += [face]
+//            let face3 = SCNMaterial()
+//            face3.diffuse.contents = tileColorFrame
+//            materialFaces += [face3]
+//            materialFaces += [face3]
+//            materialFaces += [face3]
+//            materialFaces += [face3]
+//            node.geometry?.materials = materialFaces
+//            break
+//        case .closed:
+//            var materialFaces:[SCNMaterial] = Array()
+//            let face = SCNMaterial()
+//            face.diffuse.contents = UIImage(named: "tile100")
+//            materialFaces += [face]
+//            materialFaces += [face]
+//
+//            let face3 = SCNMaterial()
+//            face3.diffuse.contents = UIImage(named: "tile100")
+//            materialFaces += [face3]
+//            materialFaces += [face3]
+//            materialFaces += [face3]
+//            materialFaces += [face3]
+//            node.geometry?.materials = materialFaces
+//            break
+//        }
     }
     
     func isPairWithTile(tile:JFTileNode) -> Bool {

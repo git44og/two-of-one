@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2729F50C1BE7C6F8004E0225 /* JFGraphUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2729F50B1BE7C6F8004E0225 /* JFGraphUtils.swift */; };
 		27B67B791BA693C900C86E7F /* explosion.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B67B781BA693C900C86E7F /* explosion.png */; };
 		B441FA6C1B974E0D00B55627 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B441FA6B1B974E0D00B55627 /* AppDelegate.swift */; };
 		B441FA6E1B974E0D00B55627 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B441FA6D1B974E0D00B55627 /* ViewController.swift */; };
@@ -46,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2729F50B1BE7C6F8004E0225 /* JFGraphUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JFGraphUtils.swift; path = Utils/JFGraphUtils.swift; sourceTree = "<group>"; };
 		27B67B781BA693C900C86E7F /* explosion.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = explosion.png; path = Images/Explosion/explosion.png; sourceTree = "<group>"; };
 		B441FA661B974E0D00B55627 /* TwoOfOne.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwoOfOne.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B441FA6A1B974E0D00B55627 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 			isa = PBXGroup;
 			children = (
 				B48112511B9DEE5900E2A4F3 /* JFUtils.swift */,
+				2729F50B1BE7C6F8004E0225 /* JFGraphUtils.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -323,6 +326,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2729F50C1BE7C6F8004E0225 /* JFGraphUtils.swift in Sources */,
 				B441FA6E1B974E0D00B55627 /* ViewController.swift in Sources */,
 				B48112061B9B7C0F00E2A4F3 /* JFSCNNode.swift in Sources */,
 				B48111F01B9759F100E2A4F3 /* JFSCNView.swift in Sources */,
