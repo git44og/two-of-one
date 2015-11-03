@@ -26,7 +26,7 @@ let tileConfig:[(row:Int, col:Int, tile:Float, corner:Float, height:Float)] =
 let configScale:Float = 0.025
 
 // config
-let configSet:Int = 2
+let configSet:Int = 1
 let tileWidth:Float = tileConfig[configSet].tile * configScale
 let cylinderHeight:Float = tileConfig[configSet].height * configScale
 let tileRows:Int = tileConfig[configSet].row
@@ -85,23 +85,11 @@ class JFSCNNode : SCNNode {
         super.init()
     }
     
-//    init(geometry: SCNGeometry, sceneSize:CGSize) {
-//        super.init()
-//        self.geometry = geometry
-//    }
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     func generateTileNodes() {
-        
-        /*
-        let tileWidth:CGFloat = 6
-        let cylinderHeight:CGFloat = 66.0
-        let tileRows:Int = 10
-        let tileCols:Int = 6
-        */
         
         // gap between tiles
         let tileGap = (cylinderHeight - (tileWidth * Float(tileRows))) / (Float(tileRows) - 1)
@@ -125,9 +113,6 @@ class JFSCNNode : SCNNode {
         let shuffledTileMap = shuffleList(tileMap)
         
         // shape
-        
-        // calculation
-        //let tileWidthRad = tileWidthDeg * (Float(M_PI) / 180)
         
         for colId in 0...(tileCols - 1) {
             
@@ -199,13 +184,12 @@ class JFSCNNode : SCNNode {
         let deltaAngle = (Float)(translationX) * self.sceneSizeFactor * (Float)(M_PI) / 180.0
         let newAngle = self.currentAngle - deltaAngle
         //print("newAngle:\(newAngle) | currentAngle:\(self.currentAngle) | currentPosition:\(self.currentPosition) | shapeRadius:\(self.shapeRadius)")
-        let rotateLayDown = SCNMatrix4MakeRotation(Float(M_PI) / 2, 1, 0, 0)
-        let rotateRoll = SCNMatrix4MakeRotation(newAngle, 0, 0, 1)
-        let rotate = SCNMatrix4Mult(rotateLayDown, rotateRoll)
+        let rotate = SCNMatrix4MakeRotation(newAngle, 0, -1, 0)
+
         // get position based on distance
         let deltaPos = deltaAngle * self.shapeRadius
         let newPos = self.currentPosition + deltaPos
-        let moveMatrix = SCNMatrix4MakeTranslation(newPos, self.position.y, 0)
+        let moveMatrix = SCNMatrix4MakeTranslation(newPos, self.position.y, self.position.z)
         
         // hit right wall
         if((newPos > self.rollBoundaries) && (deltaPos > 0)) {
@@ -226,14 +210,12 @@ class JFSCNNode : SCNNode {
         let tileAngle = (Float(M_PI) * 2) / Float(tileCols)
         let newAngle = round(self.currentAngle / tileAngle) * tileAngle
         let missingAngle = self.currentAngle - newAngle
-        let rotateLayDown = SCNMatrix4MakeRotation(Float(M_PI) / 2, 1, 0, 0)
-        let rotateRoll = SCNMatrix4MakeRotation(newAngle, 0, 0, 1)
-        let rotate = SCNMatrix4Mult(rotateLayDown, rotateRoll)
+        let rotate = SCNMatrix4MakeRotation(newAngle, 0, -1, 0)
         // get delta distance based on delta angle
         let missingDistance = missingAngle * self.shapeRadius
         let newPos = self.currentPosition + missingDistance
         //print("RTR newAngle:\(newAngle) | currentAngle:\(self.currentAngle) | currentPosition:\(self.currentPosition) | shapeRadius:\(self.shapeRadius)")
-        let moveMatrix = SCNMatrix4MakeTranslation(newPos, self.position.y, 0)
+        let moveMatrix = SCNMatrix4MakeTranslation(newPos, self.position.y, self.position.z)
         
         SCNTransaction.begin()
         if(animated) {
@@ -291,15 +273,8 @@ class JFTileNode: SCNNode {
         tileBaseShape.firstMaterial?.diffuse.contents = UIColor.clearColor()
         self.geometry = tileBaseShape
         
+        // add visible nodes
         self.addFaces(size)
-        
-//        for faceType in [JFTileNodeFaceType.open, JFTileNodeFaceType.closed] {
-//            let tileShape = SCNShape(path: path, extrusionDepth: 0.05)
-//            let tileNode = SCNNode(geometry: tileShape)
-//            self.addFaces(tileNode, type: faceType)
-//            self.addChildNode(tileNode)
-//            self.tileNodes[faceType] = tileNode
-//        }
         
         self.adjustNodesVisibility()
     }

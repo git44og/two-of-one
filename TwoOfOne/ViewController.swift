@@ -76,9 +76,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         }
         scene.rootNode.addChildNode(self.cylinderNode)
         self.cylinderNode.generateTileNodes()
-        let move = SCNMatrix4MakeTranslation(0, self.cylinderNode.shapeRadius, 0)
-        let rotate = SCNMatrix4MakeRotation(Float(M_PI) / 2, 1, 0, 0)
-        self.cylinderNode.transform = SCNMatrix4Mult(rotate, move)
+        let move = SCNMatrix4MakeTranslation(0, 0, self.cylinderNode.shapeRadius)
+        self.cylinderNode.transform = move
         groupBody.resetTransform()
         //self.cylinderNode.adjustTransparency()
         
@@ -114,10 +113,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         //cameraNode.camera?.usesOrthographicProjection = true
         cameraNode.camera?.yFov = 20
         cameraNode.camera?.zFar = 200
-        let camMove = SCNMatrix4MakeTranslation(0, 60, 0)
+        let camMove = SCNMatrix4MakeTranslation(0, 0, 60)
 //        let camMove = SCNMatrix4MakeTranslation(0, 30, 0)
-        let camRotate = SCNMatrix4MakeRotation(Float(M_PI) / -2, 1, 0, 0)
-        cameraNode.transform = SCNMatrix4Mult(camRotate, camMove)
+        cameraNode.transform = camMove
         scene.rootNode.addChildNode(cameraNode)
     }
     
@@ -127,14 +125,14 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         ambientLightNode.light = SCNLight()
         ambientLightNode.light!.type = SCNLightTypeAmbient
         ambientLightNode.light!.color = UIColor(white: 0.67, alpha: 1.0)
-        //scene.rootNode.addChildNode(ambientLightNode)
+        scene.rootNode.addChildNode(ambientLightNode)
         
         let omniLightNode = SCNNode()
         omniLightNode.light = SCNLight()
         omniLightNode.light!.type = SCNLightTypeOmni
         omniLightNode.light!.color = UIColor(white: 1, alpha: 1.0)
         omniLightNode.position = SCNVector3Make(50, 0, 50)
-        //scene.rootNode.addChildNode(omniLightNode)
+        scene.rootNode.addChildNode(omniLightNode)
         
         let spot1Light = SCNLight()
         spot1Light.attenuationStartDistance = 50
@@ -183,7 +181,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         ground.physicsBody = groundBody
         ground.physicsBody?.friction = 1.0
         ground.name = "floor"
-        scene.rootNode.addChildNode(ground)
+        //scene.rootNode.addChildNode(ground)
     }
     
     override func didReceiveMemoryWarning() {
@@ -309,13 +307,11 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         if(!usePhysics) {
             return
         }
-        
+
         // adjust rotation based on position
         let location = self.cylinderNode.presentationNode.position
         let angle = -location.x / self.cylinderNode.shapeRadius
-        let rotate = SCNMatrix4Mult(
-            SCNMatrix4MakeRotation(Float(M_PI) / 2, 1, 0, 0),
-            SCNMatrix4MakeRotation(angle, 0, 0, 1))
+        let rotate = SCNMatrix4MakeRotation(angle, 0, -1, 0)
         let move = SCNMatrix4MakeTranslation(location.x, location.y, location.z)
         self.cylinderNode.transform = SCNMatrix4Mult(rotate, move)
         self.cylinderNode.physicsBody?.resetTransform()
