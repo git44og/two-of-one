@@ -297,7 +297,7 @@ class JFTileNode: SCNNode {
     
     func didTurn(completion: (() -> Void)!) {
         
-        let rotationDuration:NSTimeInterval = 1.3
+        let rotationDuration:NSTimeInterval = 0.3
         
         // get half rotation in correct direction
         let rotationAngleInt:CGFloat = (self.turned ? 1 : -1)
@@ -313,14 +313,15 @@ class JFTileNode: SCNNode {
                 y:(parent.position.y + self.position.y),
                 z:(parent.position.z + self.position.z))
             let perpectveAngle = atan(positionAbsolute.x / positionAbsolute.z)
-            
+            let tmp = (perpectveAngle * 360) / (2 * Float(M_PI))
+            print("angle: \(tmp)")
             // get initial global angle of tile by adding local tile angle, groupNode angle, global tile position
             let rootAngle = parent.rotation.w * ((parent.rotation.y > 0) ? 1 : -1) + self.baseAngle - perpectveAngle
             
             // get angle at which small side of tile faces camera
             let rootAngleInt = rootAngle / Float(M_PI)
             let targetAngleInt:Float = self.turned ? ceil(rootAngleInt + 0.5) - 0.5 : floor(rootAngleInt + 0.5) - 0.5
-            timing = 1 - (NSTimeInterval(targetAngleInt) - NSTimeInterval(rootAngleInt)) / NSTimeInterval(rotationAngleInt)
+            timing = (NSTimeInterval(targetAngleInt) - NSTimeInterval(rootAngleInt)) / NSTimeInterval(rotationAngleInt)
             
             /*
             0 -> 0.5

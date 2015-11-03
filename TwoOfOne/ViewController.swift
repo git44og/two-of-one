@@ -76,7 +76,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         }
         scene.rootNode.addChildNode(self.cylinderNode)
         self.cylinderNode.generateTileNodes()
-        let move = SCNMatrix4MakeTranslation(0, 0, self.cylinderNode.shapeRadius)
+        let move = SCNMatrix4MakeTranslation(0, 0, self.cylinderNode.shapeRadius - 60)
         self.cylinderNode.transform = move
         groupBody.resetTransform()
         //self.cylinderNode.adjustTransparency()
@@ -113,7 +113,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         //cameraNode.camera?.usesOrthographicProjection = true
         cameraNode.camera?.yFov = 20
         cameraNode.camera?.zFar = 200
-        let camMove = SCNMatrix4MakeTranslation(0, 0, 60)
+        let camMove = SCNMatrix4MakeTranslation(0, 0, 0)
 //        let camMove = SCNMatrix4MakeTranslation(0, 30, 0)
         cameraNode.transform = camMove
         scene.rootNode.addChildNode(cameraNode)
@@ -363,7 +363,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         if((!self.panActive) && ((self.cylinderNode.physicsBody?.velocity.x > -kRestingSpeed) && (self.cylinderNode.physicsBody?.velocity.x < kRestingSpeed))) {
             let distBetweenFlatSpot = (self.cylinderNode.shapeRadius * Float(M_PI) * 2) / Float(tileCols)
             let targetPos = round(location.x / distBetweenFlatSpot) * distBetweenFlatSpot
-            self.centerNode.position = SCNVector3Make(targetPos, 0, 0)
+            self.centerNode.position = SCNVector3Make(targetPos, 0, -60)
             self.centerNode.physicsBody?.resetTransform()
             self.centerNode.physicsField?.strength = 10000
             self.centerNode.opacity = 1
