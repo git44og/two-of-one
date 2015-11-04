@@ -14,6 +14,7 @@ let kPhysicsElastic:Float = 20
 let kPhysicsZoom:Float = 17
 let kRestingSpeed:Float = 10
 let kDistanceCamera:Float = 60
+let kDistanceWall:Float = 10
 
 class ViewController: UIViewController, SCNSceneRendererDelegate {
     
@@ -170,6 +171,10 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
     }
     
     func addDecoration(scene:SCNScene) {
+        
+        // wall
+        scene.rootNode.addChildNode(JFSCNWorld())
+        
         // ground
         let groundGeometry = SCNFloor()
         let groundShape = SCNPhysicsShape(geometry: groundGeometry, options: nil)
