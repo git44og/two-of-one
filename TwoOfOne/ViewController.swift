@@ -14,7 +14,10 @@ let kPhysicsElastic:Float = 20
 let kPhysicsZoom:Float = 17
 let kRestingSpeed:Float = 10
 let kDistanceCamera:Float = 60
-let kDistanceWall:Float = 10
+let kDistanceWall:Float = 20
+
+let kLight1Color = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.6)
+let kLight2Color = UIColor(red: 243/255, green: 255/255, blue: 239/255, alpha: 0.6)
 
 class ViewController: UIViewController, SCNSceneRendererDelegate {
     
@@ -95,8 +98,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         
         //MARK: usePhysics
         if(usePhysics) {
-            let shape = SCNSphere(radius: 1)
-            shape.firstMaterial?.diffuse.contents = UIColor(white: 0.5, alpha: 1)
+            let shape = SCNSphere(radius: 0)
+            //shape.firstMaterial?.diffuse.contents = UIColor(white: 0.5, alpha: 1)
             self.centerNode = SCNNode(geometry: shape)
             let gravityField = SCNPhysicsField.radialGravityField()
             //let gravityField = SCNPhysicsField.springField()
@@ -104,7 +107,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             self.centerNode.physicsField = gravityField
             self.centerNode.name = "gravity"
             self.sceneView.scene?.rootNode.addChildNode(self.centerNode)
-            self.centerNode.opacity = 0.1
+            self.centerNode.opacity = 0.0
         }
     }
     
@@ -112,7 +115,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         // camera
         let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
-        //cameraNode.camera?.usesOrthographicProjection = true
         cameraNode.camera?.yFov = 20
         cameraNode.camera?.zFar = 200
         let camMove = SCNMatrix4MakeTranslation(0, 0, 0)
@@ -127,47 +129,37 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         ambientLightNode.light = SCNLight()
         ambientLightNode.light!.type = SCNLightTypeAmbient
         ambientLightNode.light!.color = UIColor(white: 0.67, alpha: 1.0)
-        scene.rootNode.addChildNode(ambientLightNode)
-        
-        let omniLightNode = SCNNode()
-        omniLightNode.light = SCNLight()
-        omniLightNode.light!.type = SCNLightTypeOmni
-        omniLightNode.light!.color = UIColor(white: 1, alpha: 1.0)
-        omniLightNode.position = SCNVector3Make(50, 0, 50)
-        scene.rootNode.addChildNode(omniLightNode)
+        //scene.rootNode.addChildNode(ambientLightNode)
         
         let spot1Light = SCNLight()
         spot1Light.attenuationStartDistance = 50
-        spot1Light.attenuationEndDistance = 70
-        spot1Light.spotInnerAngle = 30
-        spot1Light.spotOuterAngle = 45
+        spot1Light.attenuationEndDistance = 220
+        //spot1Light.spotInnerAngle = 60
+        //spot1Light.spotOuterAngle = 360
         let spot1LightNode = SCNNode()
         spot1LightNode.light = spot1Light
-        spot1LightNode.light!.type = SCNLightTypeSpot
-        spot1LightNode.light!.color = UIColor(white: 1, alpha: 1.0)
-        spot1LightNode.position = SCNVector3Make(10, 0, 10)
+        //spot1LightNode.light!.type = SCNLightTypeSpot
+        spot1LightNode.light!.type = SCNLightTypeOmni
+        spot1LightNode.light!.color = kLight1Color
         
-        let move1 = SCNMatrix4MakeTranslation(-15, kDistanceCamera, 0)
-        let rotate1 = SCNMatrix4MakeRotation(Float(M_PI) / -2, 1, 0, 0)
-        spot1LightNode.transform = SCNMatrix4Mult(rotate1, move1)
+        let move1 = SCNMatrix4MakeTranslation(-15, 0, 0)
+        spot1LightNode.transform = move1
         scene.rootNode.addChildNode(spot1LightNode)
         
         let spot2Light = SCNLight()
         spot2Light.attenuationStartDistance = 50
-        spot2Light.attenuationEndDistance = 70
-        spot2Light.spotInnerAngle = 30
-        spot2Light.spotOuterAngle = 45
+        spot2Light.attenuationEndDistance = 220
+        //spot2Light.spotInnerAngle = 60
+        //spot2Light.spotOuterAngle = 360
         let spot2LightNode = SCNNode()
         spot2LightNode.light = spot1Light
-        spot2LightNode.light!.type = SCNLightTypeSpot
-        spot2LightNode.light!.color = UIColor(white: 1, alpha: 1.0)
-        spot2LightNode.position = SCNVector3Make(10, 0, 10)
+        //spot2LightNode.light!.type = SCNLightTypeSpot
+        spot2LightNode.light!.type = SCNLightTypeOmni
+        spot2LightNode.light!.color = kLight2Color
         
-        let move2 = SCNMatrix4MakeTranslation(15, kDistanceCamera, 0)
-        let rotate2 = SCNMatrix4MakeRotation(Float(M_PI) / -2, 1, 0, 0)
-        spot2LightNode.transform = SCNMatrix4Mult(rotate2, move2)
+        let move2 = SCNMatrix4MakeTranslation(15, 0, 0)
+        spot2LightNode.transform = move2
         scene.rootNode.addChildNode(spot2LightNode)
-
     }
     
     func addDecoration(scene:SCNScene) {
@@ -295,7 +287,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             self.hitWallLeft = false
             self.hitWallRight = false
             self.centerNode.physicsField?.strength = 0
-            self.centerNode.opacity = 0.1
+            //self.centerNode.opacity = 0.1
         }
         self.translationX = Float(sender.translationInView(sender.view!).x)
         
@@ -372,7 +364,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             self.centerNode.position = SCNVector3Make(targetPos, 0, -kDistanceCamera)
             self.centerNode.physicsBody?.resetTransform()
             self.centerNode.physicsField?.strength = 10000
-            self.centerNode.opacity = 1
+            //self.centerNode.opacity = 1
             //print("v:\(self.cylinderNode.physicsBody?.velocity)")
         }
     }
