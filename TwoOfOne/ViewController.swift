@@ -13,6 +13,7 @@ let usePhysics = true
 let kPhysicsElastic:Float = 20
 let kPhysicsZoom:Float = 17
 let kRestingSpeed:Float = 10
+let kDistanceCamera:Float = 60
 
 class ViewController: UIViewController, SCNSceneRendererDelegate {
     
@@ -76,7 +77,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         }
         scene.rootNode.addChildNode(self.cylinderNode)
         self.cylinderNode.generateTileNodes()
-        let move = SCNMatrix4MakeTranslation(0, 0, self.cylinderNode.shapeRadius - 60)
+        let move = SCNMatrix4MakeTranslation(0, 0, self.cylinderNode.shapeRadius - kDistanceCamera)
         self.cylinderNode.transform = move
         groupBody.resetTransform()
         //self.cylinderNode.adjustTransparency()
@@ -145,7 +146,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         spot1LightNode.light!.color = UIColor(white: 1, alpha: 1.0)
         spot1LightNode.position = SCNVector3Make(10, 0, 10)
         
-        let move1 = SCNMatrix4MakeTranslation(-15, 60, 0)
+        let move1 = SCNMatrix4MakeTranslation(-15, kDistanceCamera, 0)
         let rotate1 = SCNMatrix4MakeRotation(Float(M_PI) / -2, 1, 0, 0)
         spot1LightNode.transform = SCNMatrix4Mult(rotate1, move1)
         scene.rootNode.addChildNode(spot1LightNode)
@@ -161,7 +162,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         spot2LightNode.light!.color = UIColor(white: 1, alpha: 1.0)
         spot2LightNode.position = SCNVector3Make(10, 0, 10)
         
-        let move2 = SCNMatrix4MakeTranslation(15, 60, 0)
+        let move2 = SCNMatrix4MakeTranslation(15, kDistanceCamera, 0)
         let rotate2 = SCNMatrix4MakeRotation(Float(M_PI) / -2, 1, 0, 0)
         spot2LightNode.transform = SCNMatrix4Mult(rotate2, move2)
         scene.rootNode.addChildNode(spot2LightNode)
@@ -363,7 +364,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         if((!self.panActive) && ((self.cylinderNode.physicsBody?.velocity.x > -kRestingSpeed) && (self.cylinderNode.physicsBody?.velocity.x < kRestingSpeed))) {
             let distBetweenFlatSpot = (self.cylinderNode.shapeRadius * Float(M_PI) * 2) / Float(tileCols)
             let targetPos = round(location.x / distBetweenFlatSpot) * distBetweenFlatSpot
-            self.centerNode.position = SCNVector3Make(targetPos, 0, -60)
+            self.centerNode.position = SCNVector3Make(targetPos, 0, -kDistanceCamera)
             self.centerNode.physicsBody?.resetTransform()
             self.centerNode.physicsField?.strength = 10000
             self.centerNode.opacity = 1

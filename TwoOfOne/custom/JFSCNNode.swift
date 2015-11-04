@@ -32,12 +32,13 @@ let cylinderHeight:Float = tileConfig[configSet].height * configScale
 let tileRows:Int = tileConfig[configSet].row
 let tileCols:Int = tileConfig[configSet].col
 let kTileFrameStroke:CGFloat = 0.02
-let kTileCornerradius:CGFloat = 0.1
+let kTileCornerradius:CGFloat = 0.06
 let kTileExtrusion:CGFloat = 0.02
 let kTileColorOpenInner = UIColor(white: 0.5, alpha: 0.5)
 let kTileColorOpenOuter = UIColor(white: 0.5, alpha: 1)
 let kTileColorOpenFrame = UIColor(white: 0.5, alpha: 1)
-let kTileColorClosedInner = UIColor(white: 1, alpha: 0.5)
+let kTileColorClosedInner = UIColor(red: 156/255, green: 230/255, blue: 255/255, alpha: 0.93)
+let kTileColorClosedInnerTransparency = UIColor(white: 1.0, alpha: 1)
 let kTileColorClosedOuter = UIColor(white: 1, alpha: 1)
 let kTileColorClosedFrame = UIColor(white: 1, alpha: 1)
 
@@ -313,8 +314,6 @@ class JFTileNode: SCNNode {
                 y:(parent.position.y + self.position.y),
                 z:(parent.position.z + self.position.z))
             let perpectveAngle = atan(positionAbsolute.x / positionAbsolute.z)
-            let tmp = (perpectveAngle * 360) / (2 * Float(M_PI))
-            print("angle: \(tmp)")
             // get initial global angle of tile by adding local tile angle, groupNode angle, global tile position
             let rootAngle = parent.rotation.w * ((parent.rotation.y > 0) ? 1 : -1) + self.baseAngle - perpectveAngle
             
@@ -414,11 +413,17 @@ class JFTileNode: SCNNode {
         // closed node frame
         let tileClosedFrameShape = SCNShape(path: pathOuter, extrusionDepth: extrusionDepth)
         tileClosedFrameShape.firstMaterial?.diffuse.contents = kTileColorClosedFrame
+        tileClosedFrameShape.firstMaterial?.diffuse.intensity = 1
+        tileClosedFrameShape.firstMaterial?.transparent.contents = kTileColorClosedFrame
+        tileClosedFrameShape.firstMaterial?.transparent.intensity = 0.19
         let tileClosedFrameNode = SCNNode(geometry: tileClosedFrameShape)
         tileClosedNode.addChildNode(tileClosedFrameNode)
         // closed node immer
         let tileClosedInnerShape = SCNShape(path: pathInner, extrusionDepth: extrusionDepth)
         tileClosedInnerShape.firstMaterial?.diffuse.contents = kTileColorClosedInner
+        tileClosedInnerShape.firstMaterial?.diffuse.intensity = 0.52
+        tileClosedInnerShape.firstMaterial?.transparent.contents = kTileColorClosedInnerTransparency
+        tileClosedInnerShape.firstMaterial?.transparent.intensity = 0.07
         let tileClosedInnerNode = SCNNode(geometry: tileClosedInnerShape)
         tileClosedInnerNode.transform = SCNMatrix4MakeTranslation(Float(stroke), Float(stroke), 0)
         tileClosedNode.addChildNode(tileClosedInnerNode)
