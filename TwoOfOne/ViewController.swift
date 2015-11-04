@@ -134,11 +134,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         let spot1Light = SCNLight()
         spot1Light.attenuationStartDistance = 50
         spot1Light.attenuationEndDistance = 220
-        //spot1Light.spotInnerAngle = 60
-        //spot1Light.spotOuterAngle = 360
         let spot1LightNode = SCNNode()
         spot1LightNode.light = spot1Light
-        //spot1LightNode.light!.type = SCNLightTypeSpot
         spot1LightNode.light!.type = SCNLightTypeOmni
         spot1LightNode.light!.color = kLight1Color
         
@@ -149,11 +146,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         let spot2Light = SCNLight()
         spot2Light.attenuationStartDistance = 50
         spot2Light.attenuationEndDistance = 220
-        //spot2Light.spotInnerAngle = 60
-        //spot2Light.spotOuterAngle = 360
         let spot2LightNode = SCNNode()
         spot2LightNode.light = spot1Light
-        //spot2LightNode.light!.type = SCNLightTypeSpot
         spot2LightNode.light!.type = SCNLightTypeOmni
         spot2LightNode.light!.color = kLight2Color
         
