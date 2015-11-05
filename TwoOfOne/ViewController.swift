@@ -66,13 +66,17 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         
         self.cylinderNode = JFSCNNode(sceneSize: sceneView.frame.size)
         // cylinder physics
-        let groupShape = SCNCylinder(radius: CGFloat(self.cylinderNode.shapeRadius), height: CGFloat(cylinderHeight))
+        let groupShape = SCNBox(
+            width: CGFloat(self.cylinderNode.shapeRadius) * 2,
+            height: CGFloat(cylinderHeight),
+            length: CGFloat(self.cylinderNode.shapeRadius),
+            chamferRadius: 0)
+//        let groupShape = SCNCylinder(radius: CGFloat(self.cylinderNode.shapeRadius), height: CGFloat(cylinderHeight))
         let groupPhysicsShape = SCNPhysicsShape(geometry: groupShape, options: nil)
         let groupBody = SCNPhysicsBody(type: .Dynamic , shape: groupPhysicsShape)
         groupBody.velocityFactor = SCNVector3Make(1, 0, 0)
-        //groupBody.radius = self.radius
         groupBody.angularVelocityFactor = SCNVector3Make(0, 0, 0)
-        groupBody.friction = 1.0
+        groupBody.friction = 0.0
         groupBody.rollingFriction = 0.0
         groupBody.damping = 0.999999
         // cylinder view
@@ -86,6 +90,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         self.cylinderNode.transform = move
         groupBody.resetTransform()
         //self.cylinderNode.adjustTransparency()
+        
+        self.addPhysicsWalls(scene)
         
         //MARK: usePhysics
         let panRecognizer = UIPanGestureRecognizer(target: self, action: usePhysics ? "panGesturePhysics:" : "panGesture:")
@@ -110,6 +116,35 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             self.sceneView.scene?.rootNode.addChildNode(self.centerNode)
             self.centerNode.opacity = 1.0
         }
+    }
+    
+    func addPhysicsWalls(scene:SCNScene) {
+        if(!usePhysics) {
+            return
+        }
+        
+        let wallDist = (self.cylinderNode.circumsize / 2) + self.cylinderNode.shapeRadius
+        
+        let wallRightShape = SCNFloor()
+        let wallRightPhysicsShape = SCNPhysicsShape(geometry: wallRightShape, options: nil)
+        let wallRightPhysicsBody = SCNPhysicsBody(type: .Static, shape: wallRightPhysicsShape)
+        let wallRightNode = SCNNode()
+        wallRightNode.physicsBody = wallRightPhysicsBody
+        wallRightNode.transform = SCNMatrix4Mult(
+            SCNMatrix4MakeRotation(Float(M_PI_2), 0, 0, 1),
+            SCNMatrix4MakeTranslation(wallDist, 0, 0)
+        )
+        scene.rootNode.addChildNode(wallRightNode)
+        
+        let wallLeftShape = SCNFloor()
+        let wallLeftPhysicsShape = SCNPhysicsShape(geometry: wallLeftShape, options: nil)
+        let wallLeftPhysicsBody = SCNPhysicsBody(type: .Static, shape: wallLeftPhysicsShape)
+        let wallLeftNode = SCNNode()
+        wallLeftNode.physicsBody = wallLeftPhysicsBody
+        wallLeftNode.transform = SCNMatrix4Mult(
+            SCNMatrix4MakeRotation(-Float(M_PI_2), 0, 0, 1),
+            SCNMatrix4MakeTranslation(-wallDist, 0, 0))
+        scene.rootNode.addChildNode(wallLeftNode)
     }
     
     func addCamera(scene:SCNScene) {
@@ -332,8 +367,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             //print("hit wall on the right")
             self.panPaused = true
             self.hitWallRight = true
-            let velocity = cylinderNode.physicsBody!.velocity.x * -0.2
-            cylinderNode.physicsBody?.velocity = SCNVector3Make(velocity, 0, 0)
         }
         
         // collide with left wall
@@ -341,8 +374,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             //print("hit wall on the left")
             self.panPaused = true
             self.hitWallLeft = true
-            let velocity = cylinderNode.physicsBody!.velocity.x * -0.2
-            cylinderNode.physicsBody?.velocity = SCNVector3Make(velocity, 0, 0)
         }
         
         if(self.panActive && !self.panPaused) {
@@ -361,6 +392,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             //self.centerNode.opacity = 1
             //print("v:\(self.cylinderNode.physicsBody?.velocity)")
         }
+        //-- change cylinder shape to box an try collission
     }
 }
 

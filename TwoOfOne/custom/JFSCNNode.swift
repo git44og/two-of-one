@@ -54,6 +54,7 @@ class JFSCNNode : SCNNode {
     var sceneSizeFactor: Float
     var circumsize:Float = 1
     var rollBoundaries:Float = 1
+    var tileGap:Float = 0
     
     override var transform: SCNMatrix4 {
         didSet {
@@ -81,6 +82,16 @@ class JFSCNNode : SCNNode {
         super.init()
         
         self.addChildNode(self.rotationNode)
+        
+        // gap between tiles
+        self.tileGap = (cylinderHeight - (tileWidth * Float(tileRows))) / (Float(tileRows) - 1)
+        // circumsize of cylinder
+        self.circumsize = (tileWidth * Float(tileCols)) + (tileGap * (Float(tileCols) - 1))
+        // distance to wall
+        self.rollBoundaries = (self.circumsize / 2) * 1.05
+        // cylinder radius
+        self.shapeRadius = self.circumsize / (2 * Float(M_PI))
+        // angle between columns
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -89,15 +100,6 @@ class JFSCNNode : SCNNode {
     
     func generateTileNodes() {
         
-        // gap between tiles
-        let tileGap = (cylinderHeight - (tileWidth * Float(tileRows))) / (Float(tileRows) - 1)
-        // circumsize of cylinder
-        self.circumsize = (tileWidth * Float(tileCols)) + (tileGap * (Float(tileCols) - 1))
-        // distance to wall
-        self.rollBoundaries = (self.circumsize / 2) * 1.05
-        // cylinder radius
-        self.shapeRadius = self.circumsize / (2 * Float(M_PI))
-        // angle between columns
         let tileAngleRad = Float(M_PI) * (2 / Float(tileCols))
 
         // generate tileMap
@@ -128,8 +130,8 @@ class JFSCNNode : SCNNode {
                 let tileNode = JFTileNode(x: colId, y: rowId, id: shuffledTileMap[((tileRows * colId) + rowId)], size:CGSize(width: CGFloat(tileWidth), height: CGFloat(tileWidth)))
                 tileNode.position = SCNVector3(
                     x: Float(position.x),
-                    y: ((Float(rowId) - (Float(tileRows - 1) / 2)) * (tileWidth + tileGap)),
-                    //y: ((Float(rowId) * tileWidth) - (Float(tileRows - 1) / 2)) * tileGap,
+                    y: ((Float(rowId) - (Float(tileRows - 1) / 2)) * (tileWidth + self.tileGap)),
+                    //y: ((Float(rowId) * tileWidth) - (Float(tileRows - 1) / 2)) * self.tileGap,
                     z: Float(position.y))
                 tileNode.rotation = SCNVector4(x: 0, y: 1, z: 0, w: angle)
                 tileNode.baseAngle = angle
