@@ -293,25 +293,23 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
     
     
     //MARK: SCNSceneRendererDelegate
+    func renderer(renderer: SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: NSTimeInterval) {
+        // adjust rotation based on position
+        let widthHalfTile:Float = (self.cylinderNode.circumsize / Float(tileCols)) / 2
+        let location = self.cylinderNode.presentationNode.position
+        let angle = (-location.x + widthHalfTile) / self.cylinderNode.shapeRadius
+        let rotate = SCNMatrix4MakeRotation(angle, 0, -1, 0)
+        self.cylinderNode.rotationNode.transform = rotate
+    }
     
     func renderer(renderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: NSTimeInterval) {
         //MARK:usePhysics
         if(!usePhysics) {
             return
         }
-        let widthHalfTile:Float = (self.cylinderNode.circumsize / Float(tileCols)) / 2
 
-        // adjust rotation based on position
-        let location = self.cylinderNode.presentationNode.position
-//        let angle = (-location.x + widthHalfTile) / self.cylinderNode.shapeRadius
-        let angle = (-location.x + widthHalfTile) / self.cylinderNode.shapeRadius
-        let rotate = SCNMatrix4MakeRotation(angle, 0, -1, 0)
-        let move = SCNMatrix4MakeTranslation(location.x, location.y, location.z)
-//        self.cylinderNode.transform = SCNMatrix4Mult(rotate, move)
-        self.cylinderNode.rotationNode.transform = rotate
-//        self.cylinderNode.physicsBody?.resetTransform()
-        
         // calculate velocity
+        let location = self.cylinderNode.presentationNode.position
         let nodeTranslationX = location.x - self.panStartNodePos.x
         let velocity:Float = ((Float(self.translationX) / kPhysicsZoom) - nodeTranslationX) * kPhysicsElastic
         
@@ -350,15 +348,11 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             //print("apply velocity \(velocity) d:\(self.translationX) p:\(nodeTranslationX)")
         }
         
-        // adjust angular velocity based on current velocity
-        let angularVelocity:Float = cylinderNode.physicsBody!.velocity.x / self.cylinderNode.shapeRadius
-        //cylinderNode.physicsBody?.angularVelocity = SCNVector4Make(0, 0, -1, angularVelocity)
-        
         // add center weight node
         if((!self.panActive) && ((self.cylinderNode.physicsBody?.velocity.x > -kRestingSpeed) && (self.cylinderNode.physicsBody?.velocity.x < kRestingSpeed))) {
-            let distBetweenFlatSpot = (self.cylinderNode.shapeRadius * Float(M_PI) * 2) / Float(tileCols)
+            let distBetweenFlatSpot = (self.cylinderNode.circumsize / Float(tileCols))
+            let widthHalfTile:Float = distBetweenFlatSpot / 2
             let targetPos = ((round((location.x + widthHalfTile) / distBetweenFlatSpot) + 0) * distBetweenFlatSpot) - widthHalfTile
-//            let targetPos = ((round((location.x) / distBetweenFlatSpot)) * distBetweenFlatSpot)
             self.centerNode.position = SCNVector3Make(targetPos, 0, -kDistanceCamera)
             self.centerNode.physicsBody?.resetTransform()
             self.centerNode.physicsField?.strength = 10000
