@@ -9,7 +9,7 @@
 import UIKit
 import SceneKit
 
-let usePhysics = false
+let usePhysics = true
 let kPhysicsElastic:Float = 20
 let kTranslationZoom:Float = 17
 let kRestingSpeed:Float = 10
@@ -99,11 +99,11 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         
         //MARK: usePhysics
         if(usePhysics) {
-            let shape = SCNSphere(radius: 1)
+            //let shape = SCNSphere(radius: 1)
             //shape.firstMaterial?.diffuse.contents = UIColor(white: 0.5, alpha: 1)
-            self.centerNode = SCNNode(geometry: shape)
+            //self.centerNode = SCNNode(geometry: shape)
+            self.centerNode = SCNNode()
             let gravityField = SCNPhysicsField.radialGravityField()
-            //let gravityField = SCNPhysicsField.springField()
             gravityField.strength = 0
             self.centerNode.physicsField = gravityField
             self.centerNode.name = "gravity"
@@ -358,7 +358,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             self.centerNode.position = SCNVector3Make(targetPos, 0, -kDistanceCamera)
             self.centerNode.physicsBody?.resetTransform()
             self.centerNode.physicsField?.strength = 10000
-            self.centerNode.opacity = 1
+            //self.centerNode.opacity = 1
             //print("v:\(self.cylinderNode.physicsBody?.velocity)")
         }
     }
