@@ -50,7 +50,6 @@ class JFSCNNode : SCNNode {
     var rotationNode = SCNNode()
     var shapeRadius: Float = 0
     var currentPosition: Float = 0
-    var currentAngle: Float = 0
     var sceneSize: CGSize
     var sceneSizeFactor: Float
     var circumsize:Float = 1
@@ -66,12 +65,6 @@ class JFSCNNode : SCNNode {
     override var position: SCNVector3 {
         didSet {
             self.currentPosition = self.position.x
-        }
-    }
-    
-    override var rotation: SCNVector4 {
-        didSet {
-            self.currentAngle = self.rotation.w
         }
     }
     
@@ -185,15 +178,10 @@ class JFSCNNode : SCNNode {
     
     func rollTransformation(translationX:CGFloat) {
         
-        // get angle based on distance
-        let deltaAngle = (Float)(translationX) * self.sceneSizeFactor * (Float)(M_PI) / 180.0
-        let newAngle = self.currentAngle - deltaAngle
-        //print("newAngle:\(newAngle) | currentAngle:\(self.currentAngle) | currentPosition:\(self.currentPosition) | shapeRadius:\(self.shapeRadius)")
-        let rotate = SCNMatrix4MakeRotation(newAngle, 0, -1, 0)
-
         // get position based on distance
-        let deltaPos = deltaAngle * self.shapeRadius
+        let deltaPos = Float(translationX) / kTranslationZoom
         let newPos = self.currentPosition + deltaPos
+        
         let moveMatrix = SCNMatrix4MakeTranslation(newPos, self.position.y, self.position.z)
         
         // hit right wall
@@ -205,31 +193,25 @@ class JFSCNNode : SCNNode {
             return
         }
         // transform node
-        self.transform = SCNMatrix4Mult(rotate, moveMatrix)
-        
-        self.currentAngle = newAngle
+        self.transform = moveMatrix
         self.currentPosition = newPos
     }
     
     func rollToRestingPosition(animated:Bool = true) {
-        let tileAngle = (Float(M_PI) * 2) / Float(tileCols)
-        let newAngle = round(self.currentAngle / tileAngle) * tileAngle
-        let missingAngle = self.currentAngle - newAngle
-        let rotate = SCNMatrix4MakeRotation(newAngle, 0, -1, 0)
+        
         // get delta distance based on delta angle
-        let missingDistance = missingAngle * self.shapeRadius
-        let newPos = self.currentPosition + missingDistance
-        //print("RTR newAngle:\(newAngle) | currentAngle:\(self.currentAngle) | currentPosition:\(self.currentPosition) | shapeRadius:\(self.shapeRadius)")
+        let distBetweenFlatSpot = (self.circumsize / Float(tileCols))
+        let widthHalfTile:Float = distBetweenFlatSpot / 2
+        let newPos = ((round((self.currentPosition + widthHalfTile) / distBetweenFlatSpot) + 0) * distBetweenFlatSpot) - widthHalfTile
         let moveMatrix = SCNMatrix4MakeTranslation(newPos, self.position.y, self.position.z)
         
         SCNTransaction.begin()
         if(animated) {
             SCNTransaction.setAnimationDuration(0.3)
         }
-        self.transform = SCNMatrix4Mult(rotate, moveMatrix)
+        self.transform = moveMatrix
         SCNTransaction.setAnimationTimingFunction(CAMediaTimingFunction(controlPoints: 0.42, 0.0, 0.58, 1.0))
         SCNTransaction.setCompletionBlock({ () -> Void in
-            self.currentAngle = newAngle
             self.currentPosition = newPos
         })
         SCNTransaction.commit()

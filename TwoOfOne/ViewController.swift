@@ -9,10 +9,11 @@
 import UIKit
 import SceneKit
 
-let usePhysics = true
+let usePhysics = false
 let kPhysicsElastic:Float = 20
-let kPhysicsZoom:Float = 17
+let kTranslationZoom:Float = 17
 let kRestingSpeed:Float = 10
+
 let kDistanceCamera:Float = 60
 let kDistanceWall:Float = 20
 
@@ -293,6 +294,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
     
     
     //MARK: SCNSceneRendererDelegate
+    
     func renderer(renderer: SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: NSTimeInterval) {
         // adjust rotation based on position
         let widthHalfTile:Float = (self.cylinderNode.circumsize / Float(tileCols)) / 2
@@ -311,7 +313,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         // calculate velocity
         let location = self.cylinderNode.presentationNode.position
         let nodeTranslationX = location.x - self.panStartNodePos.x
-        let velocity:Float = ((Float(self.translationX) / kPhysicsZoom) - nodeTranslationX) * kPhysicsElastic
+        let velocity:Float = ((Float(self.translationX) / kTranslationZoom) - nodeTranslationX) * kPhysicsElastic
         
         // reactivate panning after hit - check if pan is going the other way
         if(self.hitWallRight && (velocity < 0)) {
