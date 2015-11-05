@@ -37,7 +37,7 @@ let kTileExtrusion:CGFloat = 0.06
 let kTileColorOpenInner = UIColor(white: 0.5, alpha: 0.5)
 let kTileColorOpenOuter = UIColor(white: 0.5, alpha: 1)
 let kTileColorOpenFrame = UIColor(white: 1, alpha: 1)
-let kTileColorClosedInner = UIColor(red: 156/255, green: 230/255, blue: 255/255, alpha: 0.93)
+let kTileColorClosedInner = UIColor(red: 156/255, green: 230/255, blue: 255/255, alpha: 0.093)
 let kTileColorClosedInnerTransparency = UIColor(white: 1.0, alpha: 1)
 let kTileColorClosedOuter = UIColor(white: 1, alpha: 1)
 let kTileColorClosedFrame = UIColor(white: 1, alpha: 1)
@@ -47,6 +47,7 @@ let kTileColorClosedFrame = UIColor(white: 1, alpha: 1)
 class JFSCNNode : SCNNode {
     
     var nodesByCol:[[SCNNode]] = []
+    var rotationNode = SCNNode()
     var shapeRadius: Float = 0
     var currentPosition: Float = 0
     var currentAngle: Float = 0
@@ -83,7 +84,10 @@ class JFSCNNode : SCNNode {
     init(sceneSize:CGSize) {
         self.sceneSize = sceneSize
         self.sceneSizeFactor = (Float)(sceneSize.height / sceneSize.width * 1.35)
+        
         super.init()
+        
+        self.addChildNode(self.rotationNode)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -137,7 +141,7 @@ class JFSCNNode : SCNNode {
                 tileNode.rotation = SCNVector4(x: 0, y: 1, z: 0, w: angle)
                 tileNode.baseAngle = angle
                 
-                self.addChildNode(tileNode)
+                self.rotationNode.addChildNode(tileNode)
                 self.addNodeToCol(tileNode, col:colId)
             }
         }
