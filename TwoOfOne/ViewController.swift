@@ -64,31 +64,34 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         // decoration
         self.addDecoration(scene)
         
+        scene.physicsWorld.gravity = SCNVector3Make(0, -10, 0)
+        
         self.cylinderNode = JFSCNNode(sceneSize: sceneView.frame.size)
         // cylinder physics
-        let groupShape = SCNBox(
+        let cylinderShapeShape = SCNBox(
             width: CGFloat(self.cylinderNode.shapeRadius) * 2,
             height: CGFloat(cylinderHeight),
             length: CGFloat(self.cylinderNode.shapeRadius),
             chamferRadius: 0)
 //        let groupShape = SCNCylinder(radius: CGFloat(self.cylinderNode.shapeRadius), height: CGFloat(cylinderHeight))
-        let groupPhysicsShape = SCNPhysicsShape(geometry: groupShape, options: nil)
-        let groupBody = SCNPhysicsBody(type: .Dynamic , shape: groupPhysicsShape)
-        groupBody.velocityFactor = SCNVector3Make(1, 0, 0)
-        groupBody.angularVelocityFactor = SCNVector3Make(0, 0, 0)
-        groupBody.friction = 0.0
-        groupBody.rollingFriction = 0.0
-        groupBody.damping = 0.999999
+        let cylinderPhysicsShape = SCNPhysicsShape(geometry: cylinderShapeShape, options: nil)
+        let cylinderPhysicsBody = SCNPhysicsBody(type: .Dynamic, shape: cylinderPhysicsShape)
+        cylinderPhysicsBody.velocityFactor = SCNVector3Make(1, 0, 0)
+        cylinderPhysicsBody.angularVelocityFactor = SCNVector3Make(0, 0, 0)
+        cylinderPhysicsBody.friction = 0.0
+        cylinderPhysicsBody.rollingFriction = 0.0
+        cylinderPhysicsBody.damping = 0.999999
+        cylinderPhysicsBody.categoryBitMask = 1
         // cylinder view
         //MARK: usePhysics
         if(usePhysics) {
-            self.cylinderNode.physicsBody = groupBody
+            self.cylinderNode.physicsBody = cylinderPhysicsBody
         }
         scene.rootNode.addChildNode(self.cylinderNode)
         self.cylinderNode.generateTileNodes()
         let move = SCNMatrix4MakeTranslation(0, 0, self.cylinderNode.shapeRadius - kDistanceCamera)
         self.cylinderNode.transform = move
-        groupBody.resetTransform()
+        cylinderPhysicsBody.resetTransform()
         //self.cylinderNode.adjustTransparency()
         
         self.addPhysicsWalls(scene)
@@ -115,6 +118,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             self.centerNode.name = "gravity"
             self.sceneView.scene?.rootNode.addChildNode(self.centerNode)
             self.centerNode.opacity = 1.0
+            self.centerNode.physicsField?.categoryBitMask = 1
         }
     }
     
@@ -267,8 +271,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
                 tile1.lock = true
                 tile2.lock = true
                 execDelay(1) {
-                    tile1.explode()
-                    tile2.explode()
+                    tile1.tileFalls()
+                    tile2.tileFalls()
                 }
             } else {
                 let tile1 = self.turnedNodes[0]

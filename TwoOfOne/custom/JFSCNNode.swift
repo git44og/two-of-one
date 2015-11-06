@@ -127,7 +127,11 @@ class JFSCNNode : SCNNode {
             
             for rowId in 0...(tileRows - 1) {
                 // creating tile
-                let tileNode = JFTileNode(x: colId, y: rowId, id: shuffledTileMap[((tileRows * colId) + rowId)], size:CGSize(width: CGFloat(tileWidth), height: CGFloat(tileWidth)))
+                let tileNode = JFTileNode(
+                    x: colId, y: rowId,
+                    id: shuffledTileMap[((tileRows * colId) + rowId)],
+                    size:CGSize(width: CGFloat(tileWidth), height: CGFloat(tileWidth)),
+                    parent:self)
                 tileNode.position = SCNVector3(
                     x: Float(position.x),
                     y: ((Float(rowId) - (Float(tileRows - 1) / 2)) * (tileWidth + self.tileGap)),
@@ -230,14 +234,15 @@ enum JFTileNodeFaceType:Int {
 }
 
 class JFTileNode: SCNNode {
-    
-    var turned:Bool = false {
-        didSet {
-            //if(turned != oldValue) {
-            //    self.didTurn()
-            //}
-        }
-    }
+    var turned:Bool = false
+//    var turned:Bool = false {
+//        didSet {
+//            //if(turned != oldValue) {
+//            //    self.didTurn()
+//            //}
+//        }
+//    }
+    var cylinderNode: JFSCNNode
     var baseAngle:Float = 0
     var typeId:Int = 0
     var nodeId:CGPoint
@@ -248,10 +253,11 @@ class JFTileNode: SCNNode {
     var vanished:Bool = false
     var lock:Bool = false
     
-    init(x:Int, y:Int, id:Int, size:CGSize) {
+    init(x:Int, y:Int, id:Int, size:CGSize, parent:JFSCNNode) {
         
         self.nodeId = CGPoint(x: x, y: y)
         self.typeId = id
+        self.cylinderNode = parent
         
         super.init()
         
@@ -262,7 +268,7 @@ class JFTileNode: SCNNode {
         tileBaseShape.firstMaterial?.diffuse.contents = UIColor.clearColor()
         self.geometry = tileBaseShape
         
-        // add visible nodes
+       // add visible nodes
         self.addFaces(size)
         
         self.adjustNodesVisibility()
@@ -270,6 +276,7 @@ class JFTileNode: SCNNode {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+        self.cylinderNode = JFSCNNode()
     }
 
     func flip(animated:Bool = true, completion: (() -> Void)! = nil) {
@@ -285,7 +292,7 @@ class JFTileNode: SCNNode {
     }
     
     func didTurn(completion: (() -> Void)!) {
-        
+
         let rotationDuration:NSTimeInterval = 0.3
         
         // get half rotation in correct direction
@@ -346,6 +353,22 @@ class JFTileNode: SCNNode {
             SCNAction.fadeInWithDuration(0)]))
     }
 
+    func tileFalls(completion: (() -> Void)? = nil) {
+        let moveFall = SCNAction.moveBy(SCNVector3Make(0, -cylinderHeight * 2, 0), duration: 1.0)
+        moveFall.timingFunction = {(time:Float) -> Float in
+            return time * time
+        }
+        let movePush = SCNAction.moveBy(SCNVector3Make(self.position.x / -2, 0, self.position.z / -2), duration: 1.0)
+        movePush.timingMode = SCNActionTimingMode.Linear
+        
+        let rotationVector = SCNVector3Make(sin(self.rotation.w + Float(M_PI_2)), 0, cos(self.rotation.w + Float(M_PI_2)))
+        let rotatePush = SCNAction.rotateByAngle(CGFloat(M_PI) * 1, aroundAxis: SCNVector3Make(rotationVector.x, 0, rotationVector.z), duration: 1.0)
+        rotatePush.timingMode = SCNActionTimingMode.EaseIn
+        self.runAction(SCNAction.group([moveFall, movePush, rotatePush])) { () -> Void in
+            completion
+        }
+    }
+    
     func explode() {
         let path = UIBezierPath(roundedRect: CGRect(x: -0.5, y: -0.5, width: 1.0, height: 1.0), cornerRadius: 0.1)
         let tile = SCNShape(path: path, extrusionDepth: 0.05)
