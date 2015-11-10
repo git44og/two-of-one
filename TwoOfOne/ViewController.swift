@@ -8,6 +8,8 @@
 
 import UIKit
 import SceneKit
+import CoreMotion
+
 
 let usePhysics = true
 let kPhysicsElastic:Float = 20
@@ -23,6 +25,8 @@ let kLight2Color = UIColor(red: 243/255, green: 255/255, blue: 239/255, alpha: 0
 class ViewController: UIViewController, SCNSceneRendererDelegate {
     
     @IBOutlet weak var sceneView: SCNView!
+    @IBOutlet weak var menuButton: UIButton!
+    
     // Geometry
     var cylinderNode: JFSCNNode = JFSCNNode()
     
@@ -120,6 +124,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             self.centerNode.opacity = 1.0
             self.centerNode.physicsField?.categoryBitMask = 1
         }
+        
+        //--CMMotionManager.startAccelerometerUpdatesToQueue(<#T##CMMotionManager#>)
     }
     
     func addPhysicsWalls(scene:SCNScene) {
@@ -214,6 +220,10 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         ground.physicsBody?.friction = 1.0
         ground.name = "floor"
         //scene.rootNode.addChildNode(ground)
+    }
+    
+    func addUIButtonLayer() {
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -331,6 +341,10 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         }
     }
     
+    
+    @IBAction func onMenuPressed(sender: AnyObject) {
+        print("Menu")
+    }
     
     //MARK: SCNSceneRendererDelegate
     
