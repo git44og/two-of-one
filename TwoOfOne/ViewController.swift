@@ -396,7 +396,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             //self.centerNode.opacity = 1
             //print("v:\(self.cylinderNode.physicsBody?.velocity)")
         }
-        //-- change cylinder shape to box an try collission
     }
 }
 
