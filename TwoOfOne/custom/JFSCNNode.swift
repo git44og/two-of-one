@@ -41,7 +41,7 @@ let kTileColorClosedInner = UIColor(red: 156/255, green: 230/255, blue: 255/255,
 let kTileColorClosedInnerTransparency = UIColor(white: 1.0, alpha: 1)
 let kTileColorClosedOuter = UIColor(white: 1, alpha: 1)
 let kTileColorClosedFrame = UIColor(white: 1, alpha: 1)
-
+let kTileRestingPosition = SCNVector3Make(0, 1000, 0)
 
 
 class JFSCNNode : SCNNode {
@@ -275,8 +275,8 @@ class JFTileNode: SCNNode {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
         self.cylinderNode = JFSCNNode()
+        fatalError("init(coder:) has not been implemented")
     }
 
     func flip(animated:Bool = true, completion: (() -> Void)! = nil) {
@@ -368,6 +368,8 @@ class JFTileNode: SCNNode {
         let rotatePush = SCNAction.rotateByAngle(CGFloat(M_PI) * 1, aroundAxis: SCNVector3Make(rotationVector.x, 0, rotationVector.z), duration: 1.0)
         rotatePush.timingMode = SCNActionTimingMode.EaseIn
         self.runAction(SCNAction.group([moveFall, movePush, rotatePush])) { () -> Void in
+            self.opacity = 0
+            self.position = kTileRestingPosition
             completion
         }
     }
