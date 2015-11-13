@@ -31,3 +31,9 @@ func shuffleList<C: MutableCollectionType where C.Index == Int>(var list: C) -> 
     }
     return list
 }
+
+// MARK: Math
+
+func sign(number:Float) -> Float {
+    return (number < 0) ? -1 : +1
+}

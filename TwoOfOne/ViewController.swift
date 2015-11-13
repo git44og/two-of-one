@@ -22,6 +22,12 @@ let kDistanceWall:Float = 20
 let kLight1Color = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.6)
 let kLight2Color = UIColor(red: 243/255, green: 255/255, blue: 239/255, alpha: 0.6)
 
+// device roation handling
+let kEaseRotation:Double = 1 / 48
+let kMaxOutRotation:Float = Float(M_PI / 32)
+let kMinRotationRate:Double = 0.02
+
+
 class ViewController: UIViewController, SCNSceneRendererDelegate {
     
     @IBOutlet weak var sceneView: SCNView!
@@ -29,6 +35,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
     
     // Geometry
     var cylinderNode: JFSCNNode = JFSCNNode()
+    var cameraNode:SCNNode = SCNNode()
     
     // Gestures
     var currentAngle: Float = 0.0
@@ -48,6 +55,11 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
     var hitWallLeft = false
     var hitWallRight = false
     var centerNode = SCNNode()
+    
+    // core motion
+    var cm:CMMotionManager = CMMotionManager()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -59,16 +71,11 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         
         let scene = SCNScene()
         
-        // camera
-        self.addCamera(scene)
-        
         // lights
         self.addLights(scene)
         
         // decoration
         self.addDecoration(scene)
-        
-        scene.physicsWorld.gravity = SCNVector3Make(0, -10, 0)
         
         self.cylinderNode = JFSCNNode(sceneSize: sceneView.frame.size)
         // cylinder physics
@@ -77,7 +84,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             height: CGFloat(cylinderHeight),
             length: CGFloat(self.cylinderNode.shapeRadius),
             chamferRadius: 0)
-//        let groupShape = SCNCylinder(radius: CGFloat(self.cylinderNode.shapeRadius), height: CGFloat(cylinderHeight))
         let cylinderPhysicsShape = SCNPhysicsShape(geometry: cylinderShapeShape, options: nil)
         let cylinderPhysicsBody = SCNPhysicsBody(type: .Dynamic, shape: cylinderPhysicsShape)
         cylinderPhysicsBody.velocityFactor = SCNVector3Make(1, 0, 0)
@@ -125,7 +131,12 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             self.centerNode.physicsField?.categoryBitMask = 1
         }
         
-        //--CMMotionManager.startAccelerometerUpdatesToQueue(<#T##CMMotionManager#>)
+        
+        // camera
+        self.addCamera(scene)
+        
+        // motion detection
+        self.startDeviceMotionDetection()
     }
     
     func addPhysicsWalls(scene:SCNScene) {
@@ -159,12 +170,12 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
     
     func addCamera(scene:SCNScene) {
         // camera
-        let cameraNode = SCNNode()
+        self.cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
         cameraNode.camera?.yFov = 20
         cameraNode.camera?.zFar = 200
-        let camMove = SCNMatrix4MakeTranslation(0, 0, 0)
-//        let camMove = SCNMatrix4MakeTranslation(0, 30, 0)
+        cameraNode.pivot = SCNMatrix4MakeTranslation(0, 0, self.cylinderNode.shapeRadius - kDistanceCamera)
+        let camMove = SCNMatrix4MakeTranslation(0, 0, self.cylinderNode.shapeRadius - kDistanceCamera)
         cameraNode.transform = camMove
         scene.rootNode.addChildNode(cameraNode)
     }
@@ -243,7 +254,45 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         sceneView.play(nil)
     }
     
+    //MARK: acceleration handling
+    
+    func startDeviceMotionDetection() {
+        // add core motion
+        let queue:NSOperationQueue! = NSOperationQueue.currentQueue()
+        cm.deviceMotionUpdateInterval = 0.2
+        cm.startDeviceMotionUpdatesToQueue(queue) { (motionData:CMDeviceMotion?, error:NSError?) -> Void in
+            if let myMotionData = motionData {
+                self.rotatePointOfView(myMotionData.rotationRate)
+            }
+        }
+    }
+    
+    func stopDeviceMotionDetection() {
+        cm.stopDeviceMotionUpdates()
+    }
+    
+    func rotatePointOfView(rotationRate:CMRotationRate) {
+        //print("rX: \(rotationRate.y)")
+        
+        // use y cause of portrait mode
+        let easedRotationX:Float = (abs(rotationRate.y) > kMinRotationRate) ? Float(rotationRate.y * kEaseRotation) : 0
+        let maxOutRotationX:Float = (abs(easedRotationX) > kMaxOutRotation) ? kMaxOutRotation * sign(easedRotationX) : easedRotationX
+        
+        // use x cause of portrait mode
+        let easedRotationY:Float = (abs(rotationRate.x) > kMinRotationRate) ? Float(rotationRate.x * kEaseRotation) : 0
+        let maxOutRotationY:Float = (abs(easedRotationY) > kMaxOutRotation) ? kMaxOutRotation * sign(easedRotationY) : easedRotationY
+
+        if((easedRotationX == 0) && (easedRotationY == 0)) {
+            // no animation required
+            return
+        }
+        let rotationVector = SCNVector4Make(maxOutRotationX, maxOutRotationY, 0, sqrt((maxOutRotationX * maxOutRotationX) + (maxOutRotationY * maxOutRotationY)))
+        let rotateTo = SCNAction.rotateToAxisAngle(rotationVector, duration: 0.2)
+        self.cameraNode.runAction(rotateTo)
+    }
+    
     //MARK: Gesture
+    
     func tapGesture(sender: UITapGestureRecognizer) {
         let translation = sender.locationInView(sender.view!)
         let objs = self.sceneView.hitTest(translation, options: nil)
@@ -343,7 +392,36 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
     
     
     @IBAction func onMenuPressed(sender: AnyObject) {
-        print("Menu")
+        print("menu")
+        print("before x:\(self.cameraNode.rotation.x) y:\(self.cameraNode.rotation.y) z:\(self.cameraNode.rotation.z) w:\(self.cameraNode.rotation.w)")
+        let angleX:Float = 0.5//Float(M_PI_2)*0
+        let angleY:Float = 1//Float(M_PI_4)
+        print("anlge-x:\(angleX) angle-y:\(angleY)")
+        
+        let rotationVector = SCNVector4Make(angleX, angleY, 0, sqrt((angleX * angleX) + (angleY * angleY)))
+        let rotateTo = SCNAction.rotateToAxisAngle(rotationVector, duration: 0.2)
+//        self.cameraNode.runAction(rotateTo, completionHandler: { () -> Void in
+//            print("new after x:\(self.cameraNode.rotation.x) y:\(self.cameraNode.rotation.y) z:\(self.cameraNode.rotation.z) w:\(self.cameraNode.rotation.w)")
+//        })
+        
+        
+        let rotateByX = SCNAction.rotateByAngle(CGFloat(angleX), aroundAxis: SCNVector3Make(1, 0, 0), duration: 0.2)
+        let rotateByY = SCNAction.rotateByAngle(CGFloat(angleY), aroundAxis: SCNVector3Make(0, 1, 0), duration: 0.2)
+        
+        let rotationVectorX = SCNVector4Make(1, 0, 0, Float(M_PI_4))
+        let rotateToX = SCNAction.rotateToAxisAngle(rotationVectorX, duration: 1.2)
+        
+        let rotationVectorY = SCNVector4Make(0, 1, 0, Float(M_PI_4))
+        let rotateToY = SCNAction.rotateToAxisAngle(rotationVectorY, duration: 1.2)
+        
+        let rotationVectorXY = SCNVector4Make(1, 1, 0, 2 * Float(M_PI_4 / M_SQRT2))
+        let rotateToXY = SCNAction.rotateToAxisAngle(rotationVectorXY, duration: 1.2)
+        
+//        self.cameraNode.runAction(SCNAction.group([rotateByY, rotateByX]), completionHandler: { () -> Void in
+//            print("after x:\(self.cameraNode.rotation.x) y:\(self.cameraNode.rotation.y) z:\(self.cameraNode.rotation.z) w:\(self.cameraNode.rotation.w)")
+//        })
+//        self.cameraNode.runAction(SCNAction.group([rotateToX, rotateToY]))
+//        self.cameraNode.runAction(rotateToXY)
     }
     
     //MARK: SCNSceneRendererDelegate
