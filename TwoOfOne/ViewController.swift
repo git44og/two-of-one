@@ -28,24 +28,37 @@ let kMaxOutRotation:Float = Float(M_PI / 32)
 let kMinRotationRate:Double = 0.02
 
 
-class ViewController: UIViewController, SCNSceneRendererDelegate {
+enum JFGameMode:Int {
+    case Menu = 0
+    case Playing = 1
+}
+
+enum JFAlterViewIdentifier:Int {
+    case GameExit = 1
+}
+
+
+class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDelegate {
     
     @IBOutlet weak var sceneView: SCNView!
     @IBOutlet weak var menuButton: UIButton!
+    @IBOutlet weak var homeMenuView: UIView!
+    @IBOutlet weak var playEasyButton: UIButton!
+    @IBOutlet weak var playMediumButton: UIButton!
+    @IBOutlet weak var playHardButton: UIButton!
     
     // Geometry
     var cylinderNode: JFSCNNode = JFSCNNode()
+    var physicsWallNodes:[SCNNode] = []
     var cameraNode:SCNNode = SCNNode()
     
     // Gestures
     var currentAngle: Float = 0.0
     var currentPos: Float = 0.0
     var currentPanTranslation: CGFloat = 0
-    
     var sceneSizeFactor:Float = 1.0
-    
-    //tmp
-    var turnedNodes:[JFTileNode] = []
+    var panRecognizer = UIPanGestureRecognizer()
+    var tapRecognizer = UITapGestureRecognizer()
     
     //physics version
     var translationX:Float = 0
@@ -58,6 +71,11 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
     
     // core motion
     var cm:CMMotionManager = CMMotionManager()
+    
+    // game logic
+    var game:Game = Game()
+    var gameMode:JFGameMode = .Menu
+    var turnedNodes:[JFTileNode] = []
     
     
     override func viewDidLoad() {
@@ -77,6 +95,54 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         // decoration
         self.addDecoration(scene)
         
+        // add game objects
+        /*
+        self.addCylinder(scene)
+        self.addPhysicsWalls(scene)
+        self.addGestureRecognizers()
+        */
+        
+        sceneView.scene = scene
+        sceneView.autoenablesDefaultLighting = false
+        sceneView.allowsCameraControl = false
+        sceneView.delegate = self
+
+        //MARK: usePhysics
+        if(usePhysics) {
+            //let shape = SCNSphere(radius: 1)
+            //shape.firstMaterial?.diffuse.contents = UIColor(white: 0.5, alpha: 1)
+            //self.centerNode = SCNNode(geometry: shape)
+            self.centerNode = SCNNode()
+            let gravityField = SCNPhysicsField.radialGravityField()
+            gravityField.strength = 0
+            self.centerNode.physicsField = gravityField
+            self.centerNode.name = "gravity"
+            self.sceneView.scene?.rootNode.addChildNode(self.centerNode)
+            self.centerNode.opacity = 1.0
+            self.centerNode.physicsField?.categoryBitMask = 1
+        }
+        
+        // camera
+        self.addCamera(scene)
+        
+        // motion detection
+        self.startDeviceMotionDetection()
+    }
+    
+    func addGestureRecognizers() {
+        //MARK: usePhysics
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: usePhysics ? "panGesturePhysics:" : "panGesture:")
+        self.sceneView.addGestureRecognizer(panRecognizer)
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: "tapGesture:")
+        self.sceneView.addGestureRecognizer(tapRecognizer)
+    }
+    
+    func removeGestureRecognizers() {
+        self.sceneView.removeGestureRecognizer(self.tapRecognizer)
+        self.sceneView.removeGestureRecognizer(self.panRecognizer)
+    }
+    
+    func addCylinder(scene:SCNScene) {
         self.cylinderNode = JFSCNNode(sceneSize: sceneView.frame.size)
         // cylinder physics
         let cylinderShapeShape = SCNBox(
@@ -102,41 +168,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         let move = SCNMatrix4MakeTranslation(0, 0, self.cylinderNode.shapeRadius - kDistanceCamera)
         self.cylinderNode.transform = move
         cylinderPhysicsBody.resetTransform()
-        //self.cylinderNode.adjustTransparency()
         
-        self.addPhysicsWalls(scene)
-        
-        //MARK: usePhysics
-        let panRecognizer = UIPanGestureRecognizer(target: self, action: usePhysics ? "panGesturePhysics:" : "panGesture:")
-        sceneView.addGestureRecognizer(panRecognizer)
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: "tapGesture:")
-        sceneView.addGestureRecognizer(tapRecognizer)
-        sceneView.scene = scene
-        sceneView.autoenablesDefaultLighting = false
-        sceneView.allowsCameraControl = false
-        sceneView.delegate = self
-        
-        //MARK: usePhysics
-        if(usePhysics) {
-            //let shape = SCNSphere(radius: 1)
-            //shape.firstMaterial?.diffuse.contents = UIColor(white: 0.5, alpha: 1)
-            //self.centerNode = SCNNode(geometry: shape)
-            self.centerNode = SCNNode()
-            let gravityField = SCNPhysicsField.radialGravityField()
-            gravityField.strength = 0
-            self.centerNode.physicsField = gravityField
-            self.centerNode.name = "gravity"
-            self.sceneView.scene?.rootNode.addChildNode(self.centerNode)
-            self.centerNode.opacity = 1.0
-            self.centerNode.physicsField?.categoryBitMask = 1
-        }
-        
-        
-        // camera
-        self.addCamera(scene)
-        
-        // motion detection
-        self.startDeviceMotionDetection()
     }
     
     func addPhysicsWalls(scene:SCNScene) {
@@ -155,6 +187,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             SCNMatrix4MakeRotation(Float(M_PI_2), 0, 0, 1),
             SCNMatrix4MakeTranslation(wallDist, 0, 0)
         )
+        self.physicsWallNodes.append(wallRightNode)
         scene.rootNode.addChildNode(wallRightNode)
         
         let wallLeftShape = SCNFloor()
@@ -164,8 +197,18 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         wallLeftNode.physicsBody = wallLeftPhysicsBody
         wallLeftNode.transform = SCNMatrix4Mult(
             SCNMatrix4MakeRotation(-Float(M_PI_2), 0, 0, 1),
-            SCNMatrix4MakeTranslation(-wallDist, 0, 0))
+            SCNMatrix4MakeTranslation(-wallDist, 0, 0)
+        )
+        self.physicsWallNodes.append(wallLeftNode)
         scene.rootNode.addChildNode(wallLeftNode)
+    }
+    
+    func removeGameObjects() {
+        // remove wall and cylinder when entering menu mode
+        self.cylinderNode.removeFromParentNode()
+        for wallNode in self.physicsWallNodes {
+            wallNode.removeFromParentNode()
+        }
     }
     
     func addCamera(scene:SCNScene) {
@@ -390,9 +433,33 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         }
     }
     
+    //MARK: user actions
+    func gamePlay() {
+        self.homeMenuView.hidden = true
+        self.gameMode = .Playing
+        self.addCylinder(self.sceneView.scene!)
+        self.addPhysicsWalls(self.sceneView.scene!)
+        self.addGestureRecognizers()
+    }
+    
+    func gameExit() {
+        self.removeGestureRecognizers()
+        self.removeGameObjects()
+        self.gameMode = .Menu
+        self.homeMenuView.hidden = false
+    }
+    
+    //MARK: button actions
+    
+    @IBAction func onPlayPressed(sender: AnyObject) {
+        self.gamePlay()
+    }
     
     @IBAction func onMenuPressed(sender: AnyObject) {
-        print("menu")
+        let alertView = UIAlertView(title:"Exit Game", message: "", delegate: self, cancelButtonTitle: "Cancel", otherButtonTitles: "Ok")
+        alertView.tag = JFAlterViewIdentifier.GameExit.rawValue
+        alertView.show()
+        /*
         print("before x:\(self.cameraNode.rotation.x) y:\(self.cameraNode.rotation.y) z:\(self.cameraNode.rotation.z) w:\(self.cameraNode.rotation.w)")
         let angleX:Float = 0.5//Float(M_PI_2)*0
         let angleY:Float = 1//Float(M_PI_4)
@@ -416,7 +483,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         
         let rotationVectorXY = SCNVector4Make(1, 1, 0, 2 * Float(M_PI_4 / M_SQRT2))
         let rotateToXY = SCNAction.rotateToAxisAngle(rotationVectorXY, duration: 1.2)
-        
+        */
 //        self.cameraNode.runAction(SCNAction.group([rotateByY, rotateByX]), completionHandler: { () -> Void in
 //            print("after x:\(self.cameraNode.rotation.x) y:\(self.cameraNode.rotation.y) z:\(self.cameraNode.rotation.z) w:\(self.cameraNode.rotation.w)")
 //        })
@@ -424,15 +491,40 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
 //        self.cameraNode.runAction(rotateToXY)
     }
     
+    //MARK: UIAlertViewDelegate
+    
+    func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
+        switch(alertView.tag) {
+        case JFAlterViewIdentifier.GameExit.rawValue:
+            
+            // game exit alert view
+            switch(buttonIndex) {
+            case 1:
+                // exit game
+                self.gameExit()
+
+                break
+            default:
+                break
+            }
+            break
+            
+        default:
+            break
+        }
+    }
+    
     //MARK: SCNSceneRendererDelegate
     
     func renderer(renderer: SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: NSTimeInterval) {
-        // adjust rotation based on position
-        let widthHalfTile:Float = (self.cylinderNode.circumsize / Float(tileCols)) / 2
-        let location = self.cylinderNode.presentationNode.position
-        let angle = (-location.x + widthHalfTile) / self.cylinderNode.shapeRadius
-        let rotate = SCNMatrix4MakeRotation(angle, 0, -1, 0)
-        self.cylinderNode.rotationNode.transform = rotate
+        if(self.gameMode == .Playing) {
+            // adjust rotation based on position
+            let widthHalfTile:Float = (self.cylinderNode.circumsize / Float(tileCols)) / 2
+            let location = self.cylinderNode.presentationNode.position
+            let angle = (-location.x + widthHalfTile) / self.cylinderNode.shapeRadius
+            let rotate = SCNMatrix4MakeRotation(angle, 0, -1, 0)
+            self.cylinderNode.rotationNode.transform = rotate
+        }
     }
     
     func renderer(renderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: NSTimeInterval) {
@@ -441,52 +533,54 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
             return
         }
 
-        // calculate velocity
-        let location = self.cylinderNode.presentationNode.position
-        let nodeTranslationX = location.x - self.panStartNodePos.x
-        let velocity:Float = ((Float(self.translationX) / kTranslationZoom) - nodeTranslationX) * kPhysicsElastic
-        
-        // reactivate panning after hit - check if pan is going the other way
-        if(self.hitWallRight && (velocity < 0)) {
-            //print("right wall reactivate")
-            self.panPaused = false
-            self.hitWallRight = false
-        }
-        if(self.hitWallLeft && (velocity > 0)) {
-            //print("left wall reactivate")
-            self.panPaused = false
-            self.hitWallLeft = false
-        }
-        
-        // collide with right wall
-        if((cylinderNode.physicsBody!.velocity.x > 0) && (self.cylinderNode.presentationNode.position.x > self.cylinderNode.rollBoundaries)) {
-            //print("hit wall on the right")
-            self.panPaused = true
-            self.hitWallRight = true
-        }
-        
-        // collide with left wall
-        if((cylinderNode.physicsBody!.velocity.x < 0) && (self.cylinderNode.presentationNode.position.x < -self.cylinderNode.rollBoundaries)) {
-            //print("hit wall on the left")
-            self.panPaused = true
-            self.hitWallLeft = true
-        }
-        
-        if(self.panActive && !self.panPaused) {
-            cylinderNode.physicsBody?.velocity = SCNVector3Make(velocity, 0, 0)
-            //print("apply velocity \(velocity) d:\(self.translationX) p:\(nodeTranslationX)")
-        }
-        
-        // add center weight node
-        if((!self.panActive) && ((self.cylinderNode.physicsBody?.velocity.x > -kRestingSpeed) && (self.cylinderNode.physicsBody?.velocity.x < kRestingSpeed))) {
-            let distBetweenFlatSpot = (self.cylinderNode.circumsize / Float(tileCols))
-            let widthHalfTile:Float = distBetweenFlatSpot / 2
-            let targetPos = ((round((location.x + widthHalfTile) / distBetweenFlatSpot) + 0) * distBetweenFlatSpot) - widthHalfTile
-            self.centerNode.position = SCNVector3Make(targetPos, 0, -kDistanceCamera)
-            self.centerNode.physicsBody?.resetTransform()
-            self.centerNode.physicsField?.strength = 10000
-            //self.centerNode.opacity = 1
-            //print("v:\(self.cylinderNode.physicsBody?.velocity)")
+        if(self.gameMode == .Playing) {
+            // calculate velocity
+            let location = self.cylinderNode.presentationNode.position
+            let nodeTranslationX = location.x - self.panStartNodePos.x
+            let velocity:Float = ((Float(self.translationX) / kTranslationZoom) - nodeTranslationX) * kPhysicsElastic
+            
+            // reactivate panning after hit - check if pan is going the other way
+            if(self.hitWallRight && (velocity < 0)) {
+                //print("right wall reactivate")
+                self.panPaused = false
+                self.hitWallRight = false
+            }
+            if(self.hitWallLeft && (velocity > 0)) {
+                //print("left wall reactivate")
+                self.panPaused = false
+                self.hitWallLeft = false
+            }
+            
+            // collide with right wall
+            if((cylinderNode.physicsBody!.velocity.x > 0) && (self.cylinderNode.presentationNode.position.x > self.cylinderNode.rollBoundaries)) {
+                //print("hit wall on the right")
+                self.panPaused = true
+                self.hitWallRight = true
+            }
+            
+            // collide with left wall
+            if((cylinderNode.physicsBody!.velocity.x < 0) && (self.cylinderNode.presentationNode.position.x < -self.cylinderNode.rollBoundaries)) {
+                //print("hit wall on the left")
+                self.panPaused = true
+                self.hitWallLeft = true
+            }
+            
+            if(self.panActive && !self.panPaused) {
+                cylinderNode.physicsBody?.velocity = SCNVector3Make(velocity, 0, 0)
+                //print("apply velocity \(velocity) d:\(self.translationX) p:\(nodeTranslationX)")
+            }
+            
+            // add center weight node
+            if((!self.panActive) && ((self.cylinderNode.physicsBody?.velocity.x > -kRestingSpeed) && (self.cylinderNode.physicsBody?.velocity.x < kRestingSpeed))) {
+                let distBetweenFlatSpot = (self.cylinderNode.circumsize / Float(tileCols))
+                let widthHalfTile:Float = distBetweenFlatSpot / 2
+                let targetPos = ((round((location.x + widthHalfTile) / distBetweenFlatSpot) + 0) * distBetweenFlatSpot) - widthHalfTile
+                self.centerNode.position = SCNVector3Make(targetPos, 0, -kDistanceCamera)
+                self.centerNode.physicsBody?.resetTransform()
+                self.centerNode.physicsField?.strength = 10000
+                //self.centerNode.opacity = 1
+                //print("v:\(self.cylinderNode.physicsBody?.velocity)")
+            }
         }
     }
 }

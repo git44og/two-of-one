@@ -10,6 +10,7 @@
 		271038101BEC91F0009E28CA /* Startscreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 2710380F1BEC91F0009E28CA /* Startscreen.png */; };
 		2729F50C1BE7C6F8004E0225 /* JFGraphUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2729F50B1BE7C6F8004E0225 /* JFGraphUtils.swift */; };
 		27696DDB1BE923EB0047E18D /* JFSCNWorld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27696DDA1BE923EB0047E18D /* JFSCNWorld.swift */; };
+		2783B0AA1BF9B50A008F1E9B /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2783B0A91BF9B50A008F1E9B /* Game.swift */; };
 		27B67B791BA693C900C86E7F /* explosion.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B67B781BA693C900C86E7F /* explosion.png */; };
 		27DAC6F91BF1C5F20063DC28 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DAC6F81BF1C5F20063DC28 /* CoreMotion.framework */; };
 		27DAC6FB1BF1C8710063DC28 /* Notes.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 27DAC6FA1BF1C8710063DC28 /* Notes.rtf */; };
@@ -54,6 +55,7 @@
 		2710380F1BEC91F0009E28CA /* Startscreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Startscreen.png; path = Images/Startscreen.png; sourceTree = "<group>"; };
 		2729F50B1BE7C6F8004E0225 /* JFGraphUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JFGraphUtils.swift; path = Utils/JFGraphUtils.swift; sourceTree = "<group>"; };
 		27696DDA1BE923EB0047E18D /* JFSCNWorld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JFSCNWorld.swift; path = custom/JFSCNWorld.swift; sourceTree = "<group>"; };
+		2783B0A91BF9B50A008F1E9B /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Game.swift; path = Model/Game.swift; sourceTree = "<group>"; };
 		27B67B781BA693C900C86E7F /* explosion.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = explosion.png; path = Images/Explosion/explosion.png; sourceTree = "<group>"; };
 		27DAC6F81BF1C5F20063DC28 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		27DAC6FA1BF1C8710063DC28 /* Notes.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Notes.rtf; sourceTree = "<group>"; };
@@ -107,6 +109,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2783B0A81BF9B4F3008F1E9B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2783B0A91BF9B50A008F1E9B /* Game.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		B441FA5D1B974E0D00B55627 = {
 			isa = PBXGroup;
 			children = (
@@ -129,6 +139,7 @@
 		B441FA681B974E0D00B55627 /* TwoOfOne */ = {
 			isa = PBXGroup;
 			children = (
+				2783B0A81BF9B4F3008F1E9B /* Model */,
 				B48112501B9DEE3B00E2A4F3 /* Utils */,
 				B48112041B9B7BF400E2A4F3 /* Custom */,
 				B441FA6B1B974E0D00B55627 /* AppDelegate.swift */,
@@ -348,6 +359,7 @@
 				B48111F01B9759F100E2A4F3 /* JFSCNView.swift in Sources */,
 				B441FA6C1B974E0D00B55627 /* AppDelegate.swift in Sources */,
 				B48112521B9DEE5900E2A4F3 /* JFUtils.swift in Sources */,
+				2783B0AA1BF9B50A008F1E9B /* Game.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
