@@ -23,6 +23,7 @@ class Game {
     var vc:UIViewController = UIViewController()
     var score:Int = 0
     var level:Int = 0
+    var physics:Bool = true
     
     init(vc:UIViewController) {
         self.vc = vc

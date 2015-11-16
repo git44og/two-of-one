@@ -86,7 +86,7 @@ class JFSCNNode : SCNNode {
         
         // cylinder physics
         //MARK: usePhysics
-        if(usePhysics) {
+        if(self.game.physics) {
             let cylinderShapeShape = SCNBox(
                 width: CGFloat(self.shapeRadius) * 2,
                 height: CGFloat(self.game.cylinderHeight()),

@@ -11,7 +11,6 @@ import SceneKit
 import CoreMotion
 
 
-let usePhysics = true
 let kPhysicsElastic:Float = 20
 let kTranslationZoom:Float = 17
 let kRestingSpeed:Float = 10
@@ -42,10 +41,12 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     @IBOutlet weak var sceneView: SCNView!
     @IBOutlet weak var menuButton: UIButton!
+    @IBOutlet weak var gameMenuView: UIView!
     @IBOutlet weak var homeMenuView: UIView!
     @IBOutlet weak var playEasyButton: UIButton!
     @IBOutlet weak var playMediumButton: UIButton!
     @IBOutlet weak var playHardButton: UIButton!
+    @IBOutlet weak var physicsButton: UIButton!
     
     // Geometry
     var cylinderNode: JFSCNNode = JFSCNNode()
@@ -83,6 +84,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         super.viewDidLoad()
         
         self.game = Game(vc: self)
+        self.gameMenuView.hidden = true
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -103,7 +105,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         sceneView.delegate = self
 
         //MARK: usePhysics
-        if(usePhysics) {
+        if(self.game.physics) {
             //let shape = SCNSphere(radius: 1)
             //shape.firstMaterial?.diffuse.contents = UIColor(white: 0.5, alpha: 1)
             //self.centerNode = SCNNode(geometry: shape)
@@ -135,7 +137,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     }
     
     func addPhysicsWalls(scene:SCNScene) {
-        if(!usePhysics) {
+        if(!self.game.physics) {
             return
         }
         
@@ -308,7 +310,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     func addGestureRecognizers() {
         //MARK: usePhysics
-        let panRecognizer = UIPanGestureRecognizer(target: self, action: usePhysics ? "panGesturePhysics:" : "panGesture:")
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: self.game.physics ? "panGesturePhysics:" : "panGesture:")
         self.sceneView.addGestureRecognizer(panRecognizer)
         let tapRecognizer = UITapGestureRecognizer(target: self, action: "tapGesture:")
         self.sceneView.addGestureRecognizer(tapRecognizer)
@@ -418,6 +420,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     //MARK: user actions
     func gamePlay() {
+        self.gameMenuView.hidden = false
         self.homeMenuView.hidden = true
         self.gameMode = .Playing
         self.addCylinder(self.sceneView.scene!)
@@ -431,6 +434,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.removeGameObjects()
         self.gameMode = .Menu
         self.homeMenuView.hidden = false
+        self.gameMenuView.hidden = true
     }
     
     //MARK: button actions
@@ -458,6 +462,11 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         let alertView = UIAlertView(title:"Exit Game", message: "", delegate: self, cancelButtonTitle: "Cancel", otherButtonTitles: "Ok")
         alertView.tag = JFAlterViewIdentifier.GameExit.rawValue
         alertView.show()
+    }
+    
+    @IBAction func onPhysicsPressed(sender: AnyObject) {
+        self.game.physics = !self.game.physics
+        self.physicsButton.setTitle(self.game.physics ? "Physics On" : "Physics Off", forState: .Normal)
     }
     
     //MARK: UIAlertViewDelegate
@@ -498,7 +507,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     func renderer(renderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: NSTimeInterval) {
         //MARK:usePhysics
-        if(!usePhysics) {
+        if(!self.game.physics) {
             return
         }
 
