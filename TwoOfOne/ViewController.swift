@@ -139,27 +139,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     func addCylinder(scene:SCNScene) {
         self.cylinderNode = JFSCNNode(sceneSize: sceneView.frame.size, game:self.game)
         
-        
-//        // cylinder physics
-//        let cylinderShapeShape = SCNBox(
-//            width: CGFloat(self.cylinderNode.shapeRadius) * 2,
-//            height: CGFloat(cylinderHeight),
-//            length: CGFloat(self.cylinderNode.shapeRadius),
-//            chamferRadius: 0)
-//        let cylinderPhysicsShape = SCNPhysicsShape(geometry: cylinderShapeShape, options: nil)
-//        let cylinderPhysicsBody = SCNPhysicsBody(type: .Dynamic, shape: cylinderPhysicsShape)
-//        cylinderPhysicsBody.velocityFactor = SCNVector3Make(1, 0, 0)
-//        cylinderPhysicsBody.angularVelocityFactor = SCNVector3Make(0, 0, 0)
-//        cylinderPhysicsBody.friction = 0.0
-//        cylinderPhysicsBody.rollingFriction = 0.0
-//        cylinderPhysicsBody.damping = 0.999999
-//        cylinderPhysicsBody.categoryBitMask = 1
-//        // cylinder view
-//        //MARK: usePhysics
-//        if(usePhysics) {
-//            self.cylinderNode.physicsBody = cylinderPhysicsBody
-//        }
-        
         scene.rootNode.addChildNode(self.cylinderNode)
         self.cylinderNode.generateTileNodes()
         let move = SCNMatrix4MakeTranslation(0, 0, self.cylinderNode.shapeRadius - kDistanceCamera)
@@ -470,36 +449,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         let alertView = UIAlertView(title:"Exit Game", message: "", delegate: self, cancelButtonTitle: "Cancel", otherButtonTitles: "Ok")
         alertView.tag = JFAlterViewIdentifier.GameExit.rawValue
         alertView.show()
-        /*
-        print("before x:\(self.cameraNode.rotation.x) y:\(self.cameraNode.rotation.y) z:\(self.cameraNode.rotation.z) w:\(self.cameraNode.rotation.w)")
-        let angleX:Float = 0.5//Float(M_PI_2)*0
-        let angleY:Float = 1//Float(M_PI_4)
-        print("anlge-x:\(angleX) angle-y:\(angleY)")
-        
-        let rotationVector = SCNVector4Make(angleX, angleY, 0, sqrt((angleX * angleX) + (angleY * angleY)))
-        let rotateTo = SCNAction.rotateToAxisAngle(rotationVector, duration: 0.2)
-//        self.cameraNode.runAction(rotateTo, completionHandler: { () -> Void in
-//            print("new after x:\(self.cameraNode.rotation.x) y:\(self.cameraNode.rotation.y) z:\(self.cameraNode.rotation.z) w:\(self.cameraNode.rotation.w)")
-//        })
-        
-        
-        let rotateByX = SCNAction.rotateByAngle(CGFloat(angleX), aroundAxis: SCNVector3Make(1, 0, 0), duration: 0.2)
-        let rotateByY = SCNAction.rotateByAngle(CGFloat(angleY), aroundAxis: SCNVector3Make(0, 1, 0), duration: 0.2)
-        
-        let rotationVectorX = SCNVector4Make(1, 0, 0, Float(M_PI_4))
-        let rotateToX = SCNAction.rotateToAxisAngle(rotationVectorX, duration: 1.2)
-        
-        let rotationVectorY = SCNVector4Make(0, 1, 0, Float(M_PI_4))
-        let rotateToY = SCNAction.rotateToAxisAngle(rotationVectorY, duration: 1.2)
-        
-        let rotationVectorXY = SCNVector4Make(1, 1, 0, 2 * Float(M_PI_4 / M_SQRT2))
-        let rotateToXY = SCNAction.rotateToAxisAngle(rotationVectorXY, duration: 1.2)
-        */
-//        self.cameraNode.runAction(SCNAction.group([rotateByY, rotateByX]), completionHandler: { () -> Void in
-//            print("after x:\(self.cameraNode.rotation.x) y:\(self.cameraNode.rotation.y) z:\(self.cameraNode.rotation.z) w:\(self.cameraNode.rotation.w)")
-//        })
-//        self.cameraNode.runAction(SCNAction.group([rotateToX, rotateToY]))
-//        self.cameraNode.runAction(rotateToXY)
     }
     
     //MARK: UIAlertViewDelegate
