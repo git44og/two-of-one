@@ -17,20 +17,8 @@ cos = ankathete / hypo
 tan = gegen / an
 */
 
-let tileConfig:[(row:Int, col:Int, tile:Float, corner:Float, height:Float)] =
-[
-    (row:4, col:6, tile:150, corner:9, height:660),
-    (row:5, col:8, tile:120, corner:7.5, height:660),
-    (row:6, col:10, tile:100, corner:6, height:660),
-]
-let configScale:Float = 0.025
 
 // config
-let configSet:Int = 1
-let tileWidth:Float = tileConfig[configSet].tile * configScale
-let cylinderHeight:Float = tileConfig[configSet].height * configScale
-let tileRows:Int = tileConfig[configSet].row
-let tileCols:Int = tileConfig[configSet].col
 let kTileFrameStroke:CGFloat = 0.02
 let kTileCornerradius:CGFloat = 0.06
 let kTileExtrusion:CGFloat = 0.06
@@ -45,7 +33,8 @@ let kTileRestingPosition = SCNVector3Make(0, 1000, 0)
 
 
 class JFSCNNode : SCNNode {
-    
+
+    var game:Game = Game()
     var nodesByCol:[[SCNNode]] = []
     var rotationNode = SCNNode()
     var shapeRadius: Float = 0
@@ -75,8 +64,10 @@ class JFSCNNode : SCNNode {
         super.init()
     }
     
-    init(sceneSize:CGSize) {
+    init(sceneSize:CGSize, game:Game) {
+        
         self.sceneSize = sceneSize
+        self.game = game
         self.sceneSizeFactor = (Float)(sceneSize.height / sceneSize.width * 1.35)
         
         super.init()
@@ -84,14 +75,35 @@ class JFSCNNode : SCNNode {
         self.addChildNode(self.rotationNode)
         
         // gap between tiles
-        self.tileGap = (cylinderHeight - (tileWidth * Float(tileRows))) / (Float(tileRows) - 1)
+        self.tileGap = (self.game.cylinderHeight() - (self.game.cylinderTileWidth() * Float(self.game.cylinderRows()))) / (Float(self.game.cylinderRows()) - 1)
         // circumsize of cylinder
-        self.circumsize = (tileWidth * Float(tileCols)) + (tileGap * (Float(tileCols) - 1))
+        self.circumsize = (self.game.cylinderTileWidth() * Float(self.game.cylinderCols())) + (tileGap * (Float(self.game.cylinderCols()) - 1))
         // distance to wall
         self.rollBoundaries = (self.circumsize / 2) * 1.05
         // cylinder radius
         self.shapeRadius = self.circumsize / (2 * Float(M_PI))
         // angle between columns
+        
+        // cylinder physics
+        //MARK: usePhysics
+        if(usePhysics) {
+            let cylinderShapeShape = SCNBox(
+                width: CGFloat(self.shapeRadius) * 2,
+                height: CGFloat(self.game.cylinderHeight()),
+                length: CGFloat(self.shapeRadius),
+                chamferRadius: 0)
+            let cylinderPhysicsShape = SCNPhysicsShape(geometry: cylinderShapeShape, options: nil)
+            let cylinderPhysicsBody = SCNPhysicsBody(type: .Dynamic, shape: cylinderPhysicsShape)
+            cylinderPhysicsBody.velocityFactor = SCNVector3Make(1, 0, 0)
+            cylinderPhysicsBody.angularVelocityFactor = SCNVector3Make(0, 0, 0)
+            cylinderPhysicsBody.friction = 0.0
+            cylinderPhysicsBody.rollingFriction = 0.0
+            cylinderPhysicsBody.damping = 0.999999
+            cylinderPhysicsBody.categoryBitMask = 1
+            // cylinder view
+            self.physicsBody = cylinderPhysicsBody
+        }
+
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -100,13 +112,13 @@ class JFSCNNode : SCNNode {
     
     func generateTileNodes() {
         
-        let tileAngleRad = Float(M_PI) * (2 / Float(tileCols))
+        let tileAngleRad = Float(M_PI) * (2 / Float(self.game.cylinderCols()))
 
         // generate tileMap
         var tileMap:[Int] = []
-        for colId in 0...(tileCols - 1) {
-            for rowId in 0...(tileRows - 1) {
-                let tileId:Int = ((tileRows * colId) + rowId) / 2
+        for colId in 0...(self.game.cylinderCols() - 1) {
+            for rowId in 0...(self.game.cylinderRows() - 1) {
+                let tileId:Int = ((self.game.cylinderRows() * colId) + rowId) / 2
                 tileMap.append(tileId)
             }
         }
@@ -114,7 +126,7 @@ class JFSCNNode : SCNNode {
         
         // shape
         
-        for colId in 0...(tileCols - 1) {
+        for colId in 0...(self.game.cylinderCols() - 1) {
             
             self.nodesByCol.append([])
             
@@ -125,17 +137,17 @@ class JFSCNNode : SCNNode {
             
             //println("radius:\(radius) angle:\(angle) x:\(position.x) y:\(position.y)")
             
-            for rowId in 0...(tileRows - 1) {
+            for rowId in 0...(self.game.cylinderRows() - 1) {
                 // creating tile
                 let tileNode = JFTileNode(
                     x: colId, y: rowId,
-                    id: shuffledTileMap[((tileRows * colId) + rowId)],
-                    size:CGSize(width: CGFloat(tileWidth), height: CGFloat(tileWidth)),
+                    id: shuffledTileMap[((self.game.cylinderRows() * colId) + rowId)],
+                    size:CGSize(width: CGFloat(self.game.cylinderTileWidth()), height: CGFloat(self.game.cylinderTileWidth())),
                     parent:self)
                 tileNode.position = SCNVector3(
                     x: Float(position.x),
-                    y: ((Float(rowId) - (Float(tileRows - 1) / 2)) * (tileWidth + self.tileGap)),
-                    //y: ((Float(rowId) * tileWidth) - (Float(tileRows - 1) / 2)) * self.tileGap,
+                    y: ((Float(rowId) - (Float(self.game.cylinderRows() - 1) / 2)) * (self.game.cylinderTileWidth() + self.tileGap)),
+                    //y: ((Float(rowId) * self.game.cylinderTileWidth()) - (Float(self.game.cylinderRows() - 1) / 2)) * self.tileGap,
                     z: Float(position.y))
                 tileNode.rotation = SCNVector4(x: 0, y: 1, z: 0, w: angle)
                 tileNode.baseAngle = angle
@@ -206,7 +218,7 @@ class JFSCNNode : SCNNode {
     func rollToRestingPosition(animated:Bool = true) {
         
         // get delta distance based on delta angle
-        let distBetweenFlatSpot = (self.circumsize / Float(tileCols))
+        let distBetweenFlatSpot = (self.circumsize / Float(self.game.cylinderCols()))
         let widthHalfTile:Float = distBetweenFlatSpot / 2
         let newPos = ((round((self.currentPosition + widthHalfTile) / distBetweenFlatSpot) + 0) * distBetweenFlatSpot) - widthHalfTile
         let moveMatrix = SCNMatrix4MakeTranslation(newPos, self.position.y, self.position.z)
@@ -235,13 +247,6 @@ enum JFTileNodeFaceType:Int {
 
 class JFTileNode: SCNNode {
     var turned:Bool = false
-//    var turned:Bool = false {
-//        didSet {
-//            //if(turned != oldValue) {
-//            //    self.didTurn()
-//            //}
-//        }
-//    }
     var cylinderNode: JFSCNNode
     var baseAngle:Float = 0
     var typeId:Int = 0
@@ -354,7 +359,8 @@ class JFTileNode: SCNNode {
     }
 
     func tileFalls(completion: (() -> Void)? = nil) {
-        let moveFall = SCNAction.moveBy(SCNVector3Make(0, -cylinderHeight * 2, 0), duration: 1.0)
+        
+        let moveFall = SCNAction.moveBy(SCNVector3Make(0, -self.cylinderNode.game.cylinderHeight() * 2, 0), duration: 1.0)
         moveFall.timingFunction = {(time:Float) -> Float in
             return time * time
         }

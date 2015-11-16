@@ -38,27 +38,32 @@ struct JFGridSize {
 
 class JFSCNWorld : SCNNode {
     
-    override init() {
+    var game:Game
+    
+    init(game:Game) {
+        
+        self.game = game
+        
         super.init()
         
-        let tileGap = (cylinderHeight - (tileWidth * Float(tileRows))) / (Float(tileRows) - 1)
-        let sideWallDistance = ((Float(tileWidth) * (Float(tileCols) + 2)) + (tileGap * (Float(tileCols) + 1))) / 2
+        let tileGap = (self.game.cylinderHeight() - (self.game.cylinderTileWidth() * Float(self.game.cylinderRows()))) / (Float(self.game.cylinderRows()) - 1)
+        let sideWallDistance = ((Float(self.game.cylinderTileWidth()) * (Float(self.game.cylinderCols()) + 2)) + (tileGap * (Float(self.game.cylinderCols()) + 1))) / 2
         
-        let backWall = JFSCNWall(size: JFGridSize(width: kWallBackSize.width, height: kWallBackSize.height), type: JFWallTileType.back)
+        let backWall = JFSCNWall(size: JFGridSize(width: kWallBackSize.width, height: kWallBackSize.height), game:self.game, type: JFWallTileType.back)
         backWall.position = SCNVector3Make(0, 0, -kDistanceWall - kDistanceCamera)
         self.addChildNode(backWall)
         
-        let gridWall = JFSCNWall(size: JFGridSize(width: tileCols, height: tileRows), type: JFWallTileType.grid)
+        let gridWall = JFSCNWall(size: JFGridSize(width: self.game.cylinderCols(), height: self.game.cylinderRows()), game:self.game, type: JFWallTileType.grid)
         gridWall.position = SCNVector3Make(0, 0, -kDistanceCamera)
         self.addChildNode(gridWall)
         
-        let leftWall = JFSCNWall(size: JFGridSize(width: kWallBackSize.width, height: kWallBackSize.height), type: JFWallTileType.side)
+        let leftWall = JFSCNWall(size: JFGridSize(width: kWallBackSize.width, height: kWallBackSize.height), game:self.game, type: JFWallTileType.side)
         let leftWallMove = SCNMatrix4MakeTranslation(-sideWallDistance, 0, -kDistanceWall - kDistanceCamera + (leftWall.width / 2))
         let leftWallRotate = SCNMatrix4MakeRotation(Float(M_PI_2), 0, 1, 0)
         leftWall.transform = SCNMatrix4Mult(leftWallRotate, leftWallMove)
         self.addChildNode(leftWall)
 
-        let rightWall = JFSCNWall(size: JFGridSize(width: kWallBackSize.width, height: kWallBackSize.height), type: JFWallTileType.side)
+        let rightWall = JFSCNWall(size: JFGridSize(width: kWallBackSize.width, height: kWallBackSize.height), game:self.game, type: JFWallTileType.side)
         let rightWallMove = SCNMatrix4MakeTranslation(sideWallDistance, 0, -kDistanceWall - kDistanceCamera + (rightWall.width / 2))
         let rightWallRotate = SCNMatrix4MakeRotation(-Float(M_PI_2), 0, 1, 0)
         rightWall.transform = SCNMatrix4Mult(rightWallRotate, rightWallMove)
@@ -75,8 +80,11 @@ class JFSCNWorld : SCNNode {
 class JFSCNWall : SCNNode {
     
     var width:Float = 1
+    var game:Game
     
-    init(size:JFGridSize, type:JFWallTileType) {
+    init(size:JFGridSize, game:Game, type:JFWallTileType) {
+        
+        self.game = game
         
         super.init()
 
@@ -89,20 +97,20 @@ class JFSCNWall : SCNNode {
     
     func setupTiles(size:JFGridSize, type:JFWallTileType) {
         
-        let tileGap = (cylinderHeight - (tileWidth * Float(tileRows))) / (Float(tileRows) - 1)
+        let tileGap = (self.game.cylinderHeight() - (self.game.cylinderTileWidth() * Float(self.game.cylinderRows()))) / (Float(self.game.cylinderRows()) - 1)
         
         for x in 0 ... (size.width - 1) {
             for y in 0 ... (size.height - 1) {
-                let tile = JFSCNWallTile(size: CGSize(width: CGFloat(tileWidth), height: CGFloat(tileWidth)), type: type)
+                let tile = JFSCNWallTile(size: CGSize(width: CGFloat(self.game.cylinderTileWidth()), height: CGFloat(self.game.cylinderTileWidth())), type: type)
                 tile.position = SCNVector3Make(
-                    (Float(tileWidth) + tileGap) * (Float(x) - ((Float(size.width) - 1) / 2)),
-                    (Float(tileWidth) + tileGap)  * (Float(y) - ((Float(size.height) - 1) / 2)),
+                    (Float(self.game.cylinderTileWidth()) + tileGap) * (Float(x) - ((Float(size.width) - 1) / 2)),
+                    (Float(self.game.cylinderTileWidth()) + tileGap)  * (Float(y) - ((Float(size.height) - 1) / 2)),
                     0)
                 self.addChildNode(tile)
             }
         }
         
-        self.width = (Float(tileWidth) * Float(size.width)) + (tileGap * (Float(size.width) - 0))
+        self.width = (Float(self.game.cylinderTileWidth()) * Float(size.width)) + (tileGap * (Float(size.width) - 0))
     }
 }
 

@@ -81,6 +81,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.game = Game(vc: self)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -94,13 +95,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         
         // decoration
         self.addDecoration(scene)
-        
-        // add game objects
-        /*
-        self.addCylinder(scene)
-        self.addPhysicsWalls(scene)
-        self.addGestureRecognizers()
-        */
         
         sceneView.scene = scene
         sceneView.autoenablesDefaultLighting = false
@@ -143,32 +137,34 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     }
     
     func addCylinder(scene:SCNScene) {
-        self.cylinderNode = JFSCNNode(sceneSize: sceneView.frame.size)
-        // cylinder physics
-        let cylinderShapeShape = SCNBox(
-            width: CGFloat(self.cylinderNode.shapeRadius) * 2,
-            height: CGFloat(cylinderHeight),
-            length: CGFloat(self.cylinderNode.shapeRadius),
-            chamferRadius: 0)
-        let cylinderPhysicsShape = SCNPhysicsShape(geometry: cylinderShapeShape, options: nil)
-        let cylinderPhysicsBody = SCNPhysicsBody(type: .Dynamic, shape: cylinderPhysicsShape)
-        cylinderPhysicsBody.velocityFactor = SCNVector3Make(1, 0, 0)
-        cylinderPhysicsBody.angularVelocityFactor = SCNVector3Make(0, 0, 0)
-        cylinderPhysicsBody.friction = 0.0
-        cylinderPhysicsBody.rollingFriction = 0.0
-        cylinderPhysicsBody.damping = 0.999999
-        cylinderPhysicsBody.categoryBitMask = 1
-        // cylinder view
-        //MARK: usePhysics
-        if(usePhysics) {
-            self.cylinderNode.physicsBody = cylinderPhysicsBody
-        }
+        self.cylinderNode = JFSCNNode(sceneSize: sceneView.frame.size, game:self.game)
+        
+        
+//        // cylinder physics
+//        let cylinderShapeShape = SCNBox(
+//            width: CGFloat(self.cylinderNode.shapeRadius) * 2,
+//            height: CGFloat(cylinderHeight),
+//            length: CGFloat(self.cylinderNode.shapeRadius),
+//            chamferRadius: 0)
+//        let cylinderPhysicsShape = SCNPhysicsShape(geometry: cylinderShapeShape, options: nil)
+//        let cylinderPhysicsBody = SCNPhysicsBody(type: .Dynamic, shape: cylinderPhysicsShape)
+//        cylinderPhysicsBody.velocityFactor = SCNVector3Make(1, 0, 0)
+//        cylinderPhysicsBody.angularVelocityFactor = SCNVector3Make(0, 0, 0)
+//        cylinderPhysicsBody.friction = 0.0
+//        cylinderPhysicsBody.rollingFriction = 0.0
+//        cylinderPhysicsBody.damping = 0.999999
+//        cylinderPhysicsBody.categoryBitMask = 1
+//        // cylinder view
+//        //MARK: usePhysics
+//        if(usePhysics) {
+//            self.cylinderNode.physicsBody = cylinderPhysicsBody
+//        }
+        
         scene.rootNode.addChildNode(self.cylinderNode)
         self.cylinderNode.generateTileNodes()
         let move = SCNMatrix4MakeTranslation(0, 0, self.cylinderNode.shapeRadius - kDistanceCamera)
         self.cylinderNode.transform = move
-        cylinderPhysicsBody.resetTransform()
-        
+        self.cylinderNode.physicsBody?.resetTransform()
     }
     
     func addPhysicsWalls(scene:SCNScene) {
@@ -259,7 +255,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     func addDecoration(scene:SCNScene) {
         
         // wall
-        scene.rootNode.addChildNode(JFSCNWorld())
+        scene.rootNode.addChildNode(JFSCNWorld(game: self.game))
         
         // ground
         let groundGeometry = SCNFloor()
@@ -452,7 +448,22 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     //MARK: button actions
     
     @IBAction func onPlayPressed(sender: AnyObject) {
-        self.gamePlay()
+        switch(sender.tag) {
+        case 1:
+            self.game.level = 0
+            self.gamePlay()
+            break
+        case 2:
+            self.game.level = 1
+            self.gamePlay()
+            break
+        case 3:
+            self.game.level = 2
+            self.gamePlay()
+            break
+        default:
+            break
+        }
     }
     
     @IBAction func onMenuPressed(sender: AnyObject) {
@@ -519,7 +530,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     func renderer(renderer: SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: NSTimeInterval) {
         if(self.gameMode == .Playing) {
             // adjust rotation based on position
-            let widthHalfTile:Float = (self.cylinderNode.circumsize / Float(tileCols)) / 2
+            let widthHalfTile:Float = (self.cylinderNode.circumsize / Float(self.game.cylinderCols())) / 2
             let location = self.cylinderNode.presentationNode.position
             let angle = (-location.x + widthHalfTile) / self.cylinderNode.shapeRadius
             let rotate = SCNMatrix4MakeRotation(angle, 0, -1, 0)
@@ -572,7 +583,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             
             // add center weight node
             if((!self.panActive) && ((self.cylinderNode.physicsBody?.velocity.x > -kRestingSpeed) && (self.cylinderNode.physicsBody?.velocity.x < kRestingSpeed))) {
-                let distBetweenFlatSpot = (self.cylinderNode.circumsize / Float(tileCols))
+                let distBetweenFlatSpot = (self.cylinderNode.circumsize / Float(self.game.cylinderCols()))
                 let widthHalfTile:Float = distBetweenFlatSpot / 2
                 let targetPos = ((round((location.x + widthHalfTile) / distBetweenFlatSpot) + 0) * distBetweenFlatSpot) - widthHalfTile
                 self.centerNode.position = SCNVector3Make(targetPos, 0, -kDistanceCamera)
