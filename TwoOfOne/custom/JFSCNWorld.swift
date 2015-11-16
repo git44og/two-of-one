@@ -53,10 +53,6 @@ class JFSCNWorld : SCNNode {
         backWall.position = SCNVector3Make(0, 0, -kDistanceWall - kDistanceCamera)
         self.addChildNode(backWall)
         
-        let gridWall = JFSCNWall(size: JFGridSize(width: self.game.cylinderCols(), height: self.game.cylinderRows()), game:self.game, type: JFWallTileType.grid)
-        gridWall.position = SCNVector3Make(0, 0, -kDistanceCamera)
-        self.addChildNode(gridWall)
-        
         let leftWall = JFSCNWall(size: JFGridSize(width: kWallBackSize.width, height: kWallBackSize.height), game:self.game, type: JFWallTileType.side)
         let leftWallMove = SCNMatrix4MakeTranslation(-sideWallDistance, 0, -kDistanceWall - kDistanceCamera + (leftWall.width / 2))
         let leftWallRotate = SCNMatrix4MakeRotation(Float(M_PI_2), 0, 1, 0)
@@ -81,6 +77,11 @@ class JFSCNWall : SCNNode {
     
     var width:Float = 1
     var game:Game
+    
+    override init() {
+        self.game = Game()
+        super.init()
+    }
     
     init(size:JFGridSize, game:Game, type:JFWallTileType) {
         

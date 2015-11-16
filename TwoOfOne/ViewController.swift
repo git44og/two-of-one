@@ -50,6 +50,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     // Geometry
     var cylinderNode: JFSCNNode = JFSCNNode()
     var physicsWallNodes:[SCNNode] = []
+    var gridWall:JFSCNWall = JFSCNWall()
     var cameraNode:SCNNode = SCNNode()
     
     // Gestures
@@ -123,19 +124,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.startDeviceMotionDetection()
     }
     
-    func addGestureRecognizers() {
-        //MARK: usePhysics
-        let panRecognizer = UIPanGestureRecognizer(target: self, action: usePhysics ? "panGesturePhysics:" : "panGesture:")
-        self.sceneView.addGestureRecognizer(panRecognizer)
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: "tapGesture:")
-        self.sceneView.addGestureRecognizer(tapRecognizer)
-    }
-    
-    func removeGestureRecognizers() {
-        self.sceneView.removeGestureRecognizer(self.tapRecognizer)
-        self.sceneView.removeGestureRecognizer(self.panRecognizer)
-    }
-    
     func addCylinder(scene:SCNScene) {
         self.cylinderNode = JFSCNNode(sceneSize: sceneView.frame.size, game:self.game)
         
@@ -178,12 +166,19 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         scene.rootNode.addChildNode(wallLeftNode)
     }
     
+    func addGridWall(scene:SCNScene) {
+        self.gridWall = JFSCNWall(size: JFGridSize(width: self.game.cylinderCols(), height: self.game.cylinderRows()), game:self.game, type: JFWallTileType.grid)
+        self.gridWall.position = SCNVector3Make(0, 0, -kDistanceCamera)
+        scene.rootNode.addChildNode(self.gridWall)
+    }
+    
     func removeGameObjects() {
         // remove wall and cylinder when entering menu mode
         self.cylinderNode.removeFromParentNode()
         for wallNode in self.physicsWallNodes {
             wallNode.removeFromParentNode()
         }
+        self.gridWall.removeFromParentNode()
     }
     
     func addCamera(scene:SCNScene) {
@@ -311,6 +306,19 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     //MARK: Gesture
     
+    func addGestureRecognizers() {
+        //MARK: usePhysics
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: usePhysics ? "panGesturePhysics:" : "panGesture:")
+        self.sceneView.addGestureRecognizer(panRecognizer)
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: "tapGesture:")
+        self.sceneView.addGestureRecognizer(tapRecognizer)
+    }
+    
+    func removeGestureRecognizers() {
+        self.sceneView.removeGestureRecognizer(self.tapRecognizer)
+        self.sceneView.removeGestureRecognizer(self.panRecognizer)
+    }
+    
     func tapGesture(sender: UITapGestureRecognizer) {
         let translation = sender.locationInView(sender.view!)
         let objs = self.sceneView.hitTest(translation, options: nil)
@@ -414,6 +422,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.gameMode = .Playing
         self.addCylinder(self.sceneView.scene!)
         self.addPhysicsWalls(self.sceneView.scene!)
+        self.addGridWall(self.sceneView.scene!)
         self.addGestureRecognizers()
     }
     
