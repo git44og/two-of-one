@@ -12,11 +12,10 @@ import UIKit
 // game modes
 let kTileConfig:[(row:Int, col:Int, tile:Float, corner:Float, height:Float)] =
 [
-    (row:4, col:6, tile:150, corner:9, height:660),
-    (row:5, col:8, tile:120, corner:7.5, height:660),
-    (row:6, col:10, tile:100, corner:6, height:660),
+    (row:4, col:6, tile:150 * kConfigScale, corner:9, height:660 * kConfigScale),
+    (row:5, col:8, tile:120 * kConfigScale, corner:7.5, height:660 * kConfigScale),
+    (row:6, col:10, tile:100 * kConfigScale, corner:6, height:660 * kConfigScale),
 ]
-let kConfigScale:Float = 0.025
 
 class Game {
     
@@ -41,10 +40,10 @@ class Game {
     }
     
     func cylinderTileWidth() -> Float {
-        return kTileConfig[self.level].tile * kConfigScale
+        return kTileConfig[self.level].tile
     }
 
     func cylinderHeight() -> Float {
-        return kTileConfig[self.level].height * kConfigScale
+        return kTileConfig[self.level].height
     }
 }

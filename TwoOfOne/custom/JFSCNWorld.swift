@@ -12,11 +12,15 @@ import SceneKit
 
 let kWallBackTileColor = UIColor(red: 203/255, green: 255/255, blue: 240/255, alpha: 0.5)
 let kWallBackTileColorTransparency = UIColor(white: 1, alpha: 1.0)
-let kWallSideTileColor = UIColor(white: 1, alpha: 0.49)
+//let kWallBackTileColorIntensity:CGFloat = 0.52
+let kWallBackTileColorIntensity:CGFloat = 1
+let kWallSideTileColor = UIColor(red: 203/255, green: 255/255, blue: 240/255, alpha: 0.5)
+//let kWallSideTileColor = UIColor(white: 1, alpha: 0.49)
 let kWallSideTileColorTransparency = UIColor(white: 1, alpha: 1)
+let kWallSideTileColorIntensity:CGFloat = 1
 let kWallGridTileColor = UIColor(white: 1, alpha: 1.0)
 let kWallGridTileColorTransparency = UIColor(white: 1, alpha: 1)
-let kWallBackSize:JFGridSize = JFGridSize(width:16, height:8)
+let kWallGridTileColorIntensity:CGFloat = 1
 let kWallTileFrameStroke:CGFloat = 0.01
 
 enum JFWallTileType:Int {
@@ -40,6 +44,13 @@ class JFSCNWorld : SCNNode {
     
     var game:Game
     
+    override init() {
+        
+        self.game = Game()
+        
+        super.init()
+    }
+    
     init(game:Game) {
         
         self.game = game
@@ -47,20 +58,20 @@ class JFSCNWorld : SCNNode {
         super.init()
         
         let tileGap = (self.game.cylinderHeight() - (self.game.cylinderTileWidth() * Float(self.game.cylinderRows()))) / (Float(self.game.cylinderRows()) - 1)
-        let sideWallDistance = ((Float(self.game.cylinderTileWidth()) * (Float(self.game.cylinderCols()) + 2)) + (tileGap * (Float(self.game.cylinderCols()) + 1))) / 2
         
-        let backWall = JFSCNWall(size: JFGridSize(width: kWallBackSize.width, height: kWallBackSize.height), game:self.game, type: JFWallTileType.back)
-        backWall.position = SCNVector3Make(0, 0, -kDistanceWall - kDistanceCamera)
+        let backWall = JFSCNWall(size: JFGridSize(width: self.game.cylinderCols() + 2, height: self.game.cylinderRows() + 10), game:self.game, type: JFWallTileType.back)
+        backWall.position = SCNVector3Make(0, 0, -kDistanceWall - kCylinderCenter.z)
         self.addChildNode(backWall)
         
-        let leftWall = JFSCNWall(size: JFGridSize(width: kWallBackSize.width, height: kWallBackSize.height), game:self.game, type: JFWallTileType.side)
-        let leftWallMove = SCNMatrix4MakeTranslation(-sideWallDistance, 0, -kDistanceWall - kDistanceCamera + (leftWall.width / 2))
+        let wallSidePosition = ((Float(self.game.cylinderCols()) / 2) + 1) * backWall.colWidth
+        let leftWall = JFSCNWall(size: JFGridSize(width: self.game.cylinderCols() + 16, height: self.game.cylinderRows() + 10), game:self.game, type: JFWallTileType.side)
+        let leftWallMove = SCNMatrix4MakeTranslation(-wallSidePosition, 0, -kDistanceWall - kCylinderCenter.z + (leftWall.width / 2))
         let leftWallRotate = SCNMatrix4MakeRotation(Float(M_PI_2), 0, 1, 0)
         leftWall.transform = SCNMatrix4Mult(leftWallRotate, leftWallMove)
         self.addChildNode(leftWall)
 
-        let rightWall = JFSCNWall(size: JFGridSize(width: kWallBackSize.width, height: kWallBackSize.height), game:self.game, type: JFWallTileType.side)
-        let rightWallMove = SCNMatrix4MakeTranslation(sideWallDistance, 0, -kDistanceWall - kDistanceCamera + (rightWall.width / 2))
+        let rightWall = JFSCNWall(size: JFGridSize(width: self.game.cylinderCols() + 16, height: self.game.cylinderRows() + 10), game:self.game, type: JFWallTileType.side)
+        let rightWallMove = SCNMatrix4MakeTranslation(wallSidePosition, 0, -kDistanceWall - kCylinderCenter.z + (rightWall.width / 2))
         let rightWallRotate = SCNMatrix4MakeRotation(-Float(M_PI_2), 0, 1, 0)
         rightWall.transform = SCNMatrix4Mult(rightWallRotate, rightWallMove)
         self.addChildNode(rightWall)
@@ -76,6 +87,7 @@ class JFSCNWorld : SCNNode {
 class JFSCNWall : SCNNode {
     
     var width:Float = 1
+    var colWidth:Float = 1
     var game:Game
     
     override init() {
@@ -112,6 +124,7 @@ class JFSCNWall : SCNNode {
         }
         
         self.width = (Float(self.game.cylinderTileWidth()) * Float(size.width)) + (tileGap * (Float(size.width) - 0))
+        self.colWidth = tileGap + self.game.cylinderTileWidth()
     }
 }
 
@@ -146,18 +159,18 @@ class JFSCNWallTile : SCNNode {
             let path = UIBezierPath(roundedRect: CGRect(x: size.width / -2, y: size.height / -2, width: size.width, height: size.height), cornerRadius: cornerRadius)
             let tileShape = SCNShape(path: path, extrusionDepth: 0)
             tileShape.firstMaterial?.diffuse.contents = kWallBackTileColor
-            tileShape.firstMaterial?.diffuse.intensity = 0.52
-            tileShape.firstMaterial?.transparent.contents = kWallBackTileColorTransparency
-            tileShape.firstMaterial?.transparent.intensity = 0.07
+            tileShape.firstMaterial?.diffuse.intensity = kWallBackTileColorIntensity
+//            tileShape.firstMaterial?.transparent.contents = kWallBackTileColorTransparency
+//            tileShape.firstMaterial?.transparent.intensity = 0.07
             self.geometry = tileShape
             break
         case .side:
             let path = UIBezierPath(roundedRect: CGRect(x: size.width / -2, y: size.height / -2, width: size.width, height: size.height), cornerRadius: cornerRadius)
             let tileShape = SCNShape(path: path, extrusionDepth: 0)
             tileShape.firstMaterial?.diffuse.contents = kWallSideTileColor
-            tileShape.firstMaterial?.diffuse.intensity = 0.52
-            tileShape.firstMaterial?.transparent.contents = kWallSideTileColorTransparency
-            tileShape.firstMaterial?.transparent.intensity = 0.07
+            tileShape.firstMaterial?.diffuse.intensity = kWallSideTileColorIntensity
+//            tileShape.firstMaterial?.transparent.contents = kWallSideTileColorTransparency
+//            tileShape.firstMaterial?.transparent.intensity = 0.07
             self.geometry = tileShape
             break
         case .grid:
@@ -165,9 +178,9 @@ class JFSCNWallTile : SCNNode {
             let path = bezierPathRoundedRectangle(CGRect(x: size.width / -2, y: size.height / -2, width: size.width, height: size.height), stroke: stroke, cornerRadius: cornerRadius)
             let tileShape = SCNShape(path: path, extrusionDepth: extrusionDepth)
             tileShape.firstMaterial?.diffuse.contents = kWallGridTileColor
-            tileShape.firstMaterial?.diffuse.intensity = 0.52
-            tileShape.firstMaterial?.transparent.contents = kWallGridTileColorTransparency
-            tileShape.firstMaterial?.transparent.intensity = 0.07
+            tileShape.firstMaterial?.diffuse.intensity = kWallGridTileColorIntensity
+//            tileShape.firstMaterial?.transparent.contents = kWallGridTileColorTransparency
+//            tileShape.firstMaterial?.transparent.intensity = 0.07
             self.geometry = tileShape
             break
         }

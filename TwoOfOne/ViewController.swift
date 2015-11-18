@@ -11,15 +11,25 @@ import SceneKit
 import CoreMotion
 
 
+let kConfigScale:Float = 0.025
+
 let kPhysicsElastic:Float = 20
 let kTranslationZoom:Float = 17
 let kRestingSpeed:Float = 10
 
-let kDistanceCamera:Float = 60
-let kDistanceWall:Float = 20
+let kCylinderCenter = SCNVector3Make(0, 0, 2910 * kConfigScale)
+let kCameraPosition = SCNVector3Make(0, 32 * kConfigScale, 0)
+let kDistanceWall:Float = 2414 * kConfigScale
 
-let kLight1Color = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.6)
-let kLight2Color = UIColor(red: 243/255, green: 255/255, blue: 239/255, alpha: 0.6)
+let kLightLeftPosition = SCNVector3Make(-1000 * kConfigScale, 380 * kConfigScale, 1780 * kConfigScale)
+let kLightLeftColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.4)
+let kLightLeftAttenuationStartDistance = 1570 * CGFloat(kConfigScale)
+let kLightLeftAttenuationEndDistance = 4420 * CGFloat(kConfigScale)
+
+let kLightRightPosition = SCNVector3Make(950 * kConfigScale, 380 * kConfigScale, 1990 * kConfigScale)
+let kLightRightColor = UIColor(red: 243/255, green: 255/255, blue: 239/255, alpha: 0.4)
+let kLightRightAttenuationStartDistance = 1430 * CGFloat(kConfigScale)
+let kLightRightAttenuationEndDistance = 3820 * CGFloat(kConfigScale)
 
 // device roation handling
 let kEaseRotation:Double = 1 / 48
@@ -53,6 +63,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     var physicsWallNodes:[SCNNode] = []
     var gridWall:JFSCNWall = JFSCNWall()
     var cameraNode:SCNNode = SCNNode()
+    var decorationNode:JFSCNWorld = JFSCNWorld()
     
     // Gestures
     var currentAngle: Float = 0.0
@@ -96,9 +107,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         // lights
         self.addLights(scene)
         
-        // decoration
-        self.addDecoration(scene)
-        
         sceneView.scene = scene
         sceneView.autoenablesDefaultLighting = false
         sceneView.allowsCameraControl = false
@@ -131,7 +139,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         
         scene.rootNode.addChildNode(self.cylinderNode)
         self.cylinderNode.generateTileNodes()
-        let move = SCNMatrix4MakeTranslation(0, 0, self.cylinderNode.shapeRadius - kDistanceCamera)
+        let move = SCNMatrix4MakeTranslation(0, kCylinderCenter.y, self.cylinderNode.shapeRadius - kCylinderCenter.z)
         self.cylinderNode.transform = move
         self.cylinderNode.physicsBody?.resetTransform()
     }
@@ -170,8 +178,14 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     func addGridWall(scene:SCNScene) {
         self.gridWall = JFSCNWall(size: JFGridSize(width: self.game.cylinderCols(), height: self.game.cylinderRows()), game:self.game, type: JFWallTileType.grid)
-        self.gridWall.position = SCNVector3Make(0, 0, -kDistanceCamera)
+        self.gridWall.position = SCNVector3Make(0, 0, -kCylinderCenter.z)
         scene.rootNode.addChildNode(self.gridWall)
+    }
+    
+    func addDecoration(scene:SCNScene) {
+        // wall
+        self.decorationNode = JFSCNWorld(game: self.game)
+        scene.rootNode.addChildNode(self.decorationNode)
     }
     
     func removeGameObjects() {
@@ -181,16 +195,17 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             wallNode.removeFromParentNode()
         }
         self.gridWall.removeFromParentNode()
+        self.decorationNode.removeFromParentNode()
     }
     
     func addCamera(scene:SCNScene) {
         // camera
         self.cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
-        cameraNode.camera?.yFov = 20
+        cameraNode.camera?.yFov = 17.5
         cameraNode.camera?.zFar = 200
-        cameraNode.pivot = SCNMatrix4MakeTranslation(0, 0, self.cylinderNode.shapeRadius - kDistanceCamera)
-        let camMove = SCNMatrix4MakeTranslation(0, 0, self.cylinderNode.shapeRadius - kDistanceCamera)
+        cameraNode.pivot = SCNMatrix4MakeTranslation(0, 0, self.cylinderNode.shapeRadius - kCylinderCenter.z)
+        let camMove = SCNMatrix4MakeTranslation(0, kCameraPosition.y, self.cylinderNode.shapeRadius - kCylinderCenter.z)
         cameraNode.transform = camMove
         scene.rootNode.addChildNode(cameraNode)
     }
@@ -203,49 +218,29 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         ambientLightNode.light!.color = UIColor(white: 0.67, alpha: 1.0)
         //scene.rootNode.addChildNode(ambientLightNode)
         
-        let spot1Light = SCNLight()
-        spot1Light.attenuationStartDistance = 50
-        spot1Light.attenuationEndDistance = 220
-        let spot1LightNode = SCNNode()
-        spot1LightNode.light = spot1Light
-        spot1LightNode.light!.type = SCNLightTypeOmni
-        spot1LightNode.light!.color = kLight1Color
+        let spotLeftLight = SCNLight()
+        spotLeftLight.attenuationStartDistance = kLightLeftAttenuationStartDistance
+        spotLeftLight.attenuationEndDistance = kLightLeftAttenuationEndDistance
+        let spotLeftLightNode = SCNNode()
+        spotLeftLightNode.light = spotLeftLight
+        spotLeftLightNode.light!.type = SCNLightTypeOmni
+        spotLeftLightNode.light!.color = kLightLeftColor
         
-        let move1 = SCNMatrix4MakeTranslation(-15, 0, 0)
-        spot1LightNode.transform = move1
-        scene.rootNode.addChildNode(spot1LightNode)
+        let moveLeft = SCNMatrix4MakeTranslation(kLightLeftPosition.x, kLightLeftPosition.y, -kLightLeftPosition.z)
+        spotLeftLightNode.transform = moveLeft
+        scene.rootNode.addChildNode(spotLeftLightNode)
         
-        let spot2Light = SCNLight()
-        spot2Light.attenuationStartDistance = 50
-        spot2Light.attenuationEndDistance = 220
-        let spot2LightNode = SCNNode()
-        spot2LightNode.light = spot1Light
-        spot2LightNode.light!.type = SCNLightTypeOmni
-        spot2LightNode.light!.color = kLight2Color
+        let spotRightLight = SCNLight()
+        spotRightLight.attenuationStartDistance = kLightRightAttenuationStartDistance
+        spotRightLight.attenuationEndDistance = kLightRightAttenuationEndDistance
+        let spotRightLightNode = SCNNode()
+        spotRightLightNode.light = spotLeftLight
+        spotRightLightNode.light!.type = SCNLightTypeOmni
+        spotRightLightNode.light!.color = kLightRightColor
         
-        let move2 = SCNMatrix4MakeTranslation(15, 0, 0)
-        spot2LightNode.transform = move2
-        scene.rootNode.addChildNode(spot2LightNode)
-    }
-    
-    func addDecoration(scene:SCNScene) {
-        
-        // wall
-        scene.rootNode.addChildNode(JFSCNWorld(game: self.game))
-        
-        // ground
-        let groundGeometry = SCNFloor()
-        let groundShape = SCNPhysicsShape(geometry: groundGeometry, options: nil)
-        let groundBody = SCNPhysicsBody(type: .Static, shape: groundShape)
-        let groundMaterial = SCNMaterial()
-        //groundMaterial.diffuse.contents = UIColor(white: 0.5, alpha: 1)
-        groundMaterial.diffuse.contents = UIColor.redColor()
-        groundGeometry.materials = [groundMaterial]
-        let ground = SCNNode(geometry: groundGeometry)
-        ground.physicsBody = groundBody
-        ground.physicsBody?.friction = 1.0
-        ground.name = "floor"
-        //scene.rootNode.addChildNode(ground)
+        let moveRight = SCNMatrix4MakeTranslation(kLightRightPosition.x, kLightRightPosition.y, -kLightRightPosition.z)
+        spotRightLightNode.transform = moveRight
+        scene.rootNode.addChildNode(spotRightLightNode)
     }
     
     func addUIButtonLayer() {
@@ -420,12 +415,15 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     //MARK: user actions
     func gamePlay() {
+        
         self.gameMenuView.hidden = false
         self.homeMenuView.hidden = true
+        
         self.gameMode = .Playing
         self.addCylinder(self.sceneView.scene!)
         self.addPhysicsWalls(self.sceneView.scene!)
         self.addGridWall(self.sceneView.scene!)
+        self.addDecoration(self.sceneView.scene!)
         self.addGestureRecognizers()
     }
     
@@ -553,7 +551,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 let distBetweenFlatSpot = (self.cylinderNode.circumsize / Float(self.game.cylinderCols()))
                 let widthHalfTile:Float = distBetweenFlatSpot / 2
                 let targetPos = ((round((location.x + widthHalfTile) / distBetweenFlatSpot) + 0) * distBetweenFlatSpot) - widthHalfTile
-                self.centerNode.position = SCNVector3Make(targetPos, 0, -kDistanceCamera)
+                self.centerNode.position = SCNVector3Make(targetPos, 0, -kCylinderCenter.z)
                 self.centerNode.physicsBody?.resetTransform()
                 self.centerNode.physicsField?.strength = 10000
                 //self.centerNode.opacity = 1

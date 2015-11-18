@@ -22,13 +22,13 @@ tan = gegen / an
 let kTileFrameStroke:CGFloat = 0.02
 let kTileCornerradius:CGFloat = 0.06
 let kTileExtrusion:CGFloat = 0.06
-let kTileColorOpenInner = UIColor(white: 0.5, alpha: 0.5)
-let kTileColorOpenOuter = UIColor(white: 0.5, alpha: 1)
 let kTileColorOpenFrame = UIColor(white: 1, alpha: 1)
-let kTileColorClosedInner = UIColor(red: 156/255, green: 230/255, blue: 255/255, alpha: 0.93)
-let kTileColorClosedInnerTransparency = UIColor(white: 1.0, alpha: 1)
-let kTileColorClosedOuter = UIColor(white: 1, alpha: 1)
+let kTileColorClosedOutside = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.60)
+let kTileColorClosedOutsideIntensity:CGFloat = 1.0
+let kTileColorClosedInside = UIColor(red: 55/255, green: 79/255, blue: 87/255, alpha: 0.93)
+let kTileColorClosedInsideIntensity:CGFloat = 1.0
 let kTileColorClosedFrame = UIColor(white: 1, alpha: 1)
+let kTileColorClosedFrameIntensity:CGFloat = 1.0
 let kTileRestingPosition = SCNVector3Make(0, 1000, 0)
 
 
@@ -435,9 +435,7 @@ class JFTileNode: SCNNode {
         // closed node frame
         let tileClosedFrameShape = SCNShape(path: pathOuter, extrusionDepth: extrusionDepth)
         tileClosedFrameShape.firstMaterial?.diffuse.contents = kTileColorClosedFrame
-        tileClosedFrameShape.firstMaterial?.diffuse.intensity = 1
-        tileClosedFrameShape.firstMaterial?.transparent.contents = kTileColorClosedFrame
-        tileClosedFrameShape.firstMaterial?.transparent.intensity = 0.19
+        tileClosedFrameShape.firstMaterial?.diffuse.intensity = kTileColorClosedFrameIntensity
         let tileClosedFrameNode = SCNNode(geometry: tileClosedFrameShape)
         tileClosedNode.addChildNode(tileClosedFrameNode)
         // closed node immer
@@ -462,17 +460,12 @@ class JFTileNode: SCNNode {
     func material(type:JFTileNodeFaceType) -> [SCNMaterial] {
         switch(type) {
         case .closed:
-            var materialFaces:[SCNMaterial] = Array()
-            let face = SCNMaterial()
-            face.diffuse.contents = kTileColorClosedInner
-            face.diffuse.intensity = 0.52
-            face.transparent.contents = kTileColorClosedInnerTransparency
-            face.transparent.intensity = 0.07
-            materialFaces += [face]
-            materialFaces += [face]
-            let face3 = SCNMaterial()
-            face3.diffuse.contents = UIColor.clearColor()
-            materialFaces += [face3]
+            var materialFaces:[SCNMaterial] = [SCNMaterial(), SCNMaterial(), SCNMaterial()]
+            materialFaces[0].diffuse.contents = kTileColorClosedOutside
+            materialFaces[0].diffuse.intensity = kTileColorClosedOutsideIntensity
+            materialFaces[1].diffuse.contents = kTileColorClosedInside
+            materialFaces[1].diffuse.intensity = kTileColorClosedInsideIntensity
+            materialFaces[2].diffuse.contents = UIColor.clearColor()
             return materialFaces
         case .open:
             var materialFaces:[SCNMaterial] = Array()
