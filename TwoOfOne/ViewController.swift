@@ -21,12 +21,12 @@ let kCylinderCenter = SCNVector3Make(0, 0, 2910 * kConfigScale)
 let kCameraPosition = SCNVector3Make(0, 32 * kConfigScale, 0)
 let kDistanceWall:Float = 2414 * kConfigScale
 
-let kLightLeftPosition = SCNVector3Make(-1000 * kConfigScale, 380 * kConfigScale, 1780 * kConfigScale)
+let kLightLeftPosition = SCNVector3Make(-1000 * kConfigScale, -315 * kConfigScale, 1780 * kConfigScale)
 let kLightLeftColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.4)
 let kLightLeftAttenuationStartDistance = 1570 * CGFloat(kConfigScale)
 let kLightLeftAttenuationEndDistance = 4420 * CGFloat(kConfigScale)
 
-let kLightRightPosition = SCNVector3Make(950 * kConfigScale, 380 * kConfigScale, 1990 * kConfigScale)
+let kLightRightPosition = SCNVector3Make(950 * kConfigScale, -380 * kConfigScale, 1990 * kConfigScale)
 let kLightRightColor = UIColor(red: 243/255, green: 255/255, blue: 239/255, alpha: 0.4)
 let kLightRightAttenuationStartDistance = 1430 * CGFloat(kConfigScale)
 let kLightRightAttenuationEndDistance = 3820 * CGFloat(kConfigScale)

@@ -237,7 +237,6 @@ class JFSCNNode : SCNNode {
 }
 
 
-let blueColor = UIColor(red: 35/255, green: 153/255, blue: 218/255, alpha: 1)
 
 enum JFTileNodeFaceType:Int {
     case transparent = 0
@@ -380,40 +379,6 @@ class JFTileNode: SCNNode {
         }
     }
     
-    func explode() {
-        let path = UIBezierPath(roundedRect: CGRect(x: -0.5, y: -0.5, width: 1.0, height: 1.0), cornerRadius: 0.1)
-        let tile = SCNShape(path: path, extrusionDepth: 0.05)
-        
-        let exp = SCNParticleSystem()
-        exp.loops = false
-        exp.birthRate = 1000
-        exp.birthDirection = SCNParticleBirthDirection.Random
-        exp.emissionDuration = 0.05
-        exp.spreadingAngle = 0
-        exp.particleDiesOnCollision = true
-        exp.particleLifeSpan = 0.125
-        exp.particleLifeSpanVariation = 0.125
-        exp.particleVelocity = 30
-        exp.particleVelocityVariation = 10
-        exp.particleSize = 0.1
-        exp.particleColor = blueColor
-        exp.particleImage = explosionImage
-        exp.imageSequenceRowCount = 4
-        exp.imageSequenceColumnCount = 4
-        exp.imageSequenceFrameRate = 128
-        exp.dampingFactor = 5.0
-        exp.emitterShape = tile
-        self.addParticleSystem(exp)
-        
-        self.vanished = true
-        self.runAction(SCNAction.sequence([
-            SCNAction.waitForDuration(0.1),
-            SCNAction.fadeOutWithDuration(0)]), completionHandler: { () -> Void in
-                self.hidden = true
-        })
-
-    }
-    
     func openTileImage() -> UIImage {
         let tileId = (self.typeId % 10 + 1)
         let tileIdStr = (tileId < 10) ? "0\(tileId)" : String(tileId)
@@ -446,6 +411,10 @@ class JFTileNode: SCNNode {
         tileClosedNode.addChildNode(tileClosedInnerNode)
         self.tileNodes[JFTileNodeFaceType.closed] = tileClosedNode
         self.addChildNode(tileClosedNode)
+        
+//        let blurFilter = CIFilter(name:"CIGaussianBlur")
+//        blurFilter?.setValue(1.0, forKey: "inputRadius")
+//        tileClosedInnerNode.filters = [blurFilter!]
 
         // open node
         let tileOpenShape = SCNShape(path: path, extrusionDepth: extrusionDepth)
@@ -468,14 +437,10 @@ class JFTileNode: SCNNode {
             materialFaces[2].diffuse.contents = UIColor.clearColor()
             return materialFaces
         case .open:
-            var materialFaces:[SCNMaterial] = Array()
-            let face = SCNMaterial()
-            face.diffuse.contents = self.openTileImage()
-            materialFaces += [face]
-            materialFaces += [face]
-            let face3 = SCNMaterial()
-            face3.diffuse.contents = kTileColorOpenFrame
-            materialFaces += [face3]
+            var materialFaces:[SCNMaterial] = [SCNMaterial(), SCNMaterial(), SCNMaterial()]
+            materialFaces[0].diffuse.contents = self.openTileImage()
+            materialFaces[1].diffuse.contents = self.openTileImage()
+            materialFaces[2].diffuse.contents = kTileColorOpenFrame
             return materialFaces
         default:
             break
