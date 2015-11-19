@@ -361,8 +361,7 @@ class JFTileNode: SCNNode {
         let targetAngleInt:Float = self.turned ? ceil(rootAngleInt + 0.5) - 0.5 : floor(rootAngleInt + 0.5) - 0.5
         timing = (NSTimeInterval(targetAngleInt) - NSTimeInterval(rootAngleInt)) / NSTimeInterval(rotationAngleInt)
         
-        let tCylAngle = self.cylinderNode.rotationNode.rotation.w
-        //print("cylAng:\(tCylAngle) baseAng:\(baseAngle) persAng:\(perspectveAngle) timing:\(timing)")
+        //print("cylAng:\(self.cylinderNode.rotationNode.rotation.w) baseAng:\(baseAngle) persAng:\(perspectveAngle) timing:\(timing)")
         //print("rootAng:\(rootAngleInt) targetAng:\(targetAngleInt) timing:\(timing)")
         /*
         0 -> 0.5
