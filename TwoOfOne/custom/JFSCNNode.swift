@@ -346,42 +346,40 @@ class JFTileNode: SCNNode {
         
         // find timing when tile faces have to change
         var timing:NSTimeInterval = 0.5
-        if let parent = self.cylinderNode as? JFSCNNode {
 
-            // get angle based on position of tile relative to camera
-            let positionAbsolute = SCNVector3(
-                x:(parent.position.x + self.relPosition.x),
-                y:(parent.position.y + self.relPosition.y),
-                z:(parent.position.z + self.relPosition.z))
-            let perspectveAngle = atan(positionAbsolute.x / positionAbsolute.z)
-            // get initial global angle of tile by adding local tile angle, groupNode angle, global tile position
-            let rootAngle = parent.rotationNode.rotation.w * ((parent.rotationNode.rotation.y > 0) ? 1 : -1) + self.baseAngle - perspectveAngle
-            
-            // get angle at which small side of tile faces camera
-            let rootAngleInt = rootAngle / Float(M_PI)
-            let targetAngleInt:Float = self.turned ? ceil(rootAngleInt + 0.5) - 0.5 : floor(rootAngleInt + 0.5) - 0.5
-            timing = (NSTimeInterval(targetAngleInt) - NSTimeInterval(rootAngleInt)) / NSTimeInterval(rotationAngleInt)
-            
-            let tCylAngle = parent.rotationNode.rotation.w
-            //print("cylAng:\(tCylAngle) baseAng:\(baseAngle) persAng:\(perspectveAngle) timing:\(timing)")
-            //print("rootAng:\(rootAngleInt) targetAng:\(targetAngleInt) timing:\(timing)")
-            /*
-            0 -> 0.5
-            0.2 -> 0.3 / 0.7
-            0.4 -> 0.1 / 0.9
-            1.4 -> 0.1 / 0.9
-            rootAngleInt + (rotationAngle * timing) = F() 0.5 | -0.5 | 1.5 ...
-            (F() - rootAngleInt) / rotationAngle
-            0 -> 0.5 / -0.5
-            0.4 -> 0.5 / -0.5
-            1.4 -> 1.5 / 0.5
-            
-            1.4 -> 2.8 > 3.8 > ceil > 4 > 3 > 1.5
-            1.4 -> 2.8 > 3.8 > floor > 3 > 2 > 1
-            0.9 -> 1.8 > 2.8 > ceil > 3 > 2 > 1
-            0.9 -> 1.8 > 2.8 > floor > 2 > 1 > 0.5
-            */
-        }
+        // get angle based on position of tile relative to camera
+        let positionAbsolute = SCNVector3(
+            x:(self.cylinderNode.position.x + self.relPosition.x),
+            y:(self.cylinderNode.position.y + self.relPosition.y),
+            z:(self.cylinderNode.position.z + self.relPosition.z))
+        let perspectveAngle = atan(positionAbsolute.x / positionAbsolute.z)
+        // get initial global angle of tile by adding local tile angle, groupNode angle, global tile position
+        let rootAngle = self.cylinderNode.rotationNode.rotation.w * ((self.cylinderNode.rotationNode.rotation.y > 0) ? 1 : -1) + self.baseAngle - perspectveAngle
+        
+        // get angle at which small side of tile faces camera
+        let rootAngleInt = rootAngle / Float(M_PI)
+        let targetAngleInt:Float = self.turned ? ceil(rootAngleInt + 0.5) - 0.5 : floor(rootAngleInt + 0.5) - 0.5
+        timing = (NSTimeInterval(targetAngleInt) - NSTimeInterval(rootAngleInt)) / NSTimeInterval(rotationAngleInt)
+        
+        let tCylAngle = self.cylinderNode.rotationNode.rotation.w
+        //print("cylAng:\(tCylAngle) baseAng:\(baseAngle) persAng:\(perspectveAngle) timing:\(timing)")
+        //print("rootAng:\(rootAngleInt) targetAng:\(targetAngleInt) timing:\(timing)")
+        /*
+        0 -> 0.5
+        0.2 -> 0.3 / 0.7
+        0.4 -> 0.1 / 0.9
+        1.4 -> 0.1 / 0.9
+        rootAngleInt + (rotationAngle * timing) = F() 0.5 | -0.5 | 1.5 ...
+        (F() - rootAngleInt) / rotationAngle
+        0 -> 0.5 / -0.5
+        0.4 -> 0.5 / -0.5
+        1.4 -> 1.5 / 0.5
+        
+        1.4 -> 2.8 > 3.8 > ceil > 4 > 3 > 1.5
+        1.4 -> 2.8 > 3.8 > floor > 3 > 2 > 1
+        0.9 -> 1.8 > 2.8 > ceil > 3 > 2 > 1
+        0.9 -> 1.8 > 2.8 > floor > 2 > 1 > 0.5
+        */
         
         // run aminations
         let rotationAction = SCNAction.rotateByAngle(rotationAngle, aroundAxis: SCNVector3(x: 0, y: 1, z: 0), duration: rotationDuration)
