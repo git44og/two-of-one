@@ -425,6 +425,10 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.addGridWall(self.sceneView.scene!)
         self.addDecoration(self.sceneView.scene!)
         self.addGestureRecognizers()
+        
+        execDelay(0.5) { () -> () in
+            self.cylinderNode.foldAnimation()
+        }
     }
     
     func gameExit() {

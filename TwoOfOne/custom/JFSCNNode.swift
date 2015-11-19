@@ -44,7 +44,7 @@ class JFSCNNode : SCNNode {
     var circumsize:Float = 1
     var rollBoundaries:Float = 1
     var tileGap:Float = 0
-    var tileColNodes:[SCNNode] = []
+    var tileColNodes:[JFCylinderColNode] = []
     
     override var transform: SCNMatrix4 {
         didSet {
@@ -111,6 +111,12 @@ class JFSCNNode : SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func foldAnimation() {
+        for colNode in self.tileColNodes {
+            colNode.runAction(colNode.foldAction)
+        }
+    }
+    
     func generateTileNodes() {
         
         let tileAngleRad = Float(M_PI) * (2 / Float(self.game.cylinderCols()))
@@ -131,7 +137,7 @@ class JFSCNNode : SCNNode {
         for colId in 0...(self.game.cylinderCols() - 1) {
             
             // connect column nodes
-            self.tileColNodes.append(SCNNode())
+            self.tileColNodes.append(JFCylinderColNode())
             if(colId == baseColId) {
                 self.rotationNode.addChildNode(self.tileColNodes[baseColId])
             }
@@ -157,7 +163,23 @@ class JFSCNNode : SCNNode {
                     x: -colDistance * multiplier,
                     y: 0,
                     z: 0)
-                self.tileColNodes[colId].rotation = SCNVector4(x: 0, y: 1, z: 0, w: -multiplier * Float(M_PI * 2) / Float(self.game.cylinderCols()))
+                //self.tileColNodes[colId].rotation = SCNVector4(x: 0, y: 1, z: 0, w: -multiplier * Float(M_PI * 2) / Float(self.game.cylinderCols()))
+                let rotationAngle = -multiplier * Float(M_PI * 2) / Float(self.game.cylinderCols())
+                //action fold all cols
+                self.tileColNodes[colId].foldAction = SCNAction.rotateByAngle(
+                    CGFloat(rotationAngle),
+                    aroundAxis: SCNVector3(x: 0, y: 1, z: 0),
+                    duration: 1.0)
+                //action fold from sides
+                let animationLength:NSTimeInterval = 2.0
+                let singleFoldLength:NSTimeInterval = animationLength / NSTimeInterval(self.game.cylinderCols())
+                let foldAction = SCNAction.rotateByAngle(
+                    CGFloat(rotationAngle),
+                    aroundAxis: SCNVector3(x: 0, y: 1, z: 0),
+                    duration: singleFoldLength)
+                let waitDuration = (colId < baseColId) ? NSTimeInterval(colId) * singleFoldLength : NSTimeInterval(self.game.cylinderCols() - colId - 1) * singleFoldLength
+                let waitAction = SCNAction.waitForDuration(waitDuration)
+                self.tileColNodes[colId].foldAction = SCNAction.sequence([waitAction, foldAction])
             }
 
         }
@@ -169,13 +191,7 @@ class JFSCNNode : SCNNode {
             
             self.nodesByCol.append([])
             
-            //let multiplier:Float = ((colId >= (self.game.cylinderCols() / 2)) ? -1 : 1)
-            //let angle = multiplier * Float(M_PI * 2) / Float(self.game.cylinderCols())
             let angle = tileAngleRad * Float(colId)
-            let relPosition = CGPoint(
-                x: CGFloat(sin(angle)) * CGFloat(self.shapeRadius),
-                y: CGFloat(cos(angle)) * CGFloat(self.shapeRadius))
-            
             for rowId in 0...(self.game.cylinderRows() - 1) {
                 // creating tile
                 let tileNode = JFTileNode(
@@ -277,6 +293,19 @@ class JFSCNNode : SCNNode {
     }
 }
 
+
+class JFCylinderColNode: SCNNode {
+    
+    var foldAction:SCNAction = SCNAction()
+    
+    override init() {
+        super.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
 
 
 enum JFTileNodeFaceType:Int {
