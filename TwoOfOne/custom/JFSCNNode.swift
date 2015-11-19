@@ -44,6 +44,7 @@ class JFSCNNode : SCNNode {
     var circumsize:Float = 1
     var rollBoundaries:Float = 1
     var tileGap:Float = 0
+    var tileColNodes:[SCNNode] = []
     
     override var transform: SCNMatrix4 {
         didSet {
@@ -123,19 +124,57 @@ class JFSCNNode : SCNNode {
             }
         }
         let shuffledTileMap = shuffleList(tileMap)
+
+        // setup column nodes
+        // base column is touching the grid
+        let baseColId = (self.game.cylinderCols() / 2)
+        for colId in 0...(self.game.cylinderCols() - 1) {
+            
+            // connect column nodes
+            self.tileColNodes.append(SCNNode())
+            if(colId == baseColId) {
+                self.rotationNode.addChildNode(self.tileColNodes[baseColId])
+            }
+            if((colId > 0) && (colId <= baseColId)) {
+                self.tileColNodes[colId].addChildNode(self.tileColNodes[(colId - 1)])
+            } else if(colId > baseColId) {
+                self.tileColNodes[(colId - 1)].addChildNode(self.tileColNodes[colId])
+            }
+            
+            // set position and pivot point
+            let angle = tileAngleRad * Float(colId)
+            if(colId == baseColId) {
+                self.tileColNodes[baseColId].position = SCNVector3(
+                    x: Float(sin(angle)) * self.shapeRadius,
+                    y: 0,
+                    z: Float(cos(angle)) * self.shapeRadius)
+                self.tileColNodes[baseColId].rotation = SCNVector4(x: 0, y: 1, z: 0, w: angle)
+            } else {
+                let multiplier:Float = ((colId >= (self.game.cylinderCols() / 2)) ? -1 : 1)
+                let colDistance:Float = (self.tileGap + self.game.cylinderTileWidth()) / 2
+                self.tileColNodes[colId].pivot = SCNMatrix4MakeTranslation(colDistance * multiplier, 0, 0)
+                self.tileColNodes[colId].position = SCNVector3(
+                    x: -colDistance * multiplier,
+                    y: 0,
+                    z: 0)
+                self.tileColNodes[colId].rotation = SCNVector4(x: 0, y: 1, z: 0, w: -multiplier * Float(M_PI * 2) / Float(self.game.cylinderCols()))
+            }
+
+        }
         
-        // shape
-        
+        // add tiles to cylinder
+        //for colId in 0...2 {
+        //for colId in baseColId...baseColId {
         for colId in 0...(self.game.cylinderCols() - 1) {
             
             self.nodesByCol.append([])
             
+            //let multiplier:Float = ((colId >= (self.game.cylinderCols() / 2)) ? -1 : 1)
+            //let angle = multiplier * Float(M_PI * 2) / Float(self.game.cylinderCols())
             let angle = tileAngleRad * Float(colId)
-            let position = CGPoint(
+            let relPosition = CGPoint(
                 x: CGFloat(sin(angle)) * CGFloat(self.shapeRadius),
                 y: CGFloat(cos(angle)) * CGFloat(self.shapeRadius))
-            
-            //println("radius:\(radius) angle:\(angle) x:\(position.x) y:\(position.y)")
             
             for rowId in 0...(self.game.cylinderRows() - 1) {
                 // creating tile
@@ -144,15 +183,17 @@ class JFSCNNode : SCNNode {
                     id: shuffledTileMap[((self.game.cylinderRows() * colId) + rowId)],
                     size:CGSize(width: CGFloat(self.game.cylinderTileWidth()), height: CGFloat(self.game.cylinderTileWidth())),
                     parent:self)
-                tileNode.position = SCNVector3(
+                tileNode.relPosition = SCNVector3(
                     x: Float(position.x),
                     y: ((Float(rowId) - (Float(self.game.cylinderRows() - 1) / 2)) * (self.game.cylinderTileWidth() + self.tileGap)),
-                    //y: ((Float(rowId) * self.game.cylinderTileWidth()) - (Float(self.game.cylinderRows() - 1) / 2)) * self.tileGap,
                     z: Float(position.y))
-                tileNode.rotation = SCNVector4(x: 0, y: 1, z: 0, w: angle)
+                tileNode.position = SCNVector3(
+                    x: 0,
+                    y: ((Float(rowId) - (Float(self.game.cylinderRows() - 1) / 2)) * (self.game.cylinderTileWidth() + self.tileGap)),
+                    z: 0)
                 tileNode.baseAngle = angle
                 
-                self.rotationNode.addChildNode(tileNode)
+                self.tileColNodes[colId].addChildNode(tileNode)
                 self.addNodeToCol(tileNode, col:colId)
             }
         }
@@ -250,8 +291,8 @@ class JFTileNode: SCNNode {
     var baseAngle:Float = 0
     var typeId:Int = 0
     var nodeId:CGPoint
+    var relPosition:SCNVector3 = SCNVector3()
     var tileNodes:[JFTileNodeFaceType:SCNNode] = [:]
-    let explosionImage = UIImage(named: "explosion")
     
     //MARK: tmp
     var vanished:Bool = false
@@ -305,22 +346,25 @@ class JFTileNode: SCNNode {
         
         // find timing when tile faces have to change
         var timing:NSTimeInterval = 0.5
-        if let parent = self.parentNode as? JFSCNNode {
+        if let parent = self.cylinderNode as? JFSCNNode {
 
             // get angle based on position of tile relative to camera
             let positionAbsolute = SCNVector3(
-                x:(parent.position.x + self.position.x),
-                y:(parent.position.y + self.position.y),
-                z:(parent.position.z + self.position.z))
-            let perpectveAngle = atan(positionAbsolute.x / positionAbsolute.z)
+                x:(parent.position.x + self.relPosition.x),
+                y:(parent.position.y + self.relPosition.y),
+                z:(parent.position.z + self.relPosition.z))
+            let perspectveAngle = atan(positionAbsolute.x / positionAbsolute.z)
             // get initial global angle of tile by adding local tile angle, groupNode angle, global tile position
-            let rootAngle = parent.rotation.w * ((parent.rotation.y > 0) ? 1 : -1) + self.baseAngle - perpectveAngle
+            let rootAngle = parent.rotationNode.rotation.w * ((parent.rotationNode.rotation.y > 0) ? 1 : -1) + self.baseAngle - perspectveAngle
             
             // get angle at which small side of tile faces camera
             let rootAngleInt = rootAngle / Float(M_PI)
             let targetAngleInt:Float = self.turned ? ceil(rootAngleInt + 0.5) - 0.5 : floor(rootAngleInt + 0.5) - 0.5
             timing = (NSTimeInterval(targetAngleInt) - NSTimeInterval(rootAngleInt)) / NSTimeInterval(rotationAngleInt)
             
+            let tCylAngle = parent.rotationNode.rotation.w
+            //print("cylAng:\(tCylAngle) baseAng:\(baseAngle) persAng:\(perspectveAngle) timing:\(timing)")
+            //print("rootAng:\(rootAngleInt) targetAng:\(targetAngleInt) timing:\(timing)")
             /*
             0 -> 0.5
             0.2 -> 0.3 / 0.7
@@ -337,8 +381,6 @@ class JFTileNode: SCNNode {
             0.9 -> 1.8 > 2.8 > ceil > 3 > 2 > 1
             0.9 -> 1.8 > 2.8 > floor > 2 > 1 > 0.5
             */
-            
-            //println("rootAngle:\(rootAngleInt) timing:\(timing) tmp1:\(targetAngleInt)")
         }
         
         // run aminations
