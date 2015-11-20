@@ -40,6 +40,7 @@ let kMinRotationRate:Double = 0.02
 enum JFGameMode:Int {
     case Menu = 0
     case Playing = 1
+    case PlayingIntro = 2
 }
 
 enum JFAlterViewIdentifier:Int {
@@ -111,27 +112,23 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         sceneView.autoenablesDefaultLighting = false
         sceneView.allowsCameraControl = false
         sceneView.delegate = self
-
-        //MARK: usePhysics
-        if(self.game.physics) {
-            //let shape = SCNSphere(radius: 1)
-            //shape.firstMaterial?.diffuse.contents = UIColor(white: 0.5, alpha: 1)
-            //self.centerNode = SCNNode(geometry: shape)
-            self.centerNode = SCNNode()
-            let gravityField = SCNPhysicsField.radialGravityField()
-            gravityField.strength = 0
-            self.centerNode.physicsField = gravityField
-            self.centerNode.name = "gravity"
-            self.sceneView.scene?.rootNode.addChildNode(self.centerNode)
-            self.centerNode.opacity = 1.0
-            self.centerNode.physicsField?.categoryBitMask = 1
-        }
         
         // camera
         self.addCamera(scene)
         
         // motion detection
         self.startDeviceMotionDetection()
+    }
+    
+    func addCenterNode(scene:SCNScene) {
+        self.centerNode = SCNNode()
+        let gravityField = SCNPhysicsField.radialGravityField()
+        gravityField.strength = 0
+        self.centerNode.physicsField = gravityField
+        self.centerNode.name = "gravity"
+        self.sceneView.scene?.rootNode.addChildNode(self.centerNode)
+        self.centerNode.opacity = 1.0
+        self.centerNode.physicsField?.categoryBitMask = 1
     }
     
     func addCylinder(scene:SCNScene) {
@@ -194,6 +191,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         for wallNode in self.physicsWallNodes {
             wallNode.removeFromParentNode()
         }
+        self.centerNode.removeFromParentNode()
         self.gridWall.removeFromParentNode()
         self.decorationNode.removeFromParentNode()
     }
@@ -414,21 +412,32 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     }
     
     //MARK: user actions
-    func gamePlay() {
+    func gamePlayIntro() {
         
         self.gameMenuView.hidden = false
         self.homeMenuView.hidden = true
         
-        self.gameMode = .Playing
+        self.gameMode = .PlayingIntro
         self.addCylinder(self.sceneView.scene!)
         self.addPhysicsWalls(self.sceneView.scene!)
         self.addGridWall(self.sceneView.scene!)
         self.addDecoration(self.sceneView.scene!)
-        self.addGestureRecognizers()
-        
-        execDelay(0.5) { () -> () in
-            self.cylinderNode.foldAnimation()
+        if(self.game.physics) {
+            self.addCenterNode(self.sceneView.scene!)
         }
+        
+
+        execDelay(0.5) { () -> () in
+            let delayGamePlay = self.cylinderNode.foldAnimation()
+            execDelay(delayGamePlay) { () -> () in
+                self.gamePlay()
+            }
+        }
+    }
+    
+    func gamePlay() {
+        self.gameMode = .Playing
+        self.addGestureRecognizers()
     }
     
     func gameExit() {
@@ -445,15 +454,15 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         switch(sender.tag) {
         case 1:
             self.game.level = 0
-            self.gamePlay()
+            self.gamePlayIntro()
             break
         case 2:
             self.game.level = 1
-            self.gamePlay()
+            self.gamePlayIntro()
             break
         case 3:
             self.game.level = 2
-            self.gamePlay()
+            self.gamePlayIntro()
             break
         default:
             break
@@ -497,23 +506,31 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     //MARK: SCNSceneRendererDelegate
     
     func renderer(renderer: SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: NSTimeInterval) {
-        if(self.gameMode == .Playing) {
+        // handle cylinder rotation
+        switch(self.gameMode) {
+        case .Menu:
+            break
+        case .Playing, .PlayingIntro:
             // adjust rotation based on position
-            let widthHalfTile:Float = (self.cylinderNode.circumsize / Float(self.game.cylinderCols())) / 2
             let location = self.cylinderNode.presentationNode.position
-            let angle = (-location.x + widthHalfTile) / self.cylinderNode.shapeRadius
+            let angle = -location.x / self.cylinderNode.shapeRadius
             let rotate = SCNMatrix4MakeRotation(angle, 0, -1, 0)
             self.cylinderNode.rotationNode.transform = rotate
+            break
         }
     }
     
     func renderer(renderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: NSTimeInterval) {
-        //MARK:usePhysics
+        // takes care of cylinder movement
         if(!self.game.physics) {
             return
         }
 
-        if(self.gameMode == .Playing) {
+        switch(self.gameMode) {
+        case .Menu, .PlayingIntro:
+            // nothing to do
+            break
+        case .Playing:
             // calculate velocity
             let location = self.cylinderNode.presentationNode.position
             let nodeTranslationX = location.x - self.panStartNodePos.x
@@ -561,6 +578,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 //self.centerNode.opacity = 1
                 //print("v:\(self.cylinderNode.physicsBody?.velocity)")
             }
+            break
         }
     }
 }

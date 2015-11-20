@@ -30,7 +30,7 @@ let kTileColorClosedInsideIntensity:CGFloat = 1.0
 let kTileColorClosedFrame = UIColor(white: 1, alpha: 1)
 let kTileColorClosedFrameIntensity:CGFloat = 1.0
 let kTileRestingPosition = SCNVector3Make(0, 1000, 0)
-
+let kFoldinAnimationTime:NSTimeInterval = 1.0
 
 class JFSCNNode : SCNNode {
 
@@ -86,7 +86,6 @@ class JFSCNNode : SCNNode {
         // angle between columns
         
         // cylinder physics
-        //MARK: usePhysics
         if(self.game.physics) {
             let cylinderShapeShape = SCNBox(
                 width: CGFloat(self.shapeRadius) * 2,
@@ -111,10 +110,11 @@ class JFSCNNode : SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func foldAnimation() {
+    func foldAnimation() -> NSTimeInterval {
         for colNode in self.tileColNodes {
             colNode.runAction(colNode.foldAction)
         }
+        return kFoldinAnimationTime
     }
     
     func generateTileNodes() {
@@ -134,6 +134,11 @@ class JFSCNNode : SCNNode {
         // setup column nodes
         // base column is touching the grid
         let baseColId = (self.game.cylinderCols() / 2)
+        
+        // animation basics
+        let singleFoldLength:NSTimeInterval = kFoldinAnimationTime / NSTimeInterval(self.game.cylinderCols() / 2)
+        let colDistance:Float = (self.tileGap + self.game.cylinderTileWidth()) / 2
+
         for colId in 0...(self.game.cylinderCols() - 1) {
             
             // connect column nodes
@@ -150,20 +155,31 @@ class JFSCNNode : SCNNode {
             // set position and pivot point
             let angle = tileAngleRad * Float(colId)
             if(colId == baseColId) {
+                
+                self.tileColNodes[baseColId].pivot = SCNMatrix4MakeTranslation(-colDistance, 0, 0)
+
                 self.tileColNodes[baseColId].position = SCNVector3(
                     x: Float(sin(angle)) * self.shapeRadius,
                     y: 0,
                     z: Float(cos(angle)) * self.shapeRadius)
                 self.tileColNodes[baseColId].rotation = SCNVector4(x: 0, y: 1, z: 0, w: angle)
+                
+                // base tile needs to be rotated by half the angle of other tiles
+                let foldAction = SCNAction.rotateByAngle(
+                    CGFloat(M_PI * 1) / CGFloat(self.game.cylinderCols()),
+                    aroundAxis: SCNVector3(x: 0, y: 1, z: 0),
+                    duration: singleFoldLength)
+                let waitDuration = NSTimeInterval(self.game.cylinderCols() - colId - 1) * singleFoldLength
+                let waitAction = SCNAction.waitForDuration(waitDuration)
+                self.tileColNodes[colId].foldAction = SCNAction.sequence([waitAction, foldAction])
+
             } else {
                 let multiplier:Float = ((colId >= (self.game.cylinderCols() / 2)) ? -1 : 1)
-                let colDistance:Float = (self.tileGap + self.game.cylinderTileWidth()) / 2
                 self.tileColNodes[colId].pivot = SCNMatrix4MakeTranslation(colDistance * multiplier, 0, 0)
                 self.tileColNodes[colId].position = SCNVector3(
                     x: -colDistance * multiplier,
                     y: 0,
                     z: 0)
-                //self.tileColNodes[colId].rotation = SCNVector4(x: 0, y: 1, z: 0, w: -multiplier * Float(M_PI * 2) / Float(self.game.cylinderCols()))
                 let rotationAngle = -multiplier * Float(M_PI * 2) / Float(self.game.cylinderCols())
                 //action fold all cols
                 self.tileColNodes[colId].foldAction = SCNAction.rotateByAngle(
@@ -171,8 +187,6 @@ class JFSCNNode : SCNNode {
                     aroundAxis: SCNVector3(x: 0, y: 1, z: 0),
                     duration: 1.0)
                 //action fold from sides
-                let animationLength:NSTimeInterval = 2.0
-                let singleFoldLength:NSTimeInterval = animationLength / NSTimeInterval(self.game.cylinderCols())
                 let foldAction = SCNAction.rotateByAngle(
                     CGFloat(rotationAngle),
                     aroundAxis: SCNVector3(x: 0, y: 1, z: 0),
@@ -479,10 +493,6 @@ class JFTileNode: SCNNode {
         tileClosedNode.addChildNode(tileClosedInnerNode)
         self.tileNodes[JFTileNodeFaceType.closed] = tileClosedNode
         self.addChildNode(tileClosedNode)
-        
-//        let blurFilter = CIFilter(name:"CIGaussianBlur")
-//        blurFilter?.setValue(1.0, forKey: "inputRadius")
-//        tileClosedInnerNode.filters = [blurFilter!]
 
         // open node
         let tileOpenShape = SCNShape(path: path, extrusionDepth: extrusionDepth)
