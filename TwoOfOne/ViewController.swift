@@ -24,12 +24,12 @@ let kDistanceWall:Float = 2414 * kConfigScale
 let kLightLeftPosition = SCNVector3Make(-1000 * kConfigScale, -315 * kConfigScale, 1780 * kConfigScale)
 let kLightLeftColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.4)
 let kLightLeftAttenuationStartDistance = 1570 * CGFloat(kConfigScale)
-let kLightLeftAttenuationEndDistance = 4420 * CGFloat(kConfigScale)
+let kLightLeftAttenuationEndDistance = 4420 * CGFloat(kConfigScale) * 10
 
 let kLightRightPosition = SCNVector3Make(950 * kConfigScale, -380 * kConfigScale, 1990 * kConfigScale)
 let kLightRightColor = UIColor(red: 243/255, green: 255/255, blue: 239/255, alpha: 0.4)
 let kLightRightAttenuationStartDistance = 1430 * CGFloat(kConfigScale)
-let kLightRightAttenuationEndDistance = 3820 * CGFloat(kConfigScale)
+let kLightRightAttenuationEndDistance = 3820 * CGFloat(kConfigScale) * 10
 
 // device roation handling
 let kEaseRotation:Double = 1 / 48
@@ -85,6 +85,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     // core motion
     var cm:CMMotionManager = CMMotionManager()
+    var lastEasedRotationRate = CMRotationRate()
     
     // game logic
     var game:Game = Game()
@@ -283,18 +284,24 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         //print("rX: \(rotationRate.y)")
         
         // use y cause of portrait mode
-        let easedRotationX:Float = (abs(rotationRate.y) > kMinRotationRate) ? Float(rotationRate.y * kEaseRotation) : 0
+        //let easedRotationX:Float = (abs(rotationRate.y) > kMinRotationRate) ? Float(rotationRate.y * kEaseRotation) : 0
+        let easedRotationX:Float = Float(rotationRate.y * kEaseRotation)
         let maxOutRotationX:Float = (abs(easedRotationX) > kMaxOutRotation) ? kMaxOutRotation * sign(easedRotationX) : easedRotationX
+        let rotationX = (Float(self.lastEasedRotationRate.x * 2) + maxOutRotationX) / 3
         
         // use x cause of portrait mode
-        let easedRotationY:Float = (abs(rotationRate.x) > kMinRotationRate) ? Float(rotationRate.x * kEaseRotation) : 0
+        //let easedRotationY:Float = (abs(rotationRate.x) > kMinRotationRate) ? Float(-rotationRate.x * kEaseRotation) : 0
+        let easedRotationY:Float = Float(-rotationRate.x * kEaseRotation)
         let maxOutRotationY:Float = (abs(easedRotationY) > kMaxOutRotation) ? kMaxOutRotation * sign(easedRotationY) : easedRotationY
+        let rotationY = (Float(self.lastEasedRotationRate.y * 2) + maxOutRotationY) / 3
 
-        if((easedRotationX == 0) && (easedRotationY == 0)) {
+        self.lastEasedRotationRate = CMRotationRate(x: Double(maxOutRotationX), y: Double(maxOutRotationY), z: 0)
+        
+        if((rotationX == 0) && (rotationY == 0)) {
             // no animation required
             return
         }
-        let rotationVector = SCNVector4Make(maxOutRotationX, maxOutRotationY, 0, sqrt((maxOutRotationX * maxOutRotationX) + (maxOutRotationY * maxOutRotationY)))
+        let rotationVector = SCNVector4Make(rotationX, rotationY, 0, sqrt((rotationX * rotationX) + (rotationY * rotationY)))
         let rotateTo = SCNAction.rotateToAxisAngle(rotationVector, duration: 0.2)
         self.cameraNode.runAction(rotateTo)
     }
