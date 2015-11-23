@@ -38,12 +38,13 @@ let kTileColorClosedInsideIntensity:CGFloat = 1.0
 let kTileColorClosedFrame = UIColor(white: 1, alpha: 1)
 let kTileColorClosedFrameIntensity:CGFloat = 1.0
 let kTileRestingPosition = SCNVector3Make(0, 1000, 0)
+let kFlipAnimationTime:NSTimeInterval = 1.0
 let kFoldinAnimationTime:NSTimeInterval = 1.0
 
 class JFSCNNode : SCNNode {
 
     var game:Game = Game()
-    var nodesByCol:[[SCNNode]] = []
+    var nodesByCol:[[JFTileNode]] = []
     var rotationNode = SCNNode()
     var shapeRadius: Float = 0
     var currentPosition: Float = 0
@@ -119,10 +120,15 @@ class JFSCNNode : SCNNode {
     }
     
     func foldAnimation() -> NSTimeInterval {
+        for tileCol in self.nodesByCol {
+            for tileNode in tileCol {
+                tileNode.runAction(tileNode.appearAction)
+            }
+        }
         for colNode in self.tileColNodes {
             colNode.runAction(colNode.foldAction)
         }
-        return kFoldinAnimationTime
+        return kFoldinAnimationTime + kFlipAnimationTime
     }
     
     func generateTileNodes() {
@@ -178,7 +184,7 @@ class JFSCNNode : SCNNode {
                     aroundAxis: SCNVector3(x: 0, y: 1, z: 0),
                     duration: singleFoldLength)
                 let waitDuration = NSTimeInterval(self.game.cylinderCols() - colId - 1) * singleFoldLength
-                let waitAction = SCNAction.waitForDuration(waitDuration)
+                let waitAction = SCNAction.waitForDuration(kFlipAnimationTime + waitDuration)
                 self.tileColNodes[colId].foldAction = SCNAction.sequence([waitAction, foldAction])
 
             } else {
@@ -207,7 +213,7 @@ class JFSCNNode : SCNNode {
                 } else if(abs(colId - baseColId) == 1) {
                     foldAction.timingMode = .EaseOut
                 }
-                let waitAction = SCNAction.waitForDuration(waitDuration)
+                let waitAction = SCNAction.waitForDuration(kFlipAnimationTime + waitDuration)
                 self.tileColNodes[colId].foldAction = SCNAction.sequence([waitAction, foldAction])
             }
         }
@@ -243,7 +249,7 @@ class JFSCNNode : SCNNode {
         }
     }
     
-    func addNodeToCol(node:SCNNode, col:Int) {
+    func addNodeToCol(node:JFTileNode, col:Int) {
         self.nodesByCol[col].append(node)
     }
     
@@ -350,6 +356,7 @@ class JFTileNode: SCNNode {
     var nodeId:CGPoint
     var relPosition:SCNVector3 = SCNVector3()
     var tileNodes:[JFTileNodeFaceType:SCNNode] = [:]
+    var appearAction:SCNAction = SCNAction()
     
     //MARK: tmp
     var vanished:Bool = false
@@ -372,7 +379,7 @@ class JFTileNode: SCNNode {
         
        // add visible nodes
         self.addFaces(size)
-        
+        self.setupForAppearanceAnimation()
         self.adjustNodesVisibility()
     }
     
@@ -381,6 +388,20 @@ class JFTileNode: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
 
+    func setupForAppearanceAnimation() {
+        self.opacity = 0.0
+        self.rotation = SCNVector4Make(0, 1, 0, Float(M_PI_2))
+        let durationFlip = kFlipAnimationTime / NSTimeInterval(self.cylinderNode.game.cylinderCols() + self.cylinderNode.game.cylinderRows() - 2)
+        let timiningX = NSTimeInterval(CGFloat(self.cylinderNode.game.cylinderCols()) - 1 - self.nodeId.x) * durationFlip
+        let timiningY = NSTimeInterval(CGFloat(self.cylinderNode.game.cylinderRows()) - 1 - self.nodeId.y) * durationFlip
+        self.appearAction = SCNAction.sequence([
+            SCNAction.waitForDuration(timiningX + timiningY),
+            SCNAction.group([
+                SCNAction.fadeInWithDuration(0.1),
+                SCNAction.rotateToAxisAngle(SCNVector4(), duration: 0.3)])
+        ])
+    }
+    
     func flip(animated:Bool = true, completion: (() -> Void)! = nil) {
         self.turned = !self.turned
         if(animated) {
