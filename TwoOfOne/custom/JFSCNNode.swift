@@ -190,20 +190,26 @@ class JFSCNNode : SCNNode {
                     z: 0)
                 let rotationAngle = -multiplier * Float(M_PI * 2) / Float(self.game.cylinderCols())
                 //action fold all cols
+                /*
                 self.tileColNodes[colId].foldAction = SCNAction.rotateByAngle(
                     CGFloat(rotationAngle),
                     aroundAxis: SCNVector3(x: 0, y: 1, z: 0),
                     duration: 1.0)
+                */
                 //action fold from sides
                 let foldAction = SCNAction.rotateByAngle(
                     CGFloat(rotationAngle),
                     aroundAxis: SCNVector3(x: 0, y: 1, z: 0),
                     duration: singleFoldLength)
                 let waitDuration = (colId < baseColId) ? NSTimeInterval(colId) * singleFoldLength : NSTimeInterval(self.game.cylinderCols() - colId - 1) * singleFoldLength
+                if(waitDuration == 0) {
+                    foldAction.timingMode = .EaseIn
+                } else if(abs(colId - baseColId) == 1) {
+                    foldAction.timingMode = .EaseOut
+                }
                 let waitAction = SCNAction.waitForDuration(waitDuration)
                 self.tileColNodes[colId].foldAction = SCNAction.sequence([waitAction, foldAction])
             }
-
         }
         
         // add tiles to cylinder
