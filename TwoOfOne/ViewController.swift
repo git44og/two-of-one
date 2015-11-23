@@ -314,7 +314,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     //MARK: Gesture
     
     func addGestureRecognizers() {
-        //MARK: usePhysics
         let panRecognizer = UIPanGestureRecognizer(target: self, action: self.game.physics ? "panGesturePhysics:" : "panGesture:")
         self.sceneView.addGestureRecognizer(panRecognizer)
         let tapRecognizer = UITapGestureRecognizer(target: self, action: "tapGesture:")
@@ -430,7 +429,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         
         self.gameMenuView.hidden = false
         self.homeMenuView.hidden = true
-        self.gameScoreBoardView.hidden = false
+//        self.gameScoreBoardView.hidden = false
 
         self.gameMode = .PlayingIntro
         self.addCylinder(self.sceneView.scene!)
@@ -596,6 +595,18 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             }
             break
         }
+    }
+    
+    override func shouldAutorotate() -> Bool {
+        return false
+    }
+    
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.LandscapeLeft
+    }
+    
+    override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
+        return UIInterfaceOrientation.LandscapeLeft
     }
 }
 
