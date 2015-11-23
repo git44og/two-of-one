@@ -53,11 +53,15 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     @IBOutlet weak var sceneView: SCNView!
     @IBOutlet weak var menuButton: UIButton!
     @IBOutlet weak var gameMenuView: UIView!
+    @IBOutlet weak var gameScoreBoardView: UIView!
     @IBOutlet weak var homeMenuView: UIView!
     @IBOutlet weak var playEasyButton: UIButton!
     @IBOutlet weak var playMediumButton: UIButton!
     @IBOutlet weak var playHardButton: UIButton!
     @IBOutlet weak var physicsButton: UIButton!
+    @IBOutlet weak var bonusLabel: UILabel!
+    @IBOutlet weak var turnLabel: UILabel!
+    @IBOutlet weak var scoreLabel: UILabel!
     
     // Geometry
     var cylinderNode: JFSCNNode = JFSCNNode()
@@ -98,6 +102,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         
         self.game = Game(vc: self)
         self.gameMenuView.hidden = true
+        self.gameScoreBoardView.hidden = true
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -332,6 +337,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 if let hitNode = nearestObject.node as? JFTileNode {
                     if(hitNode.lock) {
                         // tile locked
+//                        --- what means tile locked
+//                        --- continue with turn count and score in game object
                     } else if(hitNode.turned) {
                         hitNode.flip()
                         for j in 0...(self.turnedNodes.count - 1) {
@@ -423,7 +430,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         
         self.gameMenuView.hidden = false
         self.homeMenuView.hidden = true
-        
+        self.gameScoreBoardView.hidden = false
+
         self.gameMode = .PlayingIntro
         self.addCylinder(self.sceneView.scene!)
         self.addPhysicsWalls(self.sceneView.scene!)
@@ -453,6 +461,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.gameMode = .Menu
         self.homeMenuView.hidden = false
         self.gameMenuView.hidden = true
+        self.gameScoreBoardView.hidden = true
     }
     
     //MARK: button actions
