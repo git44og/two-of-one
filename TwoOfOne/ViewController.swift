@@ -36,6 +36,9 @@ let kEaseRotation:Double = 1 / 48
 let kMaxOutRotation:Float = Float(M_PI / 32)
 let kMinRotationRate:Double = 0.02
 
+// tile rotation
+let kDelayTurnBack: NSTimeInterval = 1.0 //1.0
+let kDurationTileTurn: NSTimeInterval = 0.3 //0.3
 
 enum JFGameMode:Int {
     case Menu = 0
@@ -363,7 +366,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 self.turnedNodes = []
                 tile1.lock = true
                 tile2.lock = true
-                execDelay(1) {
+                execDelay(kDelayTurnBack) {
                     tile1.tileFalls()
                     tile2.tileFalls()
                 }
@@ -529,6 +532,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             // adjust rotation based on position
             let location = self.cylinderNode.presentationNode.position
             let angle = -location.x / self.cylinderNode.shapeRadius
+            //print("x:\(location.x)")
             let rotate = SCNMatrix4MakeRotation(angle, 0, -1, 0)
             self.cylinderNode.rotationNode.transform = rotate
             break

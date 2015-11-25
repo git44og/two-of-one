@@ -156,7 +156,7 @@ class JFSCNNode : SCNNode {
         for colId in 0...(self.game.cylinderCols() - 1) {
             
             // connect column nodes
-            self.tileColNodes.append(JFCylinderColNode())
+            self.tileColNodes.append(JFCylinderColNode(parent: self))
             if(colId == baseColId) {
                 self.rotationNode.addChildNode(self.tileColNodes[baseColId])
             }
@@ -168,6 +168,8 @@ class JFSCNNode : SCNNode {
             
             // set position and pivot point
             let angle = tileAngleRad * Float(colId)
+            self.tileColNodes[colId].relAngle = angle
+            
             if(colId == baseColId) {
                 
                 self.tileColNodes[baseColId].pivot = SCNMatrix4MakeTranslation(-colDistance, 0, 0)
@@ -225,23 +227,18 @@ class JFSCNNode : SCNNode {
             
             self.nodesByCol.append([])
             
-            let angle = tileAngleRad * Float(colId)
             for rowId in 0...(self.game.cylinderRows() - 1) {
                 // creating tile
                 let tileNode = JFTileNode(
                     x: colId, y: rowId,
                     id: shuffledTileMap[((self.game.cylinderRows() * colId) + rowId)],
                     size:CGSize(width: CGFloat(self.game.cylinderTileWidth()), height: CGFloat(self.game.cylinderTileWidth())),
-                    parent:self)
-                tileNode.relPosition = SCNVector3(
-                    x: Float(position.x),
-                    y: ((Float(rowId) - (Float(self.game.cylinderRows() - 1) / 2)) * (self.game.cylinderTileWidth() + self.tileGap)),
-                    z: Float(position.y))
+                    parent:self,
+                    colNode:self.tileColNodes[colId])
                 tileNode.position = SCNVector3(
                     x: 0,
                     y: ((Float(rowId) - (Float(self.game.cylinderRows() - 1) / 2)) * (self.game.cylinderTileWidth() + self.tileGap)),
                     z: 0)
-                tileNode.baseAngle = angle
                 
                 self.tileColNodes[colId].addChildNode(tileNode)
                 self.addNodeToCol(tileNode, col:colId)
@@ -325,19 +322,72 @@ class JFSCNNode : SCNNode {
         })
         SCNTransaction.commit()
     }
+    
+    func cylinderRotation() -> Float {
+        // angle correction maps the front column to angle 0
+        var rotation = (self.rotationNode.rotation.w * self.cylinderRotationOrientation()) + (Float(M_PI) / Float(self.game.cylinderCols()))
+        rotation -= (rotation > Float(M_PI * 2)) ? Float(M_PI * 2) : 0
+        rotation += (rotation < -Float(M_PI * 2)) ? Float(M_PI * 2) : 0
+        return rotation
+    }
+    
+    func cylinderRotationOrientation() -> Float {
+        // returns direction of rotation vector
+        return ((self.rotationNode.rotation.y > 0) ? 1 : -1)
+    }
 }
 
 
 class JFCylinderColNode: SCNNode {
     
     var foldAction:SCNAction = SCNAction()
+    var cylinderNode: JFSCNNode
+    var relAngle:Float = 0
     
     override init() {
+        self.cylinderNode = JFSCNNode()
+        super.init()
+    }
+    
+    init(parent:JFSCNNode) {
+        self.cylinderNode = parent
         super.init()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func globalPositionInCylinder() -> SCNVector3 {
+        
+        let cylinderRotation = self.cylinderNode.cylinderRotation()
+        let cylinderRadius = self.cylinderNode.shapeRadius
+        
+        var globalAngle = cylinderRotation + self.relAngle
+        // change angle > pi to negative angle
+        globalAngle -= (globalAngle > Float(M_PI)) ? Float(2 * M_PI) : 0
+        //print("cyl:\(cylR) col:\(colR) rad:\(colAngle)")
+        
+        // calculate global position
+        let position = SCNVector3(
+            x: Float(sin(globalAngle)) * cylinderRadius,
+            y: 0,
+            z: Float(cos(globalAngle)) * cylinderRadius)
+
+        //print("x:\(position.x) y:\(position.y) rad:\(colAngle)")
+        
+        //return position based on angle of col and angle of cylinder
+        return position
+    }
+    
+    func globalPosition() -> SCNVector3 {
+        
+        let positionAbsolute = SCNVector3(
+            x:(self.cylinderNode.presentationNode.position.x + globalPositionInCylinder().x),
+            y:(self.cylinderNode.presentationNode.position.y + globalPositionInCylinder().y),
+            z:(self.cylinderNode.presentationNode.position.z + globalPositionInCylinder().z))
+        
+        return positionAbsolute
     }
 }
 
@@ -351,10 +401,9 @@ enum JFTileNodeFaceType:Int {
 class JFTileNode: SCNNode {
     var turned:Bool = false
     var cylinderNode: JFSCNNode
-    var baseAngle:Float = 0
+    var colNode: JFCylinderColNode
     var typeId:Int = 0
     var nodeId:CGPoint
-    var relPosition:SCNVector3 = SCNVector3()
     var tileNodes:[JFTileNodeFaceType:SCNNode] = [:]
     var appearAction:SCNAction = SCNAction()
     
@@ -362,11 +411,12 @@ class JFTileNode: SCNNode {
     var vanished:Bool = false
     var lock:Bool = false
     
-    init(x:Int, y:Int, id:Int, size:CGSize, parent:JFSCNNode) {
+    init(x:Int, y:Int, id:Int, size:CGSize, parent:JFSCNNode, colNode:JFCylinderColNode) {
         
         self.nodeId = CGPoint(x: x, y: y)
         self.typeId = id
         self.cylinderNode = parent
+        self.colNode = colNode
         
         super.init()
         
@@ -385,6 +435,7 @@ class JFTileNode: SCNNode {
     
     required init?(coder aDecoder: NSCoder) {
         self.cylinderNode = JFSCNNode()
+        self.colNode = JFCylinderColNode()
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -415,8 +466,8 @@ class JFTileNode: SCNNode {
     }
     
     func didTurn(completion: (() -> Void)!) {
-
-        let rotationDuration:NSTimeInterval = 0.3
+        
+        let rotationDuration:NSTimeInterval = kDurationTileTurn
         
         // get half rotation in correct direction
         let rotationAngleInt:CGFloat = (self.turned ? 1 : -1)
@@ -426,21 +477,24 @@ class JFTileNode: SCNNode {
         var timing:NSTimeInterval = 0.5
 
         // get angle based on position of tile relative to camera
-        let positionAbsolute = SCNVector3(
-            x:(self.cylinderNode.position.x + self.relPosition.x),
-            y:(self.cylinderNode.position.y + self.relPosition.y),
-            z:(self.cylinderNode.position.z + self.relPosition.z))
+        let positionAbsolute = self.colNode.globalPosition()
         let perspectveAngle = atan(positionAbsolute.x / positionAbsolute.z)
+        
         // get initial global angle of tile by adding local tile angle, groupNode angle, global tile position
-        let rootAngle = self.cylinderNode.rotationNode.rotation.w * ((self.cylinderNode.rotationNode.rotation.y > 0) ? 1 : -1) + self.baseAngle - perspectveAngle
+        let rootAngle = self.cylinderNode.cylinderRotation() + self.colNode.relAngle - perspectveAngle
         
         // get angle at which small side of tile faces camera
         let rootAngleInt = rootAngle / Float(M_PI)
         let targetAngleInt:Float = self.turned ? ceil(rootAngleInt + 0.5) - 0.5 : floor(rootAngleInt + 0.5) - 0.5
         timing = (NSTimeInterval(targetAngleInt) - NSTimeInterval(rootAngleInt)) / NSTimeInterval(rotationAngleInt)
         
-        //print("cylAng:\(self.cylinderNode.rotationNode.rotation.w) baseAng:\(baseAngle) persAng:\(perspectveAngle) timing:\(timing)")
-        //print("rootAng:\(rootAngleInt) targetAng:\(targetAngleInt) timing:\(timing)")
+        /*
+        print("----")
+        print("c.x:\(self.cylinderNode.presentationNode.position.x) c.z:\(self.cylinderNode.presentationNode.position.z)")
+        print("r.x:\(self.colNode.globalPositionInCylinder().x) r.z:\(self.colNode.globalPositionInCylinder().z)")
+        print("a.x:\(positionAbsolute.x) a.z:\(positionAbsolute.z)")
+        print("rootAng:\(rootAngle) cylAngle:\(self.cylinderNode.cylinderRotation()) +colAng:\(self.colNode.relAngle) -persAng:\(perspectveAngle) timing:\(timing)")
+        */
         /*
         0 -> 0.5
         0.2 -> 0.3 / 0.7
