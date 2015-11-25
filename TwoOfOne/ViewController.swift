@@ -103,7 +103,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.game = Game(vc: self)
+        self.game.vc = self
         self.gameMenuView.hidden = true
         self.gameScoreBoardView.hidden = true
     }
@@ -463,6 +463,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.homeMenuView.hidden = false
         self.gameMenuView.hidden = true
         self.gameScoreBoardView.hidden = true
+        
+        let vc = self.storyboard?.instantiateViewControllerWithIdentifier("menuScreen") as! MenuViewController
+        self.presentViewController(vc, animated: false, completion: nil)
     }
     
     //MARK: button actions

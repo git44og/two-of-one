@@ -1,15 +1,106 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="iSn-JT-aV0">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
+        <!--Menu View Controller-->
+        <scene sceneID="8wz-P3-LPP">
+            <objects>
+                <viewController storyboardIdentifier="menuScreen" id="iSn-JT-aV0" customClass="MenuViewController" customModule="TwoOfOne" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="RSK-8K-EGN"/>
+                        <viewControllerLayoutGuide type="bottom" id="p4G-Yr-0o8"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="mJm-2A-ifF">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Startscreen.png" translatesAutoresizingMaskIntoConstraints="NO" id="oZb-X5-lTI">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yDF-5d-hio">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <subviews>
+                                    <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Sn-pG-7cF">
+                                        <rect key="frame" x="250" y="285" width="100" height="30"/>
+                                        <color key="backgroundColor" white="1" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="ckL-y8-IqV"/>
+                                            <constraint firstAttribute="width" constant="100" id="wIM-56-UBX"/>
+                                        </constraints>
+                                        <state key="normal" title="Medium">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onPlayPressed:" destination="iSn-JT-aV0" eventType="touchUpInside" id="JHr-jH-r6Q"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wfr-67-dKS">
+                                        <rect key="frame" x="250" y="225" width="100" height="30"/>
+                                        <color key="backgroundColor" white="1" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="bgK-M1-Nva"/>
+                                            <constraint firstAttribute="height" constant="30" id="lPZ-2T-X5N"/>
+                                        </constraints>
+                                        <state key="normal" title="Easy">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onPlayPressed:" destination="iSn-JT-aV0" eventType="touchUpInside" id="7PB-1q-IUr"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kzP-na-hbj">
+                                        <rect key="frame" x="250" y="345" width="100" height="30"/>
+                                        <color key="backgroundColor" white="1" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="NB9-eV-5Bo"/>
+                                            <constraint firstAttribute="height" constant="30" id="a2V-cv-KOA"/>
+                                        </constraints>
+                                        <state key="normal" title="Hard">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onPlayPressed:" destination="iSn-JT-aV0" eventType="touchUpInside" id="S8K-01-NPi"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="kzP-na-hbj" firstAttribute="centerX" secondItem="yDF-5d-hio" secondAttribute="centerX" id="1DZ-NK-ToL"/>
+                                    <constraint firstItem="wfr-67-dKS" firstAttribute="centerX" secondItem="yDF-5d-hio" secondAttribute="centerX" id="2Nb-MY-S2H"/>
+                                    <constraint firstItem="wfr-67-dKS" firstAttribute="centerY" secondItem="yDF-5d-hio" secondAttribute="centerY" constant="-60" id="34l-o5-fpN"/>
+                                    <constraint firstItem="kzP-na-hbj" firstAttribute="top" secondItem="0Sn-pG-7cF" secondAttribute="bottom" constant="30" id="Kr9-An-6mJ"/>
+                                    <constraint firstItem="0Sn-pG-7cF" firstAttribute="centerX" secondItem="yDF-5d-hio" secondAttribute="centerX" id="TWD-mT-MpI"/>
+                                    <constraint firstItem="0Sn-pG-7cF" firstAttribute="centerY" secondItem="yDF-5d-hio" secondAttribute="centerY" id="aHT-44-NCl"/>
+                                    <constraint firstItem="0Sn-pG-7cF" firstAttribute="top" secondItem="wfr-67-dKS" secondAttribute="bottom" constant="30" id="jj0-aZ-sEQ"/>
+                                    <constraint firstItem="kzP-na-hbj" firstAttribute="centerY" secondItem="yDF-5d-hio" secondAttribute="centerY" constant="60" id="x6p-a7-sgD"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="oZb-X5-lTI" firstAttribute="centerY" secondItem="mJm-2A-ifF" secondAttribute="centerY" id="3gt-oU-zoo"/>
+                            <constraint firstItem="oZb-X5-lTI" firstAttribute="top" secondItem="mJm-2A-ifF" secondAttribute="topMargin" id="8hC-u8-0vJ"/>
+                            <constraint firstItem="oZb-X5-lTI" firstAttribute="leading" secondItem="mJm-2A-ifF" secondAttribute="leadingMargin" constant="-20" id="CpM-WK-MjL"/>
+                            <constraint firstItem="yDF-5d-hio" firstAttribute="top" secondItem="mJm-2A-ifF" secondAttribute="topMargin" id="DtY-Uk-zr2"/>
+                            <constraint firstItem="oZb-X5-lTI" firstAttribute="centerX" secondItem="mJm-2A-ifF" secondAttribute="centerX" id="Gx2-tA-tvy"/>
+                            <constraint firstItem="yDF-5d-hio" firstAttribute="centerY" secondItem="mJm-2A-ifF" secondAttribute="centerY" id="ap5-nJ-Ka4"/>
+                            <constraint firstItem="yDF-5d-hio" firstAttribute="centerX" secondItem="mJm-2A-ifF" secondAttribute="centerX" id="has-hu-cer"/>
+                            <constraint firstItem="yDF-5d-hio" firstAttribute="leading" secondItem="mJm-2A-ifF" secondAttribute="leadingMargin" constant="-20" id="jKk-db-4Lw"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2dz-IR-Fk6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-366" y="366"/>
+        </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="TwoOfOne" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gameScreen" id="BYZ-38-t0r" customClass="ViewController" customModule="TwoOfOne" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -229,4 +320,7 @@
             <point key="canvasLocation" x="305" y="366"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Startscreen.png" width="1331" height="750"/>
+    </resources>
 </document>

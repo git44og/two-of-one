@@ -43,7 +43,7 @@ let kFoldinAnimationTime:NSTimeInterval = 1.0
 
 class JFSCNNode : SCNNode {
 
-    var game:Game = Game()
+    var game:Game
     var nodesByCol:[[JFTileNode]] = []
     var rotationNode = SCNNode()
     var shapeRadius: Float = 0
@@ -69,6 +69,7 @@ class JFSCNNode : SCNNode {
     }
     
     override init() {
+        self.game = Game()
         self.sceneSize = CGSize()
         self.sceneSizeFactor = 1
         super.init()
