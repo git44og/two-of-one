@@ -326,8 +326,8 @@ class JFSCNNode : SCNNode {
     func cylinderRotation() -> Float {
         // angle correction maps the front column to angle 0
         var rotation = (self.rotationNode.rotation.w * self.cylinderRotationOrientation()) + (Float(M_PI) / Float(self.game.cylinderCols()))
-        rotation -= (rotation > Float(M_PI * 2)) ? Float(M_PI * 2) : 0
-        rotation += (rotation < -Float(M_PI * 2)) ? Float(M_PI * 2) : 0
+        // return value in ]-pi, +pi[
+        rotation = normalizeAngle(rotation)
         return rotation
     }
     
@@ -465,6 +465,14 @@ class JFTileNode: SCNNode {
         self.tileNodes[JFTileNodeFaceType.closed]?.opacity = self.turned ? 0.0 : 1.0
     }
     
+    func isFacingCamera() -> Bool {
+        let positionAbsolute = self.colNode.globalPosition()
+        let perspectveAngle = atan(positionAbsolute.x / positionAbsolute.z)
+        let rootAngle = normalizeAngle(self.cylinderNode.cylinderRotation() + self.colNode.relAngle - perspectveAngle)
+        //print("rootAngle:\(rootAngle)")
+        return (abs(rootAngle) < Float(M_PI_2))
+    }
+    
     func didTurn(completion: (() -> Void)!) {
         
         let rotationDuration:NSTimeInterval = kDurationTileTurn
@@ -482,7 +490,7 @@ class JFTileNode: SCNNode {
         
         // get initial global angle of tile by adding local tile angle, groupNode angle, global tile position
         let rootAngle = self.cylinderNode.cylinderRotation() + self.colNode.relAngle - perspectveAngle
-        
+
         // get angle at which small side of tile faces camera
         let rootAngleInt = rootAngle / Float(M_PI)
         let targetAngleInt:Float = self.turned ? ceil(rootAngleInt + 0.5) - 0.5 : floor(rootAngleInt + 0.5) - 0.5

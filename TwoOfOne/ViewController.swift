@@ -337,10 +337,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             while((i < objs.count) && !nodeFound) {
                 let nearestObject = objs[i]
                 if let hitNode = nearestObject.node as? JFTileNode {
-                    if(hitNode.lock) {
-                        // tile locked
-//                        --- what means tile locked
-//                        --- continue with turn count and score in game object
+                    if(!hitNode.isFacingCamera() || hitNode.lock) {
+                        // tile locked or tile not facing camera
+                        // don't turn
                     } else if(hitNode.turned) {
                         hitNode.flip()
                         for j in 0...(self.turnedNodes.count - 1) {

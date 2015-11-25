@@ -32,6 +32,18 @@ func shuffleList<C: MutableCollectionType where C.Index == Int>(var list: C) -> 
     return list
 }
 
+// reduces angle to bounds ]-pi,+pi[
+func normalizeAngle(angle:Float) -> Float {
+    var normAngle = angle
+    while(normAngle > Float(M_PI)) {
+        normAngle -= Float(M_PI * 2)
+    }
+    while(normAngle < -Float(M_PI)) {
+        normAngle += Float(M_PI * 2)
+    }
+    return normAngle
+}
+
 // MARK: Math
 
 func sign(number:Float) -> Float {
