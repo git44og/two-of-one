@@ -534,11 +534,10 @@ class JFTileNode: SCNNode {
         moveFall.timingFunction = {(time:Float) -> Float in
             return time * time
         }
-        let movePush = SCNAction.moveBy(SCNVector3Make(self.position.x / -2, 0, self.position.z / -2), duration: 1.0)
+        let movePush = SCNAction.moveBy(SCNVector3Make(0, 0, self.cylinderNode.shapeRadius / -1.5), duration: 1.0)
         movePush.timingMode = SCNActionTimingMode.Linear
         
-        let rotationCorrection:Float = (self.rotation.y < -0.5) ? -1 : 1
-        let rotationVector = SCNVector3Make(sin(self.rotation.w + Float(M_PI_2)), 0, cos(self.rotation.w + Float(M_PI_2)) * rotationCorrection)
+        let rotationVector = SCNVector3Make(-1, 0, 0)
         //print("from x:\(self.rotation.x) y:\(self.rotation.y) z:\(self.rotation.z) z:\(self.rotation.w)")
         //print("to   x:\(rotationVector.x) y:\(rotationVector.y) z:\(rotationVector.z)")
         let rotatePush = SCNAction.rotateByAngle(CGFloat(M_PI) * 1, aroundAxis: SCNVector3Make(rotationVector.x, 0, rotationVector.z), duration: 1.0)
