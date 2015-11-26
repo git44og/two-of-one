@@ -99,6 +99,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     var gameMode:JFGameMode = .Menu
     var turnedNodes:[JFTileNode] = []
     
+    var scoreBoard:ScoreBoardView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,6 +107,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.game.vc = self
         self.gameMenuView.hidden = true
         self.gameScoreBoardView.hidden = true
+        
+        self.scoreBoard = ScoreBoardView(game: self.game, moveCountLabel: turnLabel, scoreLabel: scoreLabel, bonusTimeLabel: bonusLabel)
+        self.game.scoreBoard = self.scoreBoard
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -342,6 +346,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                         // don't turn
                     } else if(hitNode.turned) {
                         hitNode.flip()
+                        self.game.event(.flipTile)
                         for j in 0...(self.turnedNodes.count - 1) {
                             if(self.turnedNodes[j] == hitNode) {
                                 self.turnedNodes.removeAtIndex(j)
@@ -350,6 +355,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                         nodeFound = true
                     } else {
                         hitNode.flip()
+                        self.game.event(.flipTile)
                         self.turnedNodes.append(hitNode)
                         nodeFound = true
                     }
@@ -360,6 +366,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         
         if(turnedNodes.count >= 2) {
             if(self.turnedNodes[0].isPairWithTile(self.turnedNodes[1])) {
+                
+                self.game.event(.findPair)
+                
                 let tile1 = self.turnedNodes[0]
                 let tile2 = self.turnedNodes[1]
                 self.turnedNodes = []
@@ -431,7 +440,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         
         self.gameMenuView.hidden = false
         self.homeMenuView.hidden = true
-//        self.gameScoreBoardView.hidden = false
+        self.gameScoreBoardView.hidden = false
 
         self.gameMode = .PlayingIntro
         self.addCylinder(self.sceneView.scene!)

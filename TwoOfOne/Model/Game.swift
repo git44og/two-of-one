@@ -17,20 +17,54 @@ let kTileConfig:[(row:Int, col:Int, tile:Float, corner:Float, height:Float)] =
     (row:6, col:10, tile:100 * kConfigScale, corner:6, height:660 * kConfigScale),
 ]
 
+enum JFMoveType:Int {
+    case flipTile = 0
+    case findPair = 1
+}
+
+
 class Game {
     
     var vc:UIViewController = UIViewController()
     var score:Int = 0
+    var moveCounter:Int = 0
     var level:Int = 0
     var physics:Bool = true
+    var scoreBoard:ScoreBoardView? {
+        didSet {
+            self.updateScoreBoard()
+        }
+    }
     
     init(vc:UIViewController) {
         self.vc = vc
+        self.updateScoreBoard()
     }
     
     init() {
     }
     
+    //MARK: scoring
+    func event(mvoeType:JFMoveType) {
+        switch(mvoeType) {
+        case .flipTile:
+            self.moveCounter++
+            break
+        case .findPair:
+            self.score += 5
+            break
+        }
+        self.updateScoreBoard()
+    }
+    
+    //MARK: handling scores
+    func updateScoreBoard() {
+        if let sbv = self.scoreBoard {
+            sbv.updateScoreBoard(self.score, moveCounter: self.moveCounter)
+        }
+    }
+    
+    //MARK: appearance
     func cylinderRows() -> Int {
         return kTileConfig[self.level].row
     }
