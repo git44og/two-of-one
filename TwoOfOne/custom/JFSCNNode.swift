@@ -653,6 +653,7 @@ class JFTileNode: SCNNode {
     }
     
     func isPairWithTile(tile:JFTileNode) -> Bool {
+        return true
         return (self.typeId) == (tile.typeId)
     }
 }

@@ -32,8 +32,14 @@ class ScoreBoardView {
         self.scoreLabel = scoreLabel
         self.bonusTimeLabel = bonusTimeLabel
         
-        self.moveCountLabel.text = "999"
+        self.moveCountLabel.text = ""
+        self.scoreLabel.text = ""
+        self.bonusTimeLabel.text = ""
         
+    }
+    
+    func updateScoreBoard(bonusCounter:Float) {
+        self.bonusTimeLabel.text = (bonusCounter == 0) ? "" : String(NSString(format: "%.2f%", bonusCounter))
     }
     
     func updateScoreBoard(score:Int?, moveCounter:Int?) {
@@ -43,6 +49,5 @@ class ScoreBoardView {
         if let myMoveCounter = moveCounter {
             self.moveCountLabel.text = "\(myMoveCounter)"
         }
-        self.bonusTimeLabel.text = "---"
     }
 }

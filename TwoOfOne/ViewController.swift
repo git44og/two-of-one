@@ -346,7 +346,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                         // don't turn
                     } else if(hitNode.turned) {
                         hitNode.flip()
-                        self.game.event(.flipTile)
+                        self.game.event(.flipBackTile)
                         for j in 0...(self.turnedNodes.count - 1) {
                             if(self.turnedNodes[j] == hitNode) {
                                 self.turnedNodes.removeAtIndex(j)
@@ -379,6 +379,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                     tile2.tileFalls()
                 }
             } else {
+                
+                self.game.event(.findNoPair)
+                
                 let tile1 = self.turnedNodes[0]
                 let tile2 = self.turnedNodes[1]
                 self.turnedNodes = []
