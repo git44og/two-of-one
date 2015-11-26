@@ -558,10 +558,27 @@ class JFTileNode: SCNNode {
         }
     }
     
+    func tmpSetId(tileId:Int) -> String {
+        switch(tileId) {
+        case 1..<13:
+            return "01"
+        case 13..<21:
+            return "02"
+        case 21..<31:
+            return "03"
+        default:
+            return "00"
+        }
+    }
+    
     func openTileImage() -> UIImage {
-        let tileId = (self.typeId % 10 + 1)
+        if(self.typeId > 30) {
+            print("tile number out of bounds: \(self.typeId)")
+        }
+        let tileId = (self.typeId % 30 + 1)
+        let setId = self.tmpSetId(tileId)
         let tileIdStr = (tileId < 10) ? "0\(tileId)" : String(tileId)
-        return UIImage(named: "Karte\(tileIdStr)")!
+        return UIImage(named: "\(setId)_\(tileIdStr)")!
     }
     
     func addFaces(size:CGSize) {
@@ -636,6 +653,6 @@ class JFTileNode: SCNNode {
     }
     
     func isPairWithTile(tile:JFTileNode) -> Bool {
-        return (self.typeId % 10) == (tile.typeId % 10)
+        return (self.typeId) == (tile.typeId)
     }
 }
