@@ -124,6 +124,8 @@ class Game {
     
     // @objc prefaces method as objective-c conform
     @objc func bonusTimerFire(timer:NSTimer) {
+        self.bonusLevel = 0
+        self.updateScoreBoard()
         self.cancelBonusTimer()
     }
     
@@ -145,7 +147,7 @@ class Game {
     //MARK: handling scores
     func updateScoreBoard() {
         if let sbv = self.scoreBoard {
-            sbv.updateScoreBoard(self.score, moveCounter: self.moveCounter)
+            sbv.updateScoreBoard(self.score, moveCounter: self.moveCounter, bonusLabel: self.bonusLevel)
         }
     }
     

@@ -220,11 +220,14 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="IvC-8p-GDO">
-                                                <rect key="frame" x="50" y="14" width="125" height="2"/>
+                                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="IvC-8p-GDO">
+                                                <rect key="frame" x="50" y="14" width="75" height="2"/>
                                             </progressView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wxO-bX-gRX">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wxO-bX-gRX">
                                                 <rect key="frame" x="133" y="4" width="34" height="21"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="34" id="4iP-KO-Lrg"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
@@ -233,6 +236,8 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="1yD-uc-iw3"/>
+                                            <constraint firstAttribute="trailing" secondItem="wxO-bX-gRX" secondAttribute="trailing" constant="8" id="Dgg-Bm-AnW"/>
+                                            <constraint firstAttribute="trailing" secondItem="IvC-8p-GDO" secondAttribute="trailing" constant="50" id="f8g-hj-g16"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bfd-zO-dpw" userLabel="TurnView">
@@ -319,6 +324,7 @@
                     </view>
                     <connections>
                         <outlet property="bonusLabel" destination="wxO-bX-gRX" id="GPf-dL-1is"/>
+                        <outlet property="bonusProgressView" destination="IvC-8p-GDO" id="TVZ-oR-7Aa"/>
                         <outlet property="gameMenuView" destination="qym-OP-nNB" id="LVP-OO-HvJ"/>
                         <outlet property="gameScoreBoardView" destination="UUO-MK-4fP" id="kGS-Jk-Joj"/>
                         <outlet property="homeMenuView" destination="cSm-pp-Ytf" id="Uyn-zS-KYG"/>

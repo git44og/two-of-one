@@ -63,6 +63,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     @IBOutlet weak var playHardButton: UIButton!
     @IBOutlet weak var physicsButton: UIButton!
     @IBOutlet weak var bonusLabel: UILabel!
+    @IBOutlet weak var bonusProgressView: UIProgressView!
     @IBOutlet weak var turnLabel: UILabel!
     @IBOutlet weak var scoreLabel: UILabel!
     
@@ -108,7 +109,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.gameMenuView.hidden = true
         self.gameScoreBoardView.hidden = true
         
-        self.scoreBoard = ScoreBoardView(game: self.game, moveCountLabel: turnLabel, scoreLabel: scoreLabel, bonusTimeLabel: bonusLabel)
+        self.scoreBoard = ScoreBoardView(game: self.game, moveCountLabel: turnLabel, scoreLabel: scoreLabel, bonusTimeLabel: bonusLabel, bonusProgressView:self.bonusProgressView)
         self.game.scoreBoard = self.scoreBoard
     }
     

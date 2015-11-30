@@ -15,6 +15,7 @@ class ScoreBoardView {
     var moveCountLabel:UILabel
     var scoreLabel:UILabel
     var bonusTimeLabel:UILabel
+    var bonusProgressView:UIProgressView
     
     init() {
         
@@ -22,32 +23,43 @@ class ScoreBoardView {
         self.moveCountLabel = UILabel()
         self.scoreLabel = UILabel()
         self.bonusTimeLabel = UILabel()
+        self.bonusProgressView = UIProgressView()
         
     }
     
-    init(game:Game, moveCountLabel:UILabel, scoreLabel:UILabel, bonusTimeLabel:UILabel) {
+    init(game:Game, moveCountLabel:UILabel, scoreLabel:UILabel, bonusTimeLabel:UILabel, bonusProgressView:UIProgressView) {
         
         self.game = game
         self.moveCountLabel = moveCountLabel
         self.scoreLabel = scoreLabel
         self.bonusTimeLabel = bonusTimeLabel
+        self.bonusProgressView = bonusProgressView
         
         self.moveCountLabel.text = ""
         self.scoreLabel.text = ""
         self.bonusTimeLabel.text = ""
-        
+        self.bonusProgressView.hidden = true
     }
     
     func updateScoreBoard(bonusCounter:Float) {
-        self.bonusTimeLabel.text = (bonusCounter == 0) ? "" : String(NSString(format: "%.2f%", bonusCounter))
+        self.bonusProgressView.hidden = (bonusCounter <= 0)
+        //self.bonusTimeLabel.text = (bonusCounter == 0) ? "" : String(NSString(format: "%.2f%", bonusCounter))
+        self.bonusProgressView.setProgress(bonusCounter, animated: false)
     }
     
-    func updateScoreBoard(score:Int?, moveCounter:Int?) {
+    func updateScoreBoard(score:Int?, moveCounter:Int?, bonusLabel:Int?) {
         if let myScore = score {
             self.scoreLabel.text = "\(myScore)"
         }
         if let myMoveCounter = moveCounter {
             self.moveCountLabel.text = "\(myMoveCounter)"
+        }
+        if let myBonusLabel = bonusLabel {
+            if(bonusLabel > 1) {
+                self.bonusTimeLabel.text = "\(myBonusLabel)x"
+            } else {
+                self.bonusTimeLabel.text = ""
+            }
         }
     }
 }
