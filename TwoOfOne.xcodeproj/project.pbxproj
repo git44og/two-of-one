@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		271038101BEC91F0009E28CA /* Startscreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 2710380F1BEC91F0009E28CA /* Startscreen.png */; };
+		271BE0C91C0CBC6400C8757E /* anschlag.wav in Resources */ = {isa = PBXBuildFile; fileRef = 271BE0C41C0CBC6400C8757E /* anschlag.wav */; };
+		271BE0CA1C0CBC6400C8757E /* aufdecken.aif in Resources */ = {isa = PBXBuildFile; fileRef = 271BE0C51C0CBC6400C8757E /* aufdecken.aif */; };
+		271BE0CB1C0CBC6400C8757E /* Rollen.wav in Resources */ = {isa = PBXBuildFile; fileRef = 271BE0C61C0CBC6400C8757E /* Rollen.wav */; };
+		271BE0CC1C0CBC6400C8757E /* Rollen02.wav in Resources */ = {isa = PBXBuildFile; fileRef = 271BE0C71C0CBC6400C8757E /* Rollen02.wav */; };
+		271BE0CD1C0CBC6400C8757E /* zudecken.aif in Resources */ = {isa = PBXBuildFile; fileRef = 271BE0C81C0CBC6400C8757E /* zudecken.aif */; };
+		271BE0CF1C0CBF8000C8757E /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 271BE0CE1C0CBF8000C8757E /* AudioToolbox.framework */; };
 		2729F50C1BE7C6F8004E0225 /* JFGraphUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2729F50B1BE7C6F8004E0225 /* JFGraphUtils.swift */; };
 		274B7FD21C07745C00E33096 /* 01_01.png in Resources */ = {isa = PBXBuildFile; fileRef = 274B7FB41C07745B00E33096 /* 01_01.png */; };
 		274B7FD31C07745C00E33096 /* 01_02.png in Resources */ = {isa = PBXBuildFile; fileRef = 274B7FB51C07745B00E33096 /* 01_02.png */; };
@@ -75,6 +81,13 @@
 
 /* Begin PBXFileReference section */
 		2710380F1BEC91F0009E28CA /* Startscreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Startscreen.png; path = Images/Startscreen.png; sourceTree = "<group>"; };
+		271BE0C11C0CB98E00C8757E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		271BE0C41C0CBC6400C8757E /* anschlag.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = anschlag.wav; sourceTree = "<group>"; };
+		271BE0C51C0CBC6400C8757E /* aufdecken.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = aufdecken.aif; sourceTree = "<group>"; };
+		271BE0C61C0CBC6400C8757E /* Rollen.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Rollen.wav; sourceTree = "<group>"; };
+		271BE0C71C0CBC6400C8757E /* Rollen02.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Rollen02.wav; sourceTree = "<group>"; };
+		271BE0C81C0CBC6400C8757E /* zudecken.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = zudecken.aif; sourceTree = "<group>"; };
+		271BE0CE1C0CBF8000C8757E /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		2729F50B1BE7C6F8004E0225 /* JFGraphUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JFGraphUtils.swift; path = Utils/JFGraphUtils.swift; sourceTree = "<group>"; };
 		274B7FB41C07745B00E33096 /* 01_01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 01_01.png; sourceTree = "<group>"; };
 		274B7FB51C07745B00E33096 /* 01_02.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 01_02.png; sourceTree = "<group>"; };
@@ -139,6 +152,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				271BE0CF1C0CBF8000C8757E /* AudioToolbox.framework in Frameworks */,
 				27DAC6F91BF1C5F20063DC28 /* CoreMotion.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -153,6 +167,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		271BE0C31C0CBC6400C8757E /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				271BE0C41C0CBC6400C8757E /* anschlag.wav */,
+				271BE0C51C0CBC6400C8757E /* aufdecken.aif */,
+				271BE0C61C0CBC6400C8757E /* Rollen.wav */,
+				271BE0C71C0CBC6400C8757E /* Rollen02.wav */,
+				271BE0C81C0CBC6400C8757E /* zudecken.aif */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
 		274B7FB31C07745B00E33096 /* Set00 */ = {
 			isa = PBXGroup;
 			children = (
@@ -210,6 +236,8 @@
 		B441FA5D1B974E0D00B55627 = {
 			isa = PBXGroup;
 			children = (
+				271BE0CE1C0CBF8000C8757E /* AudioToolbox.framework */,
+				271BE0C11C0CB98E00C8757E /* AVFoundation.framework */,
 				27DAC6F81BF1C5F20063DC28 /* CoreMotion.framework */,
 				B441FA681B974E0D00B55627 /* TwoOfOne */,
 				B441FA7E1B974E0D00B55627 /* TwoOfOneTests */,
@@ -248,6 +276,7 @@
 		B441FA691B974E0D00B55627 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				271BE0C31C0CBC6400C8757E /* Sounds */,
 				B48111F11B98AA4D00E2A4F3 /* Images */,
 				B441FA6A1B974E0D00B55627 /* Info.plist */,
 			);
@@ -400,6 +429,7 @@
 				274B7FE71C07745C00E33096 /* 03_22.png in Resources */,
 				274B7FE11C07745C00E33096 /* 02_16.png in Resources */,
 				274B7FDA1C07745C00E33096 /* 01_09.png in Resources */,
+				271BE0C91C0CBC6400C8757E /* anschlag.wav in Resources */,
 				274B7FEF1C07745C00E33096 /* 03_30.png in Resources */,
 				274B7FD51C07745C00E33096 /* 01_04.png in Resources */,
 				274B7FE61C07745C00E33096 /* 03_21.png in Resources */,
@@ -413,16 +443,20 @@
 				274B7FD41C07745C00E33096 /* 01_03.png in Resources */,
 				271038101BEC91F0009E28CA /* Startscreen.png in Resources */,
 				274B7FD81C07745C00E33096 /* 01_07.png in Resources */,
+				271BE0CA1C0CBC6400C8757E /* aufdecken.aif in Resources */,
 				274B7FE41C07745C00E33096 /* 02_19.png in Resources */,
+				271BE0CB1C0CBC6400C8757E /* Rollen.wav in Resources */,
 				274B7FD71C07745C00E33096 /* 01_06.png in Resources */,
 				274B7FD91C07745C00E33096 /* 01_08.png in Resources */,
 				B441FA711B974E0D00B55627 /* Main.storyboard in Resources */,
 				274B7FEC1C07745C00E33096 /* 03_27.png in Resources */,
 				274B7FE21C07745C00E33096 /* 02_17.png in Resources */,
 				B441FA761B974E0D00B55627 /* LaunchScreen.xib in Resources */,
+				271BE0CC1C0CBC6400C8757E /* Rollen02.wav in Resources */,
 				B48111FE1B9989C600E2A4F3 /* tile0.png in Resources */,
 				274B7FD61C07745C00E33096 /* 01_05.png in Resources */,
 				27B67B791BA693C900C86E7F /* explosion.png in Resources */,
+				271BE0CD1C0CBC6400C8757E /* zudecken.aif in Resources */,
 				274B7FE31C07745C00E33096 /* 02_18.png in Resources */,
 				274B7FDD1C07745C00E33096 /* 01_12.png in Resources */,
 				274B7FDB1C07745C00E33096 /* 01_10.png in Resources */,

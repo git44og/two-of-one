@@ -103,7 +103,10 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     var scoreBoard:ScoreBoardView!
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
+        JFSoundManager.sharedInstance.preloadSounds()
         
         self.game.vc = self
         self.gameMenuView.hidden = true
@@ -334,6 +337,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     }
     
     func tapGesture(sender: UITapGestureRecognizer) {
+        
         let translation = sender.locationInView(sender.view!)
         let objs = self.sceneView.hitTest(translation, options: nil)
         if(objs.count > 0) {

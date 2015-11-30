@@ -8,7 +8,7 @@
 
 import Foundation
 import SceneKit
-
+import AudioToolbox
 
 /*
 sin = gegnkathete / hypo
@@ -24,9 +24,9 @@ let kTileCornerradius:CGFloat = 0.06
 let kTileExtrusion:CGFloat = 0.06
 let kTileColorOpenFrame = UIColor(white: 1, alpha: 1)
 //let kTileColorClosedOutside = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.60)
-let kTileColorClosedOutside = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1.0)
+let kTileColorClosedOutside = UIColor(red: 216/255, green: 237/255, blue: 229/255, alpha: 1.0)
 //let kTileColorClosedOutsideTransparency = UIColor(white: 0.4, alpha: 1.0)
-let kTileColorClosedOutsideTransparency:CGFloat = 0.6
+let kTileColorClosedOutsideTransparency:CGFloat = 0.94
 
 let kTileColorClosedOutsideIntensity:CGFloat = 1.0
 //let kTileColorClosedInside = UIColor(red: 55/255, green: 79/255, blue: 87/255, alpha: 0.93)
@@ -45,7 +45,7 @@ class JFSCNNode : SCNNode {
 
     var game:Game
     var nodesByCol:[[JFTileNode]] = []
-    var rotationNode = SCNNode()
+    var rotationNode:JFCylinderRotationNode!
     var shapeRadius: Float = 0
     var currentPosition: Float = 0
     var sceneSize: CGSize
@@ -54,13 +54,6 @@ class JFSCNNode : SCNNode {
     var rollBoundaries:Float = 1
     var tileGap:Float = 0
     var tileColNodes:[JFCylinderColNode] = []
-    
-    override var transform: SCNMatrix4 {
-        didSet {
-            //// slow on device
-            self.adjustTransparency()
-        }
-    }
     
     override var position: SCNVector3 {
         didSet {
@@ -80,6 +73,7 @@ class JFSCNNode : SCNNode {
         self.sceneSize = sceneSize
         self.game = game
         self.sceneSizeFactor = (Float)(sceneSize.height / sceneSize.width * 1.35)
+        self.rotationNode = JFCylinderRotationNode(game: game)
         
         super.init()
         
@@ -140,7 +134,12 @@ class JFSCNNode : SCNNode {
         var tileMap:[Int] = []
         for colId in 0...(self.game.cylinderCols() - 1) {
             for rowId in 0...(self.game.cylinderRows() - 1) {
-                let tileId:Int = ((self.game.cylinderRows() * colId) + rowId) / 2
+                var tileId:Int = ((self.game.cylinderRows() * colId) + rowId) / 2
+                tileId = tileId % 4
+                if(false) {
+                    print("reduced tiles")
+                    // remove modulo operator above
+                }
                 tileMap.append(tileId)
             }
         }
@@ -251,35 +250,6 @@ class JFSCNNode : SCNNode {
         self.nodesByCol[col].append(node)
     }
     
-    func adjustTransparency() {
-        
-        // calculation
-        // duplicate calculation
-        /*
-        let tileWidthRad = tileWidthDeg * (Float(M_PI) / 180)
-        let tileAngleRad = Float(M_PI) * (2 / Float(tileNum))
-        let radius = Float(tileWidth) / tan(tileWidthRad)
-
-        for colId in 0...(tileNum - 1) {
-            
-            let angle:Float = (tileAngleRad * Float(colId)) + (self.rotation.w * self.rotation.y)
-            let dist:Float = cos(angle) * radius
-            let distancePercentage:Float = (((dist / radius) + 1) / 2)
-            let opacity:Float = (distancePercentage * 0.2) + 0.6
-            
-            //println("newAngle:\(self.rotation.w) y:\(self.rotation.y) dist:\(dist) opacity:\(opacity)")
-            
-            //for rowId in 0...0 {
-            for rowId in 0...(tileRows - 1) {
-                if let tileNode = self.nodesByCol[colId][rowId] as? JFTileNode {
-                    tileNode.opacity = CGFloat(opacity)
-                }
-            }
-        }
-        let angleIntPerQuarter = (self.rotation.w / Float(M_PI)) * (Float(tileNum) / 2) // 45deg == 1 | 90deg == 2
-        */
-    }
-    
     
     //MARK: Rolling transformation
     
@@ -337,6 +307,41 @@ class JFSCNNode : SCNNode {
         return ((self.rotationNode.rotation.y > 0) ? 1 : -1)
     }
 }
+
+
+
+class JFCylinderRotationNode: SCNNode {
+    
+    var currentAngleSegment:Float = 0
+    var angleSegmentWidth:Float = 0
+    
+    override var transform: SCNMatrix4 {
+        didSet {
+            self.checkSoundEffects()
+        }
+    }
+
+    override init() {
+        super.init()
+    }
+
+    init(game:Game) {
+        
+        self.angleSegmentWidth = Float(M_PI * 2) / Float(game.cylinderCols())
+        
+        super.init()
+        
+        self.currentAngleSegment = self.rotation.w
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func checkSoundEffects() {
+    }
+}
+
 
 
 class JFCylinderColNode: SCNNode {
@@ -653,7 +658,45 @@ class JFTileNode: SCNNode {
     }
     
     func isPairWithTile(tile:JFTileNode) -> Bool {
-        return true
         return (self.typeId) == (tile.typeId)
+    }
+}
+
+
+
+enum JFSoundType:Int {
+    case Roll = 0
+}
+
+
+class JFSoundManager {
+    
+    class var sharedInstance: JFSoundManager {
+        struct Static {
+            static var instance: JFSoundManager?
+            static var token: dispatch_once_t = 0
+        }
+        
+        dispatch_once(&Static.token) {
+            Static.instance = JFSoundManager()
+        }
+        
+        return Static.instance!
+    }
+    
+    
+    var rollSound:SystemSoundID = 0
+    
+    func preloadSounds() {
+        let soundUrl = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("Rollen", ofType: "wav")!)
+        AudioServicesCreateSystemSoundID(soundUrl, &self.rollSound)
+    }
+    
+    func play(type:JFSoundType) {
+        switch(type) {
+        case .Roll:
+            AudioServicesPlaySystemSound(self.rollSound)
+            break
+        }
     }
 }
