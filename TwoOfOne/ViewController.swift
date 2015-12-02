@@ -51,7 +51,7 @@ enum JFAlterViewIdentifier:Int {
 }
 
 
-class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDelegate {
+class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDelegate, SCNPhysicsContactDelegate {
     
     @IBOutlet weak var sceneView: SCNView!
     @IBOutlet weak var menuButton: UIButton!
@@ -121,6 +121,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.sceneSizeFactor = (Float)(sceneView.frame.size.height / sceneView.frame.size.width * 1.35)
         
         let scene = SCNScene()
+        scene.physicsWorld.contactDelegate = self
         
         // lights
         self.addLights(scene)
@@ -172,6 +173,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         let wallRightShape = SCNFloor()
         let wallRightPhysicsShape = SCNPhysicsShape(geometry: wallRightShape, options: nil)
         let wallRightPhysicsBody = SCNPhysicsBody(type: .Static, shape: wallRightPhysicsShape)
+        if #available(iOS 9, *) {
+            wallRightPhysicsBody.contactTestBitMask = 1
+        }
         let wallRightNode = SCNNode()
         wallRightNode.physicsBody = wallRightPhysicsBody
         wallRightNode.transform = SCNMatrix4Mult(
@@ -184,6 +188,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         let wallLeftShape = SCNFloor()
         let wallLeftPhysicsShape = SCNPhysicsShape(geometry: wallLeftShape, options: nil)
         let wallLeftPhysicsBody = SCNPhysicsBody(type: .Static, shape: wallLeftPhysicsShape)
+        if #available(iOS 9, *) {
+            wallLeftPhysicsBody.contactTestBitMask = 1
+        }
         let wallLeftNode = SCNNode()
         wallLeftNode.physicsBody = wallLeftPhysicsBody
         wallLeftNode.transform = SCNMatrix4Mult(
@@ -590,20 +597,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 self.hitWallLeft = false
             }
             
-            // collide with right wall
-            if((cylinderNode.physicsBody!.velocity.x > 0) && (self.cylinderNode.presentationNode.position.x > self.cylinderNode.rollBoundaries)) {
-                //print("hit wall on the right")
-                self.panPaused = true
-                self.hitWallRight = true
-            }
-            
-            // collide with left wall
-            if((cylinderNode.physicsBody!.velocity.x < 0) && (self.cylinderNode.presentationNode.position.x < -self.cylinderNode.rollBoundaries)) {
-                //print("hit wall on the left")
-                self.panPaused = true
-                self.hitWallLeft = true
-            }
-            
             if(self.panActive && !self.panPaused) {
                 cylinderNode.physicsBody?.velocity = SCNVector3Make(velocity, 0, 0)
                 //print("apply velocity \(velocity) d:\(self.translationX) p:\(nodeTranslationX)")
@@ -635,5 +628,22 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
         return UIInterfaceOrientation.LandscapeLeft
     }
+    
+    
+    //MARK: SCNPhysicsContactDelegate
+    
+    func physicsWorld(world: SCNPhysicsWorld, didBeginContact contact: SCNPhysicsContact) {
+        //contact.nodeA.isMemberOfClass(JFSCNNode)
+        JFSoundManager.sharedInstance.play(.HitWall)
+        
+        self.panPaused = true
+        if(self.cylinderNode.presentationNode.position.x > 0) {
+            self.hitWallRight = true
+        } else {
+            self.hitWallLeft = true
+        }
+
+    }
+
 }
 
