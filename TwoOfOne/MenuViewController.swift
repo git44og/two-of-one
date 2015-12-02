@@ -11,12 +11,31 @@ import UIKit
 
 class MenuViewController: UIViewController {
     
+    @IBOutlet weak var backgroundFrontView: UIImageView!
+    @IBOutlet weak var backgroundBackView: UIImageView!
+    @IBOutlet weak var buttonLayerView: UIView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
+        let oldCenter = self.backgroundFrontView.center
+        let oldFrame = self.backgroundFrontView.frame
+        
+        UIView.animateWithDuration(3.0,
+            animations: { () -> Void in
+                self.backgroundFrontView.center = CGPoint(x: oldCenter.x * 2, y: oldCenter.y)
+                self.backgroundBackView.frame = CGRect(origin: oldFrame.origin, size: CGSize(width: oldFrame.size.width * 1.2, height: oldFrame.size.height * 1.2))
+            }) { (Bool) -> Void in
+                print("done")
+        }
+    }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
     
     @IBAction func onPlayPressed(sender: AnyObject) {

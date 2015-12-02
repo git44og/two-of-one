@@ -18,12 +18,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Startscreen.png" translatesAutoresizingMaskIntoConstraints="NO" id="oZb-X5-lTI">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Startscreen-back.png" translatesAutoresizingMaskIntoConstraints="NO" id="PTe-N1-ure">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yDF-5d-hio">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
+                                    <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="htK-yu-Zmi">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
                                     <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Sn-pG-7cF">
                                         <rect key="frame" x="250" y="285" width="100" height="30"/>
                                         <color key="backgroundColor" white="1" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
@@ -67,7 +71,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="kzP-na-hbj" firstAttribute="centerX" secondItem="yDF-5d-hio" secondAttribute="centerX" id="1DZ-NK-ToL"/>
                                     <constraint firstItem="wfr-67-dKS" firstAttribute="centerX" secondItem="yDF-5d-hio" secondAttribute="centerX" id="2Nb-MY-S2H"/>
@@ -75,10 +79,17 @@
                                     <constraint firstItem="kzP-na-hbj" firstAttribute="top" secondItem="0Sn-pG-7cF" secondAttribute="bottom" constant="30" id="Kr9-An-6mJ"/>
                                     <constraint firstItem="0Sn-pG-7cF" firstAttribute="centerX" secondItem="yDF-5d-hio" secondAttribute="centerX" id="TWD-mT-MpI"/>
                                     <constraint firstItem="0Sn-pG-7cF" firstAttribute="centerY" secondItem="yDF-5d-hio" secondAttribute="centerY" id="aHT-44-NCl"/>
+                                    <constraint firstItem="htK-yu-Zmi" firstAttribute="centerX" secondItem="yDF-5d-hio" secondAttribute="centerX" id="boV-cu-zUe"/>
+                                    <constraint firstItem="htK-yu-Zmi" firstAttribute="leading" secondItem="yDF-5d-hio" secondAttribute="leading" id="i43-yF-Uhf"/>
                                     <constraint firstItem="0Sn-pG-7cF" firstAttribute="top" secondItem="wfr-67-dKS" secondAttribute="bottom" constant="30" id="jj0-aZ-sEQ"/>
+                                    <constraint firstItem="htK-yu-Zmi" firstAttribute="centerY" secondItem="yDF-5d-hio" secondAttribute="centerY" id="s5f-tx-Mhs"/>
+                                    <constraint firstItem="htK-yu-Zmi" firstAttribute="top" secondItem="yDF-5d-hio" secondAttribute="top" id="ueK-sE-Qsk"/>
                                     <constraint firstItem="kzP-na-hbj" firstAttribute="centerY" secondItem="yDF-5d-hio" secondAttribute="centerY" constant="60" id="x6p-a7-sgD"/>
                                 </constraints>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Startscreen-front.png" translatesAutoresizingMaskIntoConstraints="NO" id="oZb-X5-lTI">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -87,11 +98,20 @@
                             <constraint firstItem="oZb-X5-lTI" firstAttribute="leading" secondItem="mJm-2A-ifF" secondAttribute="leadingMargin" constant="-20" id="CpM-WK-MjL"/>
                             <constraint firstItem="yDF-5d-hio" firstAttribute="top" secondItem="mJm-2A-ifF" secondAttribute="topMargin" id="DtY-Uk-zr2"/>
                             <constraint firstItem="oZb-X5-lTI" firstAttribute="centerX" secondItem="mJm-2A-ifF" secondAttribute="centerX" id="Gx2-tA-tvy"/>
+                            <constraint firstItem="PTe-N1-ure" firstAttribute="centerY" secondItem="mJm-2A-ifF" secondAttribute="centerY" id="NMM-h1-LGj"/>
+                            <constraint firstItem="PTe-N1-ure" firstAttribute="top" secondItem="mJm-2A-ifF" secondAttribute="topMargin" id="U5A-q9-1LV"/>
                             <constraint firstItem="yDF-5d-hio" firstAttribute="centerY" secondItem="mJm-2A-ifF" secondAttribute="centerY" id="ap5-nJ-Ka4"/>
+                            <constraint firstItem="PTe-N1-ure" firstAttribute="leading" secondItem="mJm-2A-ifF" secondAttribute="leadingMargin" constant="-20" id="ewe-qw-VF0"/>
                             <constraint firstItem="yDF-5d-hio" firstAttribute="centerX" secondItem="mJm-2A-ifF" secondAttribute="centerX" id="has-hu-cer"/>
                             <constraint firstItem="yDF-5d-hio" firstAttribute="leading" secondItem="mJm-2A-ifF" secondAttribute="leadingMargin" constant="-20" id="jKk-db-4Lw"/>
+                            <constraint firstItem="PTe-N1-ure" firstAttribute="centerX" secondItem="mJm-2A-ifF" secondAttribute="centerX" id="rHT-ke-CRV"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="backgroundBackView" destination="PTe-N1-ure" id="idV-ZP-QzK"/>
+                        <outlet property="backgroundFrontView" destination="oZb-X5-lTI" id="2uH-9e-tBu"/>
+                        <outlet property="buttonLayerView" destination="yDF-5d-hio" id="ILE-zl-dUi"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2dz-IR-Fk6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -344,6 +364,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Startscreen.png" width="1331" height="750"/>
+        <image name="Startscreen-back.png" width="1331" height="750"/>
+        <image name="Startscreen-front.png" width="1331" height="750"/>
     </resources>
 </document>
