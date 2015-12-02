@@ -137,6 +137,10 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.startDeviceMotionDetection()
     }
     
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
+    
     func addCenterNode(scene:SCNScene) {
         self.centerNode = SCNNode()
         let gravityField = SCNPhysicsField.radialGravityField()
