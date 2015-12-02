@@ -688,6 +688,7 @@ class JFTileNode: SCNNode {
 
 enum JFSoundType:Int {
     case Roll = 0
+    case HitWall
 }
 
 
@@ -708,16 +709,22 @@ class JFSoundManager {
     
     
     var rollSound:SystemSoundID = 0
+    var hitWallSound:SystemSoundID = 0
     
     func preloadSounds() {
-        let soundUrl = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("Rollen", ofType: "wav")!)
+        var soundUrl = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("Rollen", ofType: "wav")!)
         AudioServicesCreateSystemSoundID(soundUrl, &self.rollSound)
+        soundUrl = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("anschlag", ofType: "wav")!)
+        AudioServicesCreateSystemSoundID(soundUrl, &self.hitWallSound)
     }
     
     func play(type:JFSoundType) {
         switch(type) {
         case .Roll:
             AudioServicesPlaySystemSound(self.rollSound)
+            break
+        case .HitWall:
+            AudioServicesPlaySystemSound(self.hitWallSound)
             break
         }
     }
