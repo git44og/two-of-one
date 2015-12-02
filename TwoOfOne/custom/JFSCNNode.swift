@@ -104,7 +104,6 @@ class JFSCNNode : SCNNode {
             cylinderPhysicsBody.rollingFriction = 0.0
             cylinderPhysicsBody.damping = 0.999999
             cylinderPhysicsBody.categoryBitMask = 1
-            cylinderPhysicsBody.collisionBitMask = 1
             // cylinder view
             self.physicsBody = cylinderPhysicsBody
         }
