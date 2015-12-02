@@ -312,8 +312,10 @@ class JFSCNNode : SCNNode {
 
 class JFCylinderRotationNode: SCNNode {
     
-    var currentAngleSegment:Float = 0
     var angleSegmentWidth:Float = 0
+    var angleSegments:Float = 1
+    var previousAngleSegment:Int = 0
+    var currentAngleSegment:Int = 0
     
     override var transform: SCNMatrix4 {
         didSet {
@@ -328,17 +330,37 @@ class JFCylinderRotationNode: SCNNode {
     init(game:Game) {
         
         self.angleSegmentWidth = Float(M_PI * 2) / Float(game.cylinderCols())
-        
+        self.angleSegments = Float(game.cylinderCols())
+            
         super.init()
         
-        self.currentAngleSegment = self.rotation.w
+        self.currentAngleSegment = self.segmentFromAnlge(self.rotation)
+        self.previousAngleSegment = self.currentAngleSegment
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func segmentFromAnlge(angle:SCNVector4) -> Int {
+        let angle = normalizeRotationY(angle)
+        // sound on edge
+        let angleSegment = round(((angle + (self.angleSegmentWidth / 2)) / Float(M_PI * 2)) * self.angleSegments)
+        // sound on plain
+        //let angleSegment = round((angle / Float(M_PI * 2)) * self.angleSegments)
+        return Int(angleSegment)
+    }
+    
     func checkSoundEffects() {
+        
+        self.currentAngleSegment = self.segmentFromAnlge(self.rotation)
+        if(self.currentAngleSegment != self.previousAngleSegment) {
+            //print("tick")
+            JFSoundManager.sharedInstance.play(.Roll)
+        }
+        self.previousAngleSegment = self.currentAngleSegment
+        //print("curr:\(self.currentAngleSegment) prev:\(self.previousAngleSegment)")
+        
     }
 }
 

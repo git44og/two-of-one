@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SceneKit
 
 func JFrand(count: Int) -> Int {
     return Int(arc4random_uniform(UInt32(count)))
@@ -42,6 +43,16 @@ func normalizeAngle(angle:Float) -> Float {
         normAngle += Float(M_PI * 2)
     }
     return normAngle
+}
+
+// returns y rotation with positive y vector
+func normalizeRotationY(rotation:SCNVector4) -> Float {
+    if(rotation.y > 0.5) {
+        return rotation.w
+    } else if(rotation.y < -0.5) {
+        return -rotation.w
+    }
+    return 0
 }
 
 // MARK: Math
