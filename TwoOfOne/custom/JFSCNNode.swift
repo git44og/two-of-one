@@ -689,6 +689,8 @@ class JFTileNode: SCNNode {
 enum JFSoundType:Int {
     case Roll = 0
     case HitWall
+    case TurnTile
+    case TurnTileBack
 }
 
 
@@ -710,12 +712,18 @@ class JFSoundManager {
     
     var rollSound:SystemSoundID = 0
     var hitWallSound:SystemSoundID = 0
+    var turnTileSound:SystemSoundID = 0
+    var turnTileBackSound:SystemSoundID = 0
     
     func preloadSounds() {
         var soundUrl = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("Rollen", ofType: "wav")!)
         AudioServicesCreateSystemSoundID(soundUrl, &self.rollSound)
         soundUrl = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("anschlag", ofType: "wav")!)
         AudioServicesCreateSystemSoundID(soundUrl, &self.hitWallSound)
+        soundUrl = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("aufdecken", ofType: "aif")!)
+        AudioServicesCreateSystemSoundID(soundUrl, &self.turnTileSound)
+        soundUrl = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("zudecken", ofType: "aif")!)
+        AudioServicesCreateSystemSoundID(soundUrl, &self.turnTileBackSound)
     }
     
     func play(type:JFSoundType) {
@@ -725,6 +733,12 @@ class JFSoundManager {
             break
         case .HitWall:
             AudioServicesPlaySystemSound(self.hitWallSound)
+            break
+        case .TurnTile:
+            AudioServicesPlaySystemSound(self.turnTileSound)
+            break
+        case .TurnTileBack:
+            AudioServicesPlaySystemSound(self.turnTileBackSound)
             break
         }
     }
