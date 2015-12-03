@@ -553,6 +553,8 @@ class JFTileNode: SCNNode {
         rotationAction.timingMode = SCNActionTimingMode.Linear
         self.runAction(rotationAction, completionHandler: completion)
         
+        JFSoundManager.sharedInstance.play(self.turned ? .TurnTile : .TurnTileBack)
+        
         let nodeToHide = self.turned ? self.tileNodes[JFTileNodeFaceType.closed] : self.tileNodes[JFTileNodeFaceType.open]
         nodeToHide?.runAction(SCNAction.sequence([
             SCNAction.waitForDuration(rotationDuration * timing),
