@@ -60,4 +60,17 @@ class MenuViewController: UIViewController {
             vc.gamePlayIntro()
         }
     }
+    
+    override func shouldAutorotate() -> Bool {
+        return true
+    }
+    
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.LandscapeLeft
+    }
+    
+    override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
+        return UIInterfaceOrientation.LandscapeLeft
+    }
+
 }
