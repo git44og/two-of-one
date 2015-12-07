@@ -14,6 +14,7 @@ class MenuViewController: UIViewController {
     @IBOutlet weak var backgroundFrontView: UIImageView!
     @IBOutlet weak var backgroundBackView: UIImageView!
     @IBOutlet weak var buttonLayerView: UIView!
+    @IBOutlet weak var debugPairsSwitch: UISwitch!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +58,7 @@ class MenuViewController: UIViewController {
         }
         
         self.presentViewController(vc, animated: false) { () -> Void in
+            vc.game.debugPairs = self.debugPairsSwitch.on
             vc.gamePlayIntro()
         }
     }

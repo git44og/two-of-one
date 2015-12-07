@@ -42,6 +42,8 @@ class Game {
             self.updateScoreBoard()
         }
     }
+    // debug
+    var debugPairs:Bool = false
     
     init(vc:UIViewController) {
         self.vc = vc

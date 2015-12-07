@@ -135,10 +135,12 @@ class JFSCNNode : SCNNode {
         for colId in 0...(self.game.cylinderCols() - 1) {
             for rowId in 0...(self.game.cylinderRows() - 1) {
                 var tileId:Int = ((self.game.cylinderRows() * colId) + rowId) / 2
-                tileId = tileId % 4
-                if(false) {
-                    print("reduced tiles")
-                    // remove modulo operator above
+                if(self.game.debugPairs) {
+                    tileId = tileId % 4
+                    if(false) {
+                        print("reduced tiles")
+                        // remove modulo operator above
+                    }
                 }
                 tileMap.append(tileId)
             }
