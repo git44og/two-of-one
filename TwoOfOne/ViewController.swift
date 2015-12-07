@@ -33,8 +33,8 @@ let kLightRightAttenuationEndDistance = 3820 * CGFloat(kConfigScale)// * 10
 
 // device roation handling
 let kEaseRotation:Double = 1 / 8
-let kMaxOutRollTop:Double = -Double(M_PI / 2)
-let kMaxOutRollBottom:Double = Double(M_PI / 16)
+let kMaxOutRollTop:Double = -Double(M_PI / 4)
+let kMaxOutRollBottom:Double = Double(M_PI / 4)
 let kMaxOutPitch:Double = Double(M_PI / 4)
 let kMinRotationRate:Double = 0.02
 
@@ -341,8 +341,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         
         //print("roll: \(attitude.roll - self.startingAttitude!.roll)  pitch: \(attitude.pitch - self.startingAttitude!.pitch)  yaw: \(attitude.yaw - self.startingAttitude!.yaw)")
         let rotateTo = SCNAction.rotateToX(
-            CGFloat(easeAngle((attitude.roll - self.startingAttitudeRoll!) * kEaseRotation, maxTop: kMaxOutRollBottom, maxBottom: kMaxOutRollTop)),
-            y: CGFloat(easeAngle((-attitude.pitch + self.startingAttitudePitch!) * kEaseRotation, maxTop: kMaxOutPitch, maxBottom: -kMaxOutPitch)),
+            CGFloat(easeAngle((-attitude.roll + self.startingAttitudeRoll!) * kEaseRotation, maxTop: kMaxOutRollBottom, maxBottom: kMaxOutRollTop)),
+            y: CGFloat(easeAngle((attitude.pitch - self.startingAttitudePitch!) * kEaseRotation, maxTop: kMaxOutPitch, maxBottom: -kMaxOutPitch)),
             z: 0,
             duration: 0.2)
         self.cameraNode.runAction(rotateTo)
