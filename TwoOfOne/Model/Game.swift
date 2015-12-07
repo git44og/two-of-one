@@ -80,6 +80,10 @@ class Game {
         self.updateScoreBoard()
     }
     
+    func totalScore() -> Int {
+        return self.score - self.moveCounter
+    }
+    
     //MARK: bonus handling
     func scoreOnBonus() -> Int {
         print("score \(kBaseScore) at level \(self.bonusLevel)")

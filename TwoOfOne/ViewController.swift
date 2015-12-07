@@ -68,6 +68,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     @IBOutlet weak var bonusProgressView: UIProgressView!
     @IBOutlet weak var turnLabel: UILabel!
     @IBOutlet weak var scoreLabel: UILabel!
+    @IBOutlet weak var gameFinishView: UIView!
     
     // Geometry
     var cylinderNode: JFSCNNode = JFSCNNode()
@@ -117,6 +118,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.game.vc = self
         self.gameMenuView.hidden = true
         self.gameScoreBoardView.hidden = true
+        self.gameFinishView.alpha = 0
         
         self.scoreBoard = ScoreBoardView(game: self.game, moveCountLabel: turnLabel, scoreLabel: scoreLabel, bonusTimeLabel: bonusLabel, bonusProgressView:self.bonusProgressView)
         self.game.scoreBoard = self.scoreBoard
@@ -403,7 +405,12 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 self.turnedNodes = []
                 tile1.lock = true
                 tile2.lock = true
+                tile1.found = true
+                tile2.found = true
                 execDelay(kDelayTurnBack) {
+                    if(self.cylinderNode.solved()) {
+                        self.gameSolved()
+                    }
                     tile1.tileFalls()
                     tile2.tileFalls()
                 }
@@ -416,7 +423,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 self.turnedNodes = []
                 tile1.lock = true
                 tile2.lock = true
-                execDelay(1) {
+                execDelay(kDelayTurnBack) {
                     tile1.flip(completion: { () -> Void in
                         tile1.lock = false
                     })
@@ -497,6 +504,35 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.addGestureRecognizers()
     }
     
+    func gameSolved() {
+        for subView in self.gameFinishView.subviews {
+            switch(subView.tag) {
+            case 1:
+                // score
+                if let label = subView as? UILabel {
+                    label.text = String(NSString(format: "%i", self.game.score))
+                }
+                break
+            case 2:
+                // turns
+                if let label = subView as? UILabel {
+                    label.text = String(NSString(format: "- %i", self.game.moveCounter))
+                }
+                break
+            case 3:
+                // total score
+                if let label = subView as? UILabel {
+                    label.text = String(NSString(format: "%i", self.game.totalScore()))
+                }
+                break
+            default:
+                break
+            }
+        }
+        
+        self.gameFinishView.alpha = 1
+    }
+    
     func gameExit() {
         self.removeGestureRecognizers()
         self.removeGameObjects()
@@ -540,6 +576,20 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     @IBAction func onPhysicsPressed(sender: AnyObject) {
         self.game.physics = !self.game.physics
         self.physicsButton.setTitle(self.game.physics ? "Physics On" : "Physics Off", forState: .Normal)
+    }
+    
+    @IBAction func onGameFinishMenuPressed(sender: AnyObject) {
+        // exit game
+        self.gameExit()
+    }
+    
+    @IBAction func onGameFinishPlayAgainPressed(sender: AnyObject) {
+        let vc = self.storyboard?.instantiateViewControllerWithIdentifier("gameScreen") as! ViewController
+        vc.game.level = self.game.level
+        vc.game.debugPairs = self.game.debugPairs
+        self.presentViewController(vc, animated: false) { () -> Void in
+            vc.gamePlayIntro()
+        }
     }
     
     //MARK: UIAlertViewDelegate

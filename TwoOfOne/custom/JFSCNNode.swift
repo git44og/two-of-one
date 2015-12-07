@@ -136,7 +136,7 @@ class JFSCNNode : SCNNode {
             for rowId in 0...(self.game.cylinderRows() - 1) {
                 var tileId:Int = ((self.game.cylinderRows() * colId) + rowId) / 2
                 if(self.game.debugPairs) {
-                    tileId = tileId % 4
+                    tileId = tileId % 2
                     if(false) {
                         print("reduced tiles")
                         // remove modulo operator above
@@ -308,6 +308,18 @@ class JFSCNNode : SCNNode {
         // returns direction of rotation vector
         return ((self.rotationNode.rotation.y > 0) ? 1 : -1)
     }
+    
+    func solved() -> Bool {
+        // return true if all pairs have been found
+        for colId in 0...(self.game.cylinderCols() - 1) {
+            for rowId in 0...(self.game.cylinderRows() - 1) {
+                if(!self.nodesByCol[colId][rowId].found) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
 }
 
 
@@ -430,6 +442,7 @@ enum JFTileNodeFaceType:Int {
 
 class JFTileNode: SCNNode {
     var turned:Bool = false
+    var found:Bool = false
     var cylinderNode: JFSCNNode
     var colNode: JFCylinderColNode
     var typeId:Int = 0
