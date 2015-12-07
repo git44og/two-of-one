@@ -26,7 +26,9 @@ class MenuViewController: UIViewController {
         
         let oldCenter = self.backgroundFrontView.center
         let oldFrame = self.backgroundFrontView.frame
-        
+        let newOrigin = CGPoint(
+            x: oldFrame.origin.x,
+            y: oldFrame.size.height * -0.1)
         if(self.skipIntro) {
             self.backgroundFrontView.center = CGPoint(x: oldCenter.x * 2, y: oldCenter.y)
             self.backgroundBackView.frame = CGRect(origin: oldFrame.origin, size: CGSize(width: oldFrame.size.width * 1.2, height: oldFrame.size.height * 1.2))
@@ -34,9 +36,13 @@ class MenuViewController: UIViewController {
         }
         
         UIView.animateWithDuration(3.0,
+            delay: 0.0,
+            options: UIViewAnimationOptions.CurveEaseInOut,
             animations: { () -> Void in
                 self.backgroundFrontView.center = CGPoint(x: oldCenter.x * 2, y: oldCenter.y)
-                self.backgroundBackView.frame = CGRect(origin: oldFrame.origin, size: CGSize(width: oldFrame.size.width * 1.2, height: oldFrame.size.height * 1.2))
+                self.backgroundBackView.frame = CGRect(
+                    origin: newOrigin,
+                    size: CGSize(width: oldFrame.size.width * 1.2, height: oldFrame.size.height * 1.2))
             }) { (Bool) -> Void in
                 print("done")
         }

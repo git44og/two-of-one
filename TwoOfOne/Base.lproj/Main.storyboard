@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Startscreen-back.png" translatesAutoresizingMaskIntoConstraints="NO" id="PTe-N1-ure">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Start-Hintergrund.png" translatesAutoresizingMaskIntoConstraints="NO" id="PTe-N1-ure">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yDF-5d-hio">
@@ -100,7 +100,7 @@
                                     <constraint firstItem="kzP-na-hbj" firstAttribute="centerY" secondItem="yDF-5d-hio" secondAttribute="centerY" constant="60" id="x6p-a7-sgD"/>
                                 </constraints>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Startscreen-front.png" translatesAutoresizingMaskIntoConstraints="NO" id="oZb-X5-lTI">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Start-Tonne.png" translatesAutoresizingMaskIntoConstraints="NO" id="oZb-X5-lTI">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </imageView>
                         </subviews>
@@ -457,7 +457,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Startscreen-back.png" width="1331" height="750"/>
-        <image name="Startscreen-front.png" width="1331" height="750"/>
+        <image name="Start-Hintergrund.png" width="1331" height="750"/>
+        <image name="Start-Tonne.png" width="1331" height="750"/>
     </resources>
 </document>
