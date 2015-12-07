@@ -18,9 +18,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Startscreen-front.png" translatesAutoresizingMaskIntoConstraints="NO" id="oZb-X5-lTI">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Startscreen-back.png" translatesAutoresizingMaskIntoConstraints="NO" id="PTe-N1-ure">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </imageView>
@@ -103,6 +100,9 @@
                                     <constraint firstItem="kzP-na-hbj" firstAttribute="centerY" secondItem="yDF-5d-hio" secondAttribute="centerY" constant="60" id="x6p-a7-sgD"/>
                                 </constraints>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Startscreen-front.png" translatesAutoresizingMaskIntoConstraints="NO" id="oZb-X5-lTI">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>

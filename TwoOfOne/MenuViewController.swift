@@ -15,6 +15,7 @@ class MenuViewController: UIViewController {
     @IBOutlet weak var backgroundBackView: UIImageView!
     @IBOutlet weak var buttonLayerView: UIView!
     @IBOutlet weak var debugPairsSwitch: UISwitch!
+    var skipIntro:Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +26,12 @@ class MenuViewController: UIViewController {
         
         let oldCenter = self.backgroundFrontView.center
         let oldFrame = self.backgroundFrontView.frame
+        
+        if(self.skipIntro) {
+            self.backgroundFrontView.center = CGPoint(x: oldCenter.x * 2, y: oldCenter.y)
+            self.backgroundBackView.frame = CGRect(origin: oldFrame.origin, size: CGSize(width: oldFrame.size.width * 1.2, height: oldFrame.size.height * 1.2))
+            return
+        }
         
         UIView.animateWithDuration(3.0,
             animations: { () -> Void in
@@ -57,8 +64,9 @@ class MenuViewController: UIViewController {
             break
         }
         
+        vc.game.debugPairs = self.debugPairsSwitch.on
+        
         self.presentViewController(vc, animated: false) { () -> Void in
-            vc.game.debugPairs = self.debugPairsSwitch.on
             vc.gamePlayIntro()
         }
     }
