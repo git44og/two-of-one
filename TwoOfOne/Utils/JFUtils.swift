@@ -55,6 +55,21 @@ func normalizeRotationY(rotation:SCNVector4) -> Float {
     return 0
 }
 
+// limits angle to top / bottom
+// slows angleSpeed towards limits
+func easeAngle(angle:Double, maxTop:Double, maxBottom:Double) -> Double {
+    if((angle >= 0) && (angle < maxTop)) {
+        return sin((angle / maxTop) * M_PI_2) * maxTop
+    } else if((angle > maxBottom) && (angle < 0)) {
+        return sin((angle / maxBottom) * M_PI_2) * maxBottom
+    } else if(angle >= maxTop) {
+        return maxTop
+    } else if(angle <= maxBottom) {
+        return maxBottom
+    }
+    return angle
+}
+
 // MARK: Math
 
 func sign(number:Float) -> Float {

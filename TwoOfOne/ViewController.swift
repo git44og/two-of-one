@@ -32,8 +32,10 @@ let kLightRightAttenuationStartDistance = 1430 * CGFloat(kConfigScale)
 let kLightRightAttenuationEndDistance = 3820 * CGFloat(kConfigScale)// * 10
 
 // device roation handling
-let kEaseRotation:Double = 1 / 48
-let kMaxOutRotation:Float = Float(M_PI / 32)
+let kEaseRotation:Double = 1 / 8
+let kMaxOutRollTop:Double = -Double(M_PI / 2)
+let kMaxOutRollBottom:Double = Double(M_PI / 16)
+let kMaxOutPitch:Double = Double(M_PI / 4)
 let kMinRotationRate:Double = 0.02
 
 // tile rotation
@@ -101,6 +103,10 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     var turnedNodes:[JFTileNode] = []
     
     var scoreBoard:ScoreBoardView!
+    
+    // tmp
+    var startingAttitudeRoll:Double?
+    var startingAttitudePitch:Double?
     
     override func viewDidLoad() {
         
@@ -296,9 +302,11 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         // add core motion
         let queue:NSOperationQueue! = NSOperationQueue.currentQueue()
         cm.deviceMotionUpdateInterval = 0.2
-        cm.startDeviceMotionUpdatesToQueue(queue) { (motionData:CMDeviceMotion?, error:NSError?) -> Void in
+        cm.startDeviceMotionUpdatesUsingReferenceFrame(CMAttitudeReferenceFrame.XArbitraryZVertical, toQueue: queue) { (motionData:CMDeviceMotion?, error:NSError?) -> Void in
             if let myMotionData = motionData {
-                self.rotatePointOfView(myMotionData.rotationRate)
+                self.cameraAttitude(myMotionData.attitude)
+                //print("roll:\(myMotionData.attitude.roll) pitch:\(myMotionData.attitude.pitch) yaw:\(myMotionData.attitude.yaw)")
+                // roll x | pitch y | yaw z
             }
         }
     }
@@ -307,29 +315,34 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         cm.stopDeviceMotionUpdates()
     }
     
-    func rotatePointOfView(rotationRate:CMRotationRate) {
-        //print("rX: \(rotationRate.y)")
+    func cameraAttitude(attitude:CMAttitude) {
         
-        // use y cause of portrait mode
-        //let easedRotationX:Float = (abs(rotationRate.y) > kMinRotationRate) ? Float(rotationRate.y * kEaseRotation) : 0
-        let easedRotationX:Float = Float(rotationRate.y * kEaseRotation)
-        let maxOutRotationX:Float = (abs(easedRotationX) > kMaxOutRotation) ? kMaxOutRotation * sign(easedRotationX) : easedRotationX
-        let rotationX = (Float(self.lastEasedRotationRate.x * 2) + maxOutRotationX) / 3
-        
-        // use x cause of portrait mode
-        //let easedRotationY:Float = (abs(rotationRate.x) > kMinRotationRate) ? Float(-rotationRate.x * kEaseRotation) : 0
-        let easedRotationY:Float = Float(-rotationRate.x * kEaseRotation)
-        let maxOutRotationY:Float = (abs(easedRotationY) > kMaxOutRotation) ? kMaxOutRotation * sign(easedRotationY) : easedRotationY
-        let rotationY = (Float(self.lastEasedRotationRate.y * 2) + maxOutRotationY) / 3
-
-        self.lastEasedRotationRate = CMRotationRate(x: Double(maxOutRotationX), y: Double(maxOutRotationY), z: 0)
-        
-        if((rotationX == 0) && (rotationY == 0)) {
-            // no animation required
-            return
+        if let _ = self.startingAttitudeRoll {
+            if((attitude.roll - self.startingAttitudeRoll!) > kMaxOutRollBottom) {
+                self.startingAttitudeRoll = attitude.roll - kMaxOutRollBottom
+            } else if((attitude.roll - self.startingAttitudeRoll!) < kMaxOutRollTop) {
+                self.startingAttitudeRoll = attitude.roll - kMaxOutRollTop
+            }
+        } else {
+            self.startingAttitudeRoll = attitude.roll
         }
-        let rotationVector = SCNVector4Make(rotationX, rotationY, 0, sqrt((rotationX * rotationX) + (rotationY * rotationY)))
-        let rotateTo = SCNAction.rotateToAxisAngle(rotationVector, duration: 0.2)
+
+        if let _ = self.startingAttitudePitch {
+            if((attitude.pitch - self.startingAttitudePitch!) > kMaxOutPitch) {
+                self.startingAttitudePitch = attitude.pitch - kMaxOutPitch
+            } else if((attitude.pitch - self.startingAttitudePitch!) < -kMaxOutPitch) {
+                self.startingAttitudePitch = attitude.pitch + kMaxOutPitch
+            }
+        } else {
+            self.startingAttitudePitch = attitude.pitch
+        }
+        
+        //print("roll: \(attitude.roll - self.startingAttitude!.roll)  pitch: \(attitude.pitch - self.startingAttitude!.pitch)  yaw: \(attitude.yaw - self.startingAttitude!.yaw)")
+        let rotateTo = SCNAction.rotateToX(
+            CGFloat(easeAngle((attitude.roll - self.startingAttitudeRoll!) * kEaseRotation, maxTop: kMaxOutRollBottom, maxBottom: kMaxOutRollTop)),
+            y: CGFloat(easeAngle((-attitude.pitch + self.startingAttitudePitch!) * kEaseRotation, maxTop: kMaxOutPitch, maxBottom: -kMaxOutPitch)),
+            z: 0,
+            duration: 0.2)
         self.cameraNode.runAction(rotateTo)
     }
     
@@ -618,7 +631,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     }
     
     override func shouldAutorotate() -> Bool {
-        return false
+        return true
     }
     
     override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
