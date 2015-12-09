@@ -15,10 +15,14 @@ class MenuViewController: UIViewController {
     @IBOutlet weak var backgroundBackView: UIImageView!
     @IBOutlet weak var buttonLayerView: UIView!
     @IBOutlet weak var debugPairsSwitch: UISwitch!
+    @IBOutlet weak var menuView: JFMenuView!
+    
     var skipIntro:Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.menuView.vc = self
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -52,29 +56,17 @@ class MenuViewController: UIViewController {
         return true
     }
     
-    @IBAction func onPlayPressed(sender: AnyObject) {
-        
+    func onPlayPressed(sender:AnyObject, level:Int) {
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("gameScreen") as! ViewController
-
-        switch(sender.tag) {
-        case 1:
-            vc.game.level = 0
-            break
-        case 2:
-            vc.game.level = 1
-            break
-        case 3:
-            vc.game.level = 2
-            break
-        default:
-            break
-        }
-        
+        vc.game.level = level
         vc.game.debugPairs = self.debugPairsSwitch.on
-        
         self.presentViewController(vc, animated: false) { () -> Void in
             vc.gamePlayIntro()
         }
+    }
+    
+    func onGameCenterPressed(sender:AnyObject) {
+        print("load gamecenter")
     }
     
     override func shouldAutorotate() -> Bool {
