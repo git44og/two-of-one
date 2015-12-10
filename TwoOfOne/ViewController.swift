@@ -505,6 +505,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     }
     
     func gameSolved() {
+        JFHighScoreObject.sharedInstance.setScore(self.game.totalScore(), level: self.game.level)
         for subView in self.gameFinishView.subviews {
             switch(subView.tag) {
             case 1:

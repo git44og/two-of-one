@@ -21,7 +21,7 @@ class MenuViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        JFHighScoreObject.sharedInstance.load()
         self.menuView.vc = self
     }
     

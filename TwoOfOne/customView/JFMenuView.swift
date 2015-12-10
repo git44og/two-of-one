@@ -79,13 +79,16 @@ class JFMenuView : UIView {
         for i in 0...2 {
             label = UILabel()
             label.tag = 121 + i
-            label.text = "0"
+            label.text = String(JFHighScoreObject.sharedInstance.score(i))
             label.textAlignment = .Right
             label.textColor = UIColor.whiteColor()
             label.backgroundColor = UIColor.clearColor()
             self.addSubview(label)
         }
     }
+    
+    
+    //MARK: button actions
     
     override func layoutSubviews() {
         let scale:CGFloat = self.bounds.width / 424
@@ -104,6 +107,7 @@ class JFMenuView : UIView {
             label.font = UIFont(name: kTitleFontName, size: 28 * scale)
             label.frame = CGRect(x: 33 * scale, y: 424 * scale, width: 358 * scale, height: 35 * scale)
         }
+        
         for i in 0...2 {
             if let label = self.viewWithTag(111 + i) as? UILabel {
                 label.font = UIFont(name: kHighScoreFontName, size: 28 * scale)
@@ -136,5 +140,69 @@ class JFMenuView : UIView {
                 break
             }
         }
+    }
+}
+
+let kPersonalHighScore = "pScore"
+
+class JFHighScoreObject {
+    
+    var personalScores:[Int] = [0, 0, 0]
+    
+    class var sharedInstance: JFHighScoreObject {
+        struct Static {
+            static var instance: JFHighScoreObject?
+            static var token: dispatch_once_t = 0
+        }
+        
+        dispatch_once(&Static.token) {
+            Static.instance = JFHighScoreObject()
+        }
+        
+        return Static.instance!
+    }
+
+    init() {
+        self.load()
+    }
+
+    //MARK: accessors
+    func setScore(score:Int, level:Int) -> Bool {
+        if(self.personalScores.count > level) {
+            self.personalScores[level] = score
+            self.save()
+            return true
+        }
+        return false
+    }
+    
+    func score(level:Int) -> Int {
+        if(self.personalScores.count > level) {
+            return self.personalScores[level]
+        }
+        return 0
+    }
+    
+    //MARK: load/save
+    func load() {
+        if let pScores = NSUserDefaults.standardUserDefaults().objectForKey(kPersonalHighScore) as? NSArray {
+            for i in 0...2 {
+                if let score = pScores.objectAtIndex(i) as? NSNumber {
+                    self.personalScores[i] = score.integerValue
+                }
+            }
+        } else {
+            self.personalScores = [0, 0, 0]
+        }
+    }
+    
+    func save() {
+        let pScores = NSMutableArray()
+        for i in 0...2 {
+            let score = NSNumber(integer: self.personalScores[i])
+            pScores.addObject(score)
+        }
+        NSUserDefaults.standardUserDefaults().setObject(pScores, forKey: kPersonalHighScore)
+        NSUserDefaults.standardUserDefaults().synchronize()
     }
 }
