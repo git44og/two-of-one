@@ -23,6 +23,7 @@ class MenuViewController: UIViewController {
         super.viewDidLoad()
         JFHighScoreObject.sharedInstance.load()
         self.menuView.vc = self
+        self.buttonLayerView.alpha = 0
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -39,10 +40,11 @@ class MenuViewController: UIViewController {
             return
         }
         
-        UIView.animateWithDuration(3.0,
+        UIView.animateWithDuration(2.0,
             delay: 0.0,
             options: UIViewAnimationOptions.CurveEaseInOut,
             animations: { () -> Void in
+                self.buttonLayerView.alpha = 1
                 self.backgroundFrontView.center = CGPoint(x: oldCenter.x * 2, y: oldCenter.y)
                 self.backgroundBackView.frame = CGRect(
                     origin: newOrigin,

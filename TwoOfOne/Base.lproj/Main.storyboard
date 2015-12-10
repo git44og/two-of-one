@@ -22,9 +22,6 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Start-Hintergrund.png" translatesAutoresizingMaskIntoConstraints="NO" id="PTe-N1-ure">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="750"/>
                             </imageView>
-                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Start-Tonne.png" translatesAutoresizingMaskIntoConstraints="NO" id="oZb-X5-lTI">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="750"/>
-                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yDF-5d-hio">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="750"/>
                                 <subviews>
@@ -78,16 +75,19 @@
                                     <constraint firstItem="2hh-WL-b6y" firstAttribute="leading" secondItem="fTy-RS-rKB" secondAttribute="trailing" constant="7" id="pAc-d9-rKg"/>
                                 </constraints>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Start-Tonne.png" translatesAutoresizingMaskIntoConstraints="NO" id="oZb-X5-lTI">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="750"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="oZb-X5-lTI" firstAttribute="centerY" secondItem="mJm-2A-ifF" secondAttribute="centerY" id="3gt-oU-zoo"/>
-                            <constraint firstItem="oZb-X5-lTI" firstAttribute="top" secondItem="mJm-2A-ifF" secondAttribute="topMargin" id="8hC-u8-0vJ"/>
                             <constraint firstItem="oZb-X5-lTI" firstAttribute="leading" secondItem="mJm-2A-ifF" secondAttribute="leadingMargin" constant="-20" id="CpM-WK-MjL"/>
-                            <constraint firstItem="yDF-5d-hio" firstAttribute="top" secondItem="mJm-2A-ifF" secondAttribute="topMargin" id="DtY-Uk-zr2"/>
                             <constraint firstItem="oZb-X5-lTI" firstAttribute="centerX" secondItem="mJm-2A-ifF" secondAttribute="centerX" id="Gx2-tA-tvy"/>
+                            <constraint firstItem="p4G-Yr-0o8" firstAttribute="top" secondItem="yDF-5d-hio" secondAttribute="bottom" id="MxQ-lh-l6M"/>
                             <constraint firstItem="PTe-N1-ure" firstAttribute="centerY" secondItem="mJm-2A-ifF" secondAttribute="centerY" id="NMM-h1-LGj"/>
-                            <constraint firstItem="PTe-N1-ure" firstAttribute="top" secondItem="mJm-2A-ifF" secondAttribute="topMargin" id="U5A-q9-1LV"/>
+                            <constraint firstItem="p4G-Yr-0o8" firstAttribute="top" secondItem="oZb-X5-lTI" secondAttribute="bottom" id="PcH-SP-Ej0"/>
+                            <constraint firstItem="p4G-Yr-0o8" firstAttribute="top" secondItem="PTe-N1-ure" secondAttribute="bottom" id="S8M-wU-Y0k"/>
                             <constraint firstItem="yDF-5d-hio" firstAttribute="centerY" secondItem="mJm-2A-ifF" secondAttribute="centerY" id="ap5-nJ-Ka4"/>
                             <constraint firstItem="PTe-N1-ure" firstAttribute="leading" secondItem="mJm-2A-ifF" secondAttribute="leadingMargin" constant="-20" id="ewe-qw-VF0"/>
                             <constraint firstItem="yDF-5d-hio" firstAttribute="centerX" secondItem="mJm-2A-ifF" secondAttribute="centerX" id="has-hu-cer"/>

@@ -17,9 +17,9 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="bFg-WG-dS9" secondAttribute="bottom" id="03y-WJ-jsv"/>
                 <constraint firstItem="bFg-WG-dS9" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="FUj-1u-MU5"/>
                 <constraint firstItem="bFg-WG-dS9" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="OA6-mN-HaE"/>
-                <constraint firstItem="bFg-WG-dS9" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Prm-rN-q3P"/>
                 <constraint firstItem="bFg-WG-dS9" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="lPY-9H-Fdx"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
