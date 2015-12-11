@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -11,16 +11,23 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Start.png" translatesAutoresizingMaskIntoConstraints="NO" id="bFg-WG-dS9">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Start-Hintergrund.png" translatesAutoresizingMaskIntoConstraints="NO" id="bFg-WG-dS9">
+                    <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Start-Tonne.png" translatesAutoresizingMaskIntoConstraints="NO" id="qsZ-kQ-AZg">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                 </imageView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="bFg-WG-dS9" secondAttribute="bottom" id="03y-WJ-jsv"/>
-                <constraint firstItem="bFg-WG-dS9" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="FUj-1u-MU5"/>
-                <constraint firstItem="bFg-WG-dS9" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="OA6-mN-HaE"/>
-                <constraint firstItem="bFg-WG-dS9" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="lPY-9H-Fdx"/>
+                <constraint firstItem="qsZ-kQ-AZg" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="9BE-2w-YVx"/>
+                <constraint firstItem="bFg-WG-dS9" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="WMX-ts-iho"/>
+                <constraint firstItem="bFg-WG-dS9" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="X8N-Ih-ujB"/>
+                <constraint firstAttribute="bottom" secondItem="qsZ-kQ-AZg" secondAttribute="bottom" id="Yw5-aX-8iI"/>
+                <constraint firstItem="qsZ-kQ-AZg" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="haZ-iG-LRd"/>
+                <constraint firstItem="bFg-WG-dS9" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="ktw-G2-2Qf"/>
+                <constraint firstItem="qsZ-kQ-AZg" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="uGc-b0-4bw"/>
+                <constraint firstAttribute="bottom" secondItem="bFg-WG-dS9" secondAttribute="bottom" id="yf3-l8-hoy"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -28,6 +35,7 @@
         </view>
     </objects>
     <resources>
-        <image name="Start.png" width="1331" height="750"/>
+        <image name="Start-Hintergrund.png" width="1331" height="750"/>
+        <image name="Start-Tonne.png" width="1331" height="750"/>
     </resources>
 </document>
