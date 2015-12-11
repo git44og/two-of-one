@@ -35,6 +35,7 @@ class MenuViewController: UIViewController {
             x: oldFrame.origin.x,
             y: oldFrame.size.height * -0.1)
         if(self.skipIntro) {
+            self.buttonLayerView.alpha = 1
             self.backgroundFrontView.center = CGPoint(x: oldCenter.x * 2, y: oldCenter.y)
             self.backgroundBackView.frame = CGRect(origin: oldFrame.origin, size: CGSize(width: oldFrame.size.width * 1.2, height: oldFrame.size.height * 1.2))
             return
