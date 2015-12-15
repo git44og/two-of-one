@@ -103,6 +103,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     // tmp
     var startingAttitudeRoll:Double?
     var startingAttitudePitch:Double?
+    var timerForTiles:[NSTimer] = []
     
     override func viewDidLoad() {
         
@@ -379,6 +380,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             while((i < objs.count) && !nodeFound) {
                 let nearestObject = objs[i]
                 if let hitNode = nearestObject.node as? JFTileNode {
+                    
+                    self.fireAllTileAnimations()
+                    
                     if(!hitNode.isFacingCamera() || hitNode.lock) {
                         // tile locked or tile not facing camera
                         // don't turn
@@ -402,6 +406,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             }
         }
         
+        
         if(turnedNodes.count >= 2) {
             if(self.turnedNodes[0].isPairWithTile(self.turnedNodes[1])) {
                 
@@ -414,12 +419,14 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 tile2.lock = true
                 tile1.found = true
                 tile2.found = true
+                
+                let timer = NSTimer.scheduledTimerWithTimeInterval(kDelayTurnBack, target: self, selector: Selector("tilesStartFalling:"), userInfo: [tile1, tile2], repeats: false)
+                self.timerForTiles.append(timer)
+
                 execDelay(kDelayTurnBack) {
                     if(self.cylinderNode.solved()) {
                         self.gameSolved()
                     }
-                    tile1.tileFalls()
-                    tile2.tileFalls()
                 }
             } else {
                 
@@ -430,14 +437,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 self.turnedNodes = []
                 tile1.lock = true
                 tile2.lock = true
-                execDelay(kDelayTurnBack) {
-                    tile1.flip(completion: { () -> Void in
-                        tile1.lock = false
-                    })
-                    tile2.flip(completion: { () -> Void in
-                        tile2.lock = false
-                    })
-                }
+                
+                let timer = NSTimer.scheduledTimerWithTimeInterval(kDelayTurnBack, target: self, selector: Selector("tilesTurnBack:"), userInfo: [tile1, tile2], repeats: false)
+                self.timerForTiles.append(timer)
             }
         }
     }
@@ -482,6 +484,40 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     }
     
     //MARK: animaton
+    
+    @objc func tilesStartFalling(timer:NSTimer) {
+        //print("fall")
+        if let tiles = timer.userInfo as? [AnyObject] {
+            if(tiles.count == 2) {
+                for i in 0...1 {
+                    if let tile = tiles[i] as? JFTileNode {
+                        tile.tileFalls()
+                    }
+                }
+            }
+        }
+    }
+    
+    @objc func tilesTurnBack(timer:NSTimer) {
+        //print("turnback")
+        if let tiles = timer.userInfo as? [AnyObject] {
+            if(tiles.count == 2) {
+                for i in 0...1 {
+                    if let tile = tiles[i] as? JFTileNode {
+                        tile.flip(completion: { () -> Void in
+                            tile.lock = false
+                        })
+                    }
+                }
+            }
+        }
+    }
+    
+    func fireAllTileAnimations() {
+        for timer in self.timerForTiles {
+            timer.fire()
+        }
+    }
     
     func animation(fadeIn:Bool, completion: (() -> Void)?) {
         self.applyState(fadeIn)
@@ -565,12 +601,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             vc.menuAnimation = .GameEnd
             self.presentViewController(vc, animated: false, completion: nil)
         }
-        
-//        self.removeGameObjects()
-//        self.gameMode = .Menu
-//        let vc = self.storyboard?.instantiateViewControllerWithIdentifier("menuScreen") as! MenuViewController
-//        vc.menuAnimation = .GameEnd
-//        self.presentViewController(vc, animated: false, completion: nil)
     }
     
     //MARK: button actions
