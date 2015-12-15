@@ -617,11 +617,11 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     }
     
     @IBAction func onGameFinishPlayAgainPressed(sender: AnyObject) {
-        let vc = self.storyboard?.instantiateViewControllerWithIdentifier("gameScreen") as! ViewController
-        vc.game.level = self.game.level
-        vc.game.debugPairs = self.game.debugPairs
-        self.presentViewController(vc, animated: false) { () -> Void in
-            vc.gamePlayIntro()
+        self.animation(false) { () -> Void in
+            let vc = self.storyboard?.instantiateViewControllerWithIdentifier("gameScreen") as! ViewController
+            vc.game.level = self.game.level
+            vc.game.debugPairs = self.game.debugPairs
+            self.presentViewController(vc, animated: false, completion: nil)
         }
     }
     

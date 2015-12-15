@@ -96,9 +96,7 @@ class MenuViewController: UIViewController {
         vc.game.debugPairs = self.debugPairsSwitch.on
         
         self.animation(.Ready, endState: .Playing) { () -> Void in
-            self.presentViewController(vc, animated: false) { () -> Void in
-                //vc.gamePlayIntro()
-            }
+            self.presentViewController(vc, animated: false, completion: nil)
         }
     }
     
