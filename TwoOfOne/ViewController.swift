@@ -485,8 +485,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     func animation(fadeIn:Bool, completion: (() -> Void)?) {
         self.applyState(fadeIn)
-        UIView.animateWithDuration(0.3,
-            delay: 1.0,
+        UIView.animateWithDuration(fadeIn ? 0.5 : 0.3,
+            delay: fadeIn ? 1.0 : 0,
             options: UIViewAnimationOptions.CurveLinear,
             animations: { () -> Void in
                 self.applyState(!fadeIn)
@@ -559,11 +559,18 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     func gameExit() {
         self.removeGestureRecognizers()
-        self.removeGameObjects()
-        self.gameMode = .Menu
-        let vc = self.storyboard?.instantiateViewControllerWithIdentifier("menuScreen") as! MenuViewController
-        vc.menuAnimation = .GameEnd
-        self.presentViewController(vc, animated: false, completion: nil)
+        
+        self.animation(false) { () -> Void in
+            let vc = self.storyboard?.instantiateViewControllerWithIdentifier("menuScreen") as! MenuViewController
+            vc.menuAnimation = .GameEnd
+            self.presentViewController(vc, animated: false, completion: nil)
+        }
+        
+//        self.removeGameObjects()
+//        self.gameMode = .Menu
+//        let vc = self.storyboard?.instantiateViewControllerWithIdentifier("menuScreen") as! MenuViewController
+//        vc.menuAnimation = .GameEnd
+//        self.presentViewController(vc, animated: false, completion: nil)
     }
     
     //MARK: button actions
