@@ -538,12 +538,13 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.removeGestureRecognizers()
         self.removeGameObjects()
         self.gameMode = .Menu
+        /*
         self.homeMenuView.hidden = false
         self.gameMenuView.hidden = true
         self.gameScoreBoardView.hidden = true
-        
+        */
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("menuScreen") as! MenuViewController
-        vc.skipIntro = true
+        vc.menuAnimation = .GameEnd
         self.presentViewController(vc, animated: false, completion: nil)
     }
     
