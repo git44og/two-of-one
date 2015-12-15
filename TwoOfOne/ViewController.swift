@@ -59,11 +59,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     @IBOutlet weak var menuButton: UIButton!
     @IBOutlet weak var gameMenuView: UIView!
     @IBOutlet weak var gameScoreBoardView: UIView!
-    @IBOutlet weak var homeMenuView: UIView!
-    @IBOutlet weak var playEasyButton: UIButton!
-    @IBOutlet weak var playMediumButton: UIButton!
-    @IBOutlet weak var playHardButton: UIButton!
-    @IBOutlet weak var physicsButton: UIButton!
     @IBOutlet weak var bonusLabel: UILabel!
     @IBOutlet weak var bonusProgressView: UIProgressView!
     @IBOutlet weak var turnLabel: UILabel!
@@ -478,7 +473,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     func gamePlayIntro() {
         
         self.gameMenuView.hidden = false
-        self.homeMenuView.hidden = true
         self.gameScoreBoardView.hidden = false
 
         self.gameMode = .PlayingIntro
@@ -550,34 +544,10 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     //MARK: button actions
     
-    @IBAction func onPlayPressed(sender: AnyObject) {
-        switch(sender.tag) {
-        case 1:
-            self.game.level = 0
-            self.gamePlayIntro()
-            break
-        case 2:
-            self.game.level = 1
-            self.gamePlayIntro()
-            break
-        case 3:
-            self.game.level = 2
-            self.gamePlayIntro()
-            break
-        default:
-            break
-        }
-    }
-    
     @IBAction func onMenuPressed(sender: AnyObject) {
         let alertView = UIAlertView(title:"Exit Game", message: "", delegate: self, cancelButtonTitle: "Cancel", otherButtonTitles: "Ok")
         alertView.tag = JFAlterViewIdentifier.GameExit.rawValue
         alertView.show()
-    }
-    
-    @IBAction func onPhysicsPressed(sender: AnyObject) {
-        self.game.physics = !self.game.physics
-        self.physicsButton.setTitle(self.game.physics ? "Physics On" : "Physics Off", forState: .Normal)
     }
     
     @IBAction func onGameFinishMenuPressed(sender: AnyObject) {
