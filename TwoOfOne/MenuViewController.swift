@@ -97,7 +97,7 @@ class MenuViewController: UIViewController {
         
         self.animation(.Ready, endState: .Playing) { () -> Void in
             self.presentViewController(vc, animated: false) { () -> Void in
-                vc.gamePlayIntro()
+                //vc.gamePlayIntro()
             }
         }
     }

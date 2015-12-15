@@ -111,12 +111,11 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         JFSoundManager.sharedInstance.preloadSounds()
         
         self.game.vc = self
-        self.gameMenuView.hidden = true
-        self.gameScoreBoardView.hidden = true
         self.gameFinishView.alpha = 0
-        
         self.scoreBoard = ScoreBoardView(game: self.game, moveCountLabel: turnLabel, scoreLabel: scoreLabel, bonusTimeLabel: bonusLabel, bonusProgressView:self.bonusProgressView)
         self.game.scoreBoard = self.scoreBoard
+        
+        self.applyState(true)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -139,6 +138,19 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         
         // motion detection
         self.startDeviceMotionDetection()
+        
+        self.gameMode = .PlayingIntro
+        self.addCylinder(self.sceneView.scene!)
+        self.addPhysicsWalls(self.sceneView.scene!)
+        self.addGridWall(self.sceneView.scene!)
+        self.addDecoration(self.sceneView.scene!)
+        if(self.game.physics) {
+            self.addCenterNode(self.sceneView.scene!)
+        }
+
+        self.animation(true) { () -> Void in
+            self.gamePlayIntro()
+        }
     }
     
     override func prefersStatusBarHidden() -> Bool {
@@ -469,22 +481,39 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         }
     }
     
-    //MARK: user actions
-    func gamePlayIntro() {
-        
-        self.gameMenuView.hidden = false
-        self.gameScoreBoardView.hidden = false
-
-        self.gameMode = .PlayingIntro
-        self.addCylinder(self.sceneView.scene!)
-        self.addPhysicsWalls(self.sceneView.scene!)
-        self.addGridWall(self.sceneView.scene!)
-        self.addDecoration(self.sceneView.scene!)
-        if(self.game.physics) {
-            self.addCenterNode(self.sceneView.scene!)
+    //MARK: animaton
+    
+    func animation(fadeIn:Bool, completion: (() -> Void)?) {
+        self.applyState(fadeIn)
+        UIView.animateWithDuration(0.3,
+            delay: 1.0,
+            options: UIViewAnimationOptions.CurveLinear,
+            animations: { () -> Void in
+                self.applyState(!fadeIn)
+            }) { (Bool) -> Void in
+                execDelay(0, closure: { () -> () in
+                    if let myCompletion = completion {
+                        myCompletion()
+                    }
+                })
         }
-        
-
+    }
+    
+    func applyState(hidden:Bool) {
+        if(hidden) {
+            self.gameMenuView.alpha = 0.1
+            self.gameScoreBoardView.alpha = 0.1
+            self.sceneView.alpha = 0.1
+            self.gameFinishView.alpha = 0
+        } else {
+            self.gameMenuView.alpha = 1
+            self.gameScoreBoardView.alpha = 1
+            self.sceneView.alpha = 1
+            self.gameFinishView.alpha = 0
+        }
+    }
+    
+    func gamePlayIntro() {
         execDelay(0.5) { () -> () in
             let delayGamePlay = self.cylinderNode.foldAnimation()
             execDelay(delayGamePlay) { () -> () in
@@ -532,11 +561,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.removeGestureRecognizers()
         self.removeGameObjects()
         self.gameMode = .Menu
-        /*
-        self.homeMenuView.hidden = false
-        self.gameMenuView.hidden = true
-        self.gameScoreBoardView.hidden = true
-        */
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("menuScreen") as! MenuViewController
         vc.menuAnimation = .GameEnd
         self.presentViewController(vc, animated: false, completion: nil)
