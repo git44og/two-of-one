@@ -37,6 +37,7 @@ class Game {
     var bonusUpdateTimer:NSTimer = NSTimer()
     var level:Int = 0
     var physics:Bool = true
+    var enableBackOfTiles:Bool = false
     var scoreBoard:ScoreBoardView? {
         didSet {
             self.updateScoreBoard()

@@ -99,6 +99,7 @@ class MenuViewController: UIViewController {
     func onPlayPressed(sender:AnyObject, level:Int) {
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("gameScreen") as! ViewController
         vc.game.level = level
+        vc.game.enableBackOfTiles = self.enableBackOfTile.on
         vc.game.debugPairs = self.debugPairsSwitch.on
         
         self.animation(.Ready, endState: .Playing) { () -> Void in

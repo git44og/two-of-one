@@ -39,8 +39,8 @@ let kMaxOutPitch:Double = Double(M_PI / 4)
 let kMinRotationRate:Double = 0.02
 
 // tile rotation
-let kDelayTurnBack: NSTimeInterval = 2.0 //1.0
-let kDurationTileTurn: NSTimeInterval = 1.0 //0.3
+let kDelayTurnBack: NSTimeInterval = 1.0 //1.0
+let kDurationTileTurn: NSTimeInterval = 0.3 //0.3
 
 enum JFGameMode:Int {
     case Menu = 0
@@ -431,7 +431,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     func handleTurnedTile(hitNode:JFTileNode) -> Bool {
         self.fireAllTileAnimations()
         
-        if(!hitNode.isFacingCamera() || hitNode.lock) {
+        if((!self.game.enableBackOfTiles && !hitNode.isFacingCamera()) || hitNode.lock) {
             // tile locked or tile not facing camera
             // don't turn
             return false
