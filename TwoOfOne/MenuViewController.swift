@@ -156,17 +156,73 @@ class MenuViewController: UIViewController {
             break
         }
         
-        UIView.animateWithDuration(duration,
-            delay: 0,
-            options: option,
-            animations: { () -> Void in
-                self.applyMenuState(endState)
-            }) { (Bool) -> Void in
-                execDelay(0, closure: { () -> () in
-                    if let myCompletion = completion {
-                        myCompletion()
-                    }
-                })
+        switch(endState) {
+        case .Playing:
+            UIView.animateWithDuration(duration,
+                delay: 0,
+                options: option,
+                animations: { () -> Void in
+                    self.backgroundFrontView.alpha = 0
+                    self.backgroundBackView.alpha = 0
+                    self.backgroundFrontView.center = CGPoint(x: self.animationRefCenter.x * 10, y: self.animationRefCenter.y)
+                    self.backgroundBackView.frame = CGRect(
+                        origin: self.animationRefFrame.origin,
+                        size: CGSize(width: self.animationRefFrame.size.width * 6, height: self.animationRefFrame.size.height * 6))
+                }) { (Bool) -> Void in
+                    execDelay(0, closure: { () -> () in
+                        if let myCompletion = completion {
+                            myCompletion()
+                        }
+                    })
+            }
+            UIView.animateWithDuration((duration / 2),
+                delay: 0,
+                options: UIViewAnimationOptions.CurveEaseOut,
+                animations: { () -> Void in
+                    self.buttonLayerView.alpha = 0
+                },
+                completion:nil)
+            break
+        case .Ready:
+            UIView.animateWithDuration(duration,
+                delay: 0,
+                options: option,
+                animations: { () -> Void in
+                    self.backgroundFrontView.alpha = 1
+                    self.backgroundBackView.alpha = 1
+                    self.backgroundFrontView.center = CGPoint(x: self.animationRefCenter.x * 2, y: self.animationRefCenter.y)
+                    self.backgroundBackView.frame = CGRect(
+                        origin: self.animationRefFrame.origin,
+                        size: CGSize(width: self.animationRefFrame.size.width * 1.2, height: self.animationRefFrame.size.height * 1.2))
+                }) { (Bool) -> Void in
+                    execDelay(0, closure: { () -> () in
+                        if let myCompletion = completion {
+                            myCompletion()
+                        }
+                    })
+            }
+            UIView.animateWithDuration((duration / 2),
+                delay: (duration / 2),
+                options: UIViewAnimationOptions.CurveEaseIn,
+                animations: { () -> Void in
+                    self.buttonLayerView.alpha = 1
+                },
+                completion:nil)
+            break
+        default:
+            UIView.animateWithDuration(duration,
+                delay: 0,
+                options: option,
+                animations: { () -> Void in
+                    self.applyMenuState(endState)
+                }) { (Bool) -> Void in
+                    execDelay(0, closure: { () -> () in
+                        if let myCompletion = completion {
+                            myCompletion()
+                        }
+                    })
+            }
+            break
         }
     }
 }
