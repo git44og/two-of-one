@@ -35,9 +35,36 @@
                                     </imageView>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="fTy-RS-rKB">
                                         <rect key="frame" x="10" y="360" width="51" height="31"/>
+                                        <connections>
+                                            <action selector="onSwitchChange:" destination="iSn-JT-aV0" eventType="valueChanged" id="D6W-pd-gvF"/>
+                                        </connections>
                                     </switch>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Debug (2 Paare)" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2hh-WL-b6y">
-                                        <rect key="frame" x="66" y="289" width="125" height="21"/>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="SfV-CI-ACN">
+                                        <rect key="frame" x="10" y="410" width="51" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="49" id="UTp-q7-nOU"/>
+                                            <constraint firstAttribute="height" constant="31" id="Zud-sc-pcF"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="onSwitchChange:" destination="iSn-JT-aV0" eventType="valueChanged" id="SPT-EP-dZe"/>
+                                        </connections>
+                                    </switch>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Debug (2 Paare)" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2hh-WL-b6y">
+                                        <rect key="frame" x="66" y="360" width="125" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="31" id="SCA-Ol-pGW"/>
+                                            <constraint firstAttribute="width" constant="125" id="htz-Bz-diS"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable back of tile" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f76-zh-BGd">
+                                        <rect key="frame" x="66" y="410" width="155" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="155" id="ZjC-Rw-cjh"/>
+                                            <constraint firstAttribute="height" constant="31" id="er6-vy-hBD"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -63,9 +90,13 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="f76-zh-BGd" firstAttribute="leading" secondItem="SfV-CI-ACN" secondAttribute="trailing" constant="7" id="2H8-A1-R01"/>
+                                    <constraint firstItem="f76-zh-BGd" firstAttribute="top" secondItem="2hh-WL-b6y" secondAttribute="bottom" constant="19" id="8xk-DY-xCK"/>
+                                    <constraint firstItem="SfV-CI-ACN" firstAttribute="leading" secondItem="yDF-5d-hio" secondAttribute="leading" constant="10" id="DQb-HM-BhK"/>
                                     <constraint firstItem="B5x-ag-WYU" firstAttribute="top" secondItem="yDF-5d-hio" secondAttribute="top" id="Ivm-G7-SSk"/>
                                     <constraint firstItem="fD5-aH-Yq6" firstAttribute="top" secondItem="yDF-5d-hio" secondAttribute="top" id="NE2-eb-02I"/>
                                     <constraint firstItem="B5x-ag-WYU" firstAttribute="centerX" secondItem="yDF-5d-hio" secondAttribute="centerX" id="Pc7-fx-u8X"/>
+                                    <constraint firstItem="SfV-CI-ACN" firstAttribute="top" secondItem="fTy-RS-rKB" secondAttribute="bottom" constant="19" id="PsY-jk-ehS"/>
                                     <constraint firstItem="B5x-ag-WYU" firstAttribute="leading" secondItem="yDF-5d-hio" secondAttribute="leading" id="UhE-VF-zGR"/>
                                     <constraint firstItem="fD5-aH-Yq6" firstAttribute="centerY" secondItem="yDF-5d-hio" secondAttribute="centerY" id="dDV-ek-hK9"/>
                                     <constraint firstItem="B5x-ag-WYU" firstAttribute="centerY" secondItem="yDF-5d-hio" secondAttribute="centerY" id="dbJ-ws-L2G"/>
@@ -103,6 +134,7 @@
                         <outlet property="backgroundFrontView" destination="oZb-X5-lTI" id="2uH-9e-tBu"/>
                         <outlet property="buttonLayerView" destination="yDF-5d-hio" id="ILE-zl-dUi"/>
                         <outlet property="debugPairsSwitch" destination="fTy-RS-rKB" id="s8H-RM-jfC"/>
+                        <outlet property="enableBackOfTile" destination="SfV-CI-ACN" id="KvA-vf-XVP"/>
                         <outlet property="menuView" destination="fD5-aH-Yq6" id="Rdh-IV-95F"/>
                     </connections>
                 </viewController>

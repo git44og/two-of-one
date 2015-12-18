@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+let kOptionsEnableBackOfTile = "enableBackOfTile"
+let kOptionsEnableDebug = "enableDebug"
 
 
 enum JFMenuState:Int {
@@ -29,6 +31,7 @@ class MenuViewController: UIViewController {
     @IBOutlet weak var backgroundBackView: UIImageView!
     @IBOutlet weak var buttonLayerView: UIView!
     @IBOutlet weak var debugPairsSwitch: UISwitch!
+    @IBOutlet weak var enableBackOfTile: UISwitch!
     @IBOutlet weak var menuView: JFMenuView!
     
     var menuAnimation:JFMenuAnimation = .Startup
@@ -39,6 +42,9 @@ class MenuViewController: UIViewController {
         super.viewDidLoad()
         JFHighScoreObject.sharedInstance.load()
         self.menuView.vc = self
+        
+        self.enableBackOfTile.on = NSUserDefaults.standardUserDefaults().boolForKey(kOptionsEnableBackOfTile)
+        self.debugPairsSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey(kOptionsEnableDebug)
         
         switch(self.menuAnimation) {
         case .None:
@@ -104,6 +110,11 @@ class MenuViewController: UIViewController {
         print("load gamecenter")
     }
     
+    @IBAction func onSwitchChange(sender: AnyObject) {
+        NSUserDefaults.standardUserDefaults().setBool(self.enableBackOfTile.on, forKey: kOptionsEnableBackOfTile)
+        NSUserDefaults.standardUserDefaults().setBool(self.debugPairsSwitch.on, forKey: kOptionsEnableDebug)
+        NSUserDefaults.standardUserDefaults().synchronize()
+    }
 
     func applyMenuState(state:JFMenuState) {
         switch(state) {
