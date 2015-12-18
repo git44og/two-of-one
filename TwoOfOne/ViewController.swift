@@ -39,8 +39,8 @@ let kMaxOutPitch:Double = Double(M_PI / 4)
 let kMinRotationRate:Double = 0.02
 
 // tile rotation
-let kDelayTurnBack: NSTimeInterval = 1.0 //1.0
-let kDurationTileTurn: NSTimeInterval = 0.3 //0.3
+let kDelayTurnBack: NSTimeInterval = 2.0 //1.0
+let kDurationTileTurn: NSTimeInterval = 1.0 //0.3
 
 enum JFGameMode:Int {
     case Menu = 0
@@ -380,66 +380,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             while((i < objs.count) && !nodeFound) {
                 let nearestObject = objs[i]
                 if let hitNode = nearestObject.node as? JFTileNode {
-                    
-                    self.fireAllTileAnimations()
-                    
-                    if(!hitNode.isFacingCamera() || hitNode.lock) {
-                        // tile locked or tile not facing camera
-                        // don't turn
-                    } else if(hitNode.turned) {
-                        hitNode.flip()
-                        self.game.event(.flipBackTile)
-                        for j in 0...(self.turnedNodes.count - 1) {
-                            if(self.turnedNodes[j] == hitNode) {
-                                self.turnedNodes.removeAtIndex(j)
-                            }
-                        }
-                        nodeFound = true
-                    } else {
-                        hitNode.flip()
-                        self.game.event(.flipTile)
-                        self.turnedNodes.append(hitNode)
-                        nodeFound = true
-                    }
+                    nodeFound = handleTurnedTile(hitNode)
                 }
                 i++
-            }
-        }
-        
-        
-        if(turnedNodes.count >= 2) {
-            if(self.turnedNodes[0].isPairWithTile(self.turnedNodes[1])) {
-                
-                self.game.event(.findPair)
-                
-                let tile1 = self.turnedNodes[0]
-                let tile2 = self.turnedNodes[1]
-                self.turnedNodes = []
-                tile1.lock = true
-                tile2.lock = true
-                tile1.found = true
-                tile2.found = true
-                
-                let timer = NSTimer.scheduledTimerWithTimeInterval(kDelayTurnBack, target: self, selector: Selector("tilesStartFalling:"), userInfo: [tile1, tile2], repeats: false)
-                self.timerForTiles.append(timer)
-
-                execDelay(kDelayTurnBack) {
-                    if(self.cylinderNode.solved()) {
-                        self.gameSolved()
-                    }
-                }
-            } else {
-                
-                self.game.event(.findNoPair)
-                
-                let tile1 = self.turnedNodes[0]
-                let tile2 = self.turnedNodes[1]
-                self.turnedNodes = []
-                tile1.lock = true
-                tile2.lock = true
-                
-                let timer = NSTimer.scheduledTimerWithTimeInterval(kDelayTurnBack, target: self, selector: Selector("tilesTurnBack:"), userInfo: [tile1, tile2], repeats: false)
-                self.timerForTiles.append(timer)
             }
         }
     }
@@ -483,10 +426,89 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         }
     }
     
+    //MARK: tile turn handling
+
+    func handleTurnedTile(hitNode:JFTileNode) -> Bool {
+        self.fireAllTileAnimations()
+        
+        if(!hitNode.isFacingCamera() || hitNode.lock) {
+            // tile locked or tile not facing camera
+            // don't turn
+            return false
+        } else if(hitNode.turned) {
+            hitNode.flip(completion: { () -> Void in
+                execOnMain({ () -> () in
+                    self.game.event(.flipBackTile)
+                })
+            })
+            for j in 0...(self.turnedNodes.count - 1) {
+                if(self.turnedNodes[j] == hitNode) {
+                    self.turnedNodes.removeAtIndex(j)
+                }
+            }
+            return true
+        } else {
+            self.turnedNodes.append(hitNode)
+            let checkPairCompletion = self.checkPair()
+            //hitNode.flip(completion: checkPairCompletion)
+            hitNode.flip(completion: { () -> Void in
+                checkPairCompletion()
+                execOnMain({ () -> () in
+                    self.game.event(.flipTile)
+                })
+            })
+            return true
+        }
+    }
+    
+    func checkPair() -> (() -> Void)! {
+        if(turnedNodes.count >= 2) {
+            if(self.turnedNodes[0].isPairWithTile(self.turnedNodes[1])) {
+                
+                let tile1 = self.turnedNodes[0]
+                let tile2 = self.turnedNodes[1]
+                self.turnedNodes = []
+                tile1.lock = true
+                tile2.lock = true
+                tile1.found = true
+                tile2.found = true
+                
+                let timer = NSTimer.scheduledTimerWithTimeInterval(kDelayTurnBack, target: self, selector: Selector("tilesStartFalling:"), userInfo: [tile1, tile2], repeats: false)
+                self.timerForTiles.append(timer)
+                
+                if(self.cylinderNode.solved()) {
+                    self.gameSolved()
+                }
+                
+                return {
+                    execOnMain({ () -> () in
+                        self.game.event(.findPair)
+                    })
+                }
+            } else {
+                let tile1 = self.turnedNodes[0]
+                let tile2 = self.turnedNodes[1]
+                self.turnedNodes = []
+                tile1.lock = true
+                tile2.lock = true
+                
+                let timer = NSTimer.scheduledTimerWithTimeInterval(kDelayTurnBack, target: self, selector: Selector("tilesTurnBack:"), userInfo: [tile1, tile2], repeats: false)
+                self.timerForTiles.append(timer)
+                
+                return {
+                    execOnMain({ () -> () in
+                        self.game.event(.findNoPair)
+                    })
+                }
+            }
+        }
+        return {}
+    }
+
     //MARK: animaton
     
     @objc func tilesStartFalling(timer:NSTimer) {
-        //print("fall")
+        print("func tilesStartFalling")
         if let tiles = timer.userInfo as? [AnyObject] {
             if(tiles.count == 2) {
                 for i in 0...1 {
@@ -499,7 +521,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     }
     
     @objc func tilesTurnBack(timer:NSTimer) {
-        //print("turnback")
+        print("func tilesTurnBack")
         if let tiles = timer.userInfo as? [AnyObject] {
             if(tiles.count == 2) {
                 for i in 0...1 {

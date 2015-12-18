@@ -22,6 +22,12 @@ func execDelay(delay:Double, closure:()->()) {
         dispatch_get_main_queue(), closure)
 }
 
+func execOnMain(closure:()->()) {
+    dispatch_async(dispatch_get_main_queue(), {
+        closure()
+    })
+}
+
 func shuffleList<C: MutableCollectionType where C.Index == Int>(var list: C) -> C {
     let c = list.count
     for i in 0..<(c - 1) {
