@@ -60,9 +60,12 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     @IBOutlet weak var gameMenuView: UIView!
     @IBOutlet weak var gameScoreBoardView: UIView!
     @IBOutlet weak var bonusLabel: UILabel!
+    @IBOutlet weak var bonusRefLabel: UILabel!
     @IBOutlet weak var bonusProgressView: UIProgressView!
     @IBOutlet weak var turnLabel: UILabel!
+    @IBOutlet weak var turnRefLabel: UILabel!
     @IBOutlet weak var scoreLabel: UILabel!
+    @IBOutlet weak var scoreRefLabel: UILabel!
     @IBOutlet weak var gameFinishView: UIView!
     
     // Geometry
