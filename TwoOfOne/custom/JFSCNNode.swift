@@ -529,6 +529,11 @@ class JFTileNode: SCNNode {
         let rotationAngleInt:CGFloat = (self.turned ? 1 : -1)
         let rotationAngle:CGFloat = CGFloat(M_PI) * rotationAngleInt
         
+        // lines below required for alternative rotation actions
+        //let rotationVectorY:Float = (self.turned ? 1 : -1)
+        //let rotationTargetAngle:Float = (self.turned ? Float(M_PI) : 0)
+        //print("current:\(self.rotation.w) target:\(rotationAngle)")
+        
         // find timing when tile faces have to change
         var timing:NSTimeInterval = 0.5
 
@@ -568,8 +573,19 @@ class JFTileNode: SCNNode {
         0.9 -> 1.8 > 2.8 > floor > 2 > 1 > 0.5
         */
         
+        // clear actions
+        // clear actions on self would cause error on target angle of tile
+        //self.removeAllActions()
+        self.tileNodes[JFTileNodeFaceType.open]?.removeAllActions()
+        self.tileNodes[JFTileNodeFaceType.closed]?.removeAllActions()
+        
         // run aminations
         let rotationAction = SCNAction.rotateByAngle(rotationAngle, aroundAxis: SCNVector3(x: 0, y: 1, z: 0), duration: rotationDuration)
+        // action below might rotate around angle other than y
+        //let rotationAction = SCNAction.rotateToX(0, y: CGFloat(rotationTargetAngle), z: 0, duration: rotationDuration, shortestUnitArc:true)
+        // action below doesn't rotate back properly
+        //let rotationAction = SCNAction.rotateToAxisAngle(SCNVector4Make(0, rotationVectorY, 0, rotationTargetAngle), duration: rotationDuration)
+
         rotationAction.timingMode = SCNActionTimingMode.Linear
         self.runAction(rotationAction, completionHandler: completion)
         
