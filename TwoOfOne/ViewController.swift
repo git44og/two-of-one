@@ -723,9 +723,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             
             // add center weight node
             if((!self.panActive) && ((self.cylinderNode.physicsBody?.velocity.x > -kRestingSpeed) && (self.cylinderNode.physicsBody?.velocity.x < kRestingSpeed))) {
-                let distBetweenFlatSpot = (self.cylinderNode.circumsize / Float(self.game.cylinderCols()))
-                let widthHalfTile:Float = distBetweenFlatSpot / 2
-                let targetPos = ((round((location.x + widthHalfTile) / distBetweenFlatSpot) + 0) * distBetweenFlatSpot) - widthHalfTile
+                let targetPos = ((round((location.x + self.cylinderNode.widthHalfTile) / self.cylinderNode.distBetweenFlatSpot) + 0) * self.cylinderNode.distBetweenFlatSpot) - self.cylinderNode.widthHalfTile
                 if(!SCNVector3EqualToVector3(SCNVector3Make(targetPos, 0, -kCylinderCenter.z), self.centerNode.position)) {
                     self.centerNode.position = SCNVector3Make(targetPos, 0, -kCylinderCenter.z)
                     self.centerNode.physicsBody?.resetTransform()

@@ -54,7 +54,9 @@ class JFSCNNode : SCNNode {
     var rollBoundaries:Float = 1
     var tileGap:Float = 0
     var tileColNodes:[JFCylinderColNode] = []
-    
+    var distBetweenFlatSpot:Float = 0
+    var widthHalfTile:Float = 0
+
     override var position: SCNVector3 {
         didSet {
             self.currentPosition = self.position.x
@@ -87,8 +89,11 @@ class JFSCNNode : SCNNode {
         self.rollBoundaries = (self.circumsize / 2) * 1.05
         // cylinder radius
         self.shapeRadius = self.circumsize / (2 * Float(M_PI))
-        // angle between columns
-        
+
+        // tile distance
+        self.distBetweenFlatSpot = (self.circumsize / Float(self.game.cylinderCols()))
+        self.widthHalfTile = distBetweenFlatSpot / 2
+
         // cylinder physics
         if(self.game.physics) {
             let cylinderShapeShape = SCNBox(
