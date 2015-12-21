@@ -726,9 +726,11 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 let distBetweenFlatSpot = (self.cylinderNode.circumsize / Float(self.game.cylinderCols()))
                 let widthHalfTile:Float = distBetweenFlatSpot / 2
                 let targetPos = ((round((location.x + widthHalfTile) / distBetweenFlatSpot) + 0) * distBetweenFlatSpot) - widthHalfTile
-                self.centerNode.position = SCNVector3Make(targetPos, 0, -kCylinderCenter.z)
-                self.centerNode.physicsBody?.resetTransform()
-                self.centerNode.physicsField?.strength = 10000
+                if(!SCNVector3EqualToVector3(SCNVector3Make(targetPos, 0, -kCylinderCenter.z), self.centerNode.position)) {
+                    self.centerNode.position = SCNVector3Make(targetPos, 0, -kCylinderCenter.z)
+                    self.centerNode.physicsBody?.resetTransform()
+                    self.centerNode.physicsField?.strength = 10000
+                }
                 //self.centerNode.opacity = 1
                 //print("v:\(self.cylinderNode.physicsBody?.velocity)")
             }
