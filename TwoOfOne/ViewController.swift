@@ -46,6 +46,7 @@ enum JFGameMode:Int {
     case Menu = 0
     case Playing = 1
     case PlayingIntro = 2
+    case Ready
 }
 
 enum JFAlterViewIdentifier:Int {
@@ -394,6 +395,13 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             while((i < objs.count) && !nodeFound) {
                 let nearestObject = objs[i]
                 if let hitNode = nearestObject.node as? JFTileNode {
+                    
+                    if(self.gameMode == .Ready) {
+                        // start game
+                        self.gameMode = .Playing
+                        self.game.event(JFMoveType.StartGame)
+                    }
+                    
                     nodeFound = handleTurnedTile(hitNode)
                 }
                 i++
@@ -595,7 +603,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     }
     
     func gamePlay() {
-        self.gameMode = .Playing
+        self.gameMode = .Ready
         self.addGestureRecognizers()
     }
     
@@ -691,7 +699,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         switch(self.gameMode) {
         case .Menu:
             break
-        case .Playing, .PlayingIntro:
+        case .Ready, .Playing, .PlayingIntro:
             // adjust rotation based on position
             let location = self.cylinderNode.presentationNode.position
             let angle = -location.x / self.cylinderNode.shapeRadius
@@ -712,7 +720,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         case .Menu, .PlayingIntro:
             // nothing to do
             break
-        case .Playing:
+        case .Ready, .Playing:
             // calculate velocity
             let location = self.cylinderNode.presentationNode.position
             let nodeTranslationX = location.x - self.panStartNodePos.x

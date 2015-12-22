@@ -24,12 +24,15 @@ enum JFMoveType:Int {
     case flipBackTile
     case findPair
     case findNoPair
+    case StartGame
+    case FinishGame
 }
 
 
 class Game {
     
     var vc:UIViewController = UIViewController()
+    var startDate:NSDate = NSDate()
     var score:Int = 0
     var turn:Int = 0
     var bonusLevel:Int = 0
@@ -57,6 +60,13 @@ class Game {
     //MARK: scoring
     func event(mvoeType:JFMoveType) {
         switch(mvoeType) {
+        case .StartGame:
+            self.startDate = NSDate()
+            self.startUpdateTimer()
+            break
+        case .FinishGame:
+            self.cancelBonusTimer()
+            break
         case .flipTile:
             self.turn++
             break
@@ -64,18 +74,18 @@ class Game {
         case .flipBackTile:
             self.bonusLevel = 0
             self.turn++
-            self.cancelBonusTimer()
+            //self.cancelBonusTimer()
             
         case .findPair:
             self.score += self.scoreOnBonus()
             self.bonusLevel++
-            self.cancelBonusTimer()
-            self.startBonusTimer()
+            //self.cancelBonusTimer()
+            //self.startBonusTimer()
             break
             
         case .findNoPair:
             self.bonusLevel = 0
-            self.cancelBonusTimer()
+            //self.cancelBonusTimer()
             break
         }
         self.updateScoreBoard()
@@ -112,6 +122,7 @@ class Game {
         }
     }
     
+    /*
     func startBonusTimer() {
         print("start bonus timer at level \(self.bonusLevel) with time \(self.bonusTimerInterval())")
         self.bonusTimer = NSTimer.scheduledTimerWithTimeInterval(self.bonusTimerInterval(), target: self, selector: "bonusTimerFire:", userInfo: nil, repeats: false)
@@ -119,6 +130,12 @@ class Game {
         if let sbv = self.scoreBoard {
             sbv.updateScoreBoard([JFScoreboardField.TimeProgress : 0])
         }
+    }
+    */
+    
+    func startUpdateTimer() {
+        self.bonusUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(kUpdateInterval, target: self, selector: Selector("updateTimerFire:"), userInfo: nil, repeats: true)
+        //self.bonusUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(kUpdateInterval, target: self, selector: Selector("bonusUpdateTimerFire:"), userInfo: nil, repeats: true)
     }
     
     func cancelBonusTimer() {
@@ -135,7 +152,7 @@ class Game {
         self.updateScoreBoard()
         self.cancelBonusTimer()
     }
-    
+    /*
     @objc func bonusUpdateTimerFire(timer:NSTimer) {
         if(self.bonusTimer.valid) {
             let progressLeft = Float(self.bonusTimer.fireDate.timeIntervalSinceNow / self.bonusTimerInterval())
@@ -148,6 +165,13 @@ class Game {
             if let sbv = self.scoreBoard {
                 sbv.updateScoreBoard([JFScoreboardField.TimeProgress : 0])
             }
+        }
+    }
+    */
+    @objc func updateTimerFire(timer:NSTimer) {
+        let timeSince = -self.startDate.timeIntervalSinceNow
+        if let sbv = self.scoreBoard {
+            sbv.updateScoreBoard([JFScoreboardField.TimeRef:Int(timeSince)])
         }
     }
     
