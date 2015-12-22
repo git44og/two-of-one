@@ -9,56 +9,80 @@
 import Foundation
 import UIKit
 
+
+enum JFScoreboardField:Int {
+    case Score = 0
+    case ScoreRef
+    case Turn
+    case TurnRef
+    case TurnProgress
+    case Time
+    case TimeRef
+    case TimeProgress
+}
+
 class ScoreBoardView {
     
     var game:Game
-    var moveCountLabel:UILabel
-    var scoreLabel:UILabel
-    var bonusTimeLabel:UILabel
-    var bonusProgressView:UIProgressView
+    var labels:[JFScoreboardField:UILabel] = [:]
+    var progressViews:[JFScoreboardField:UIProgressView] = [:]
     
     init() {
         
         self.game = Game()
-        self.moveCountLabel = UILabel()
-        self.scoreLabel = UILabel()
-        self.bonusTimeLabel = UILabel()
-        self.bonusProgressView = UIProgressView()
-        
     }
     
-    init(game:Game, moveCountLabel:UILabel, scoreLabel:UILabel, bonusTimeLabel:UILabel, bonusProgressView:UIProgressView) {
-        
+    init(game:Game, scoreViews:[JFScoreboardField:UIView]) {
         self.game = game
-        self.moveCountLabel = moveCountLabel
-        self.scoreLabel = scoreLabel
-        self.bonusTimeLabel = bonusTimeLabel
-        self.bonusProgressView = bonusProgressView
-        
-        self.moveCountLabel.text = ""
-        self.scoreLabel.text = ""
-        self.bonusTimeLabel.text = ""
-        self.bonusProgressView.hidden = true
+        for scoreViewType in scoreViews.keys {
+            switch(scoreViewType) {
+            case .Score, .ScoreRef, .Turn, .TurnRef, .Time, .TimeRef:
+                if let label = scoreViews[scoreViewType] as? UILabel {
+                    self.labels[scoreViewType] = label
+                    label.text = ""
+                } else {
+                    print("error type mismatch")
+                }
+                break
+            case .TimeProgress, .TurnProgress:
+                if let progressView = scoreViews[scoreViewType] as? UIProgressView {
+                    self.progressViews[scoreViewType] = progressView
+                    progressView.alpha = 0
+                    progressView.progress = 0
+                } else {
+                    print("error type mismatch")
+                }
+                break
+            }
+        }
     }
     
-    func updateScoreBoard(bonusCounter:Float) {
-        self.bonusProgressView.hidden = (bonusCounter <= 0)
-        //self.bonusTimeLabel.text = (bonusCounter == 0) ? "" : String(NSString(format: "%.2f%", bonusCounter))
-        self.bonusProgressView.setProgress(bonusCounter, animated: false)
-    }
-    
-    func updateScoreBoard(score:Int?, moveCounter:Int?, bonusLabel:Int?) {
-        if let myScore = score {
-            self.scoreLabel.text = "\(myScore)"
-        }
-        if let myMoveCounter = moveCounter {
-            self.moveCountLabel.text = "\(myMoveCounter)"
-        }
-        if let myBonusLabel = bonusLabel {
-            if(bonusLabel > 1) {
-                self.bonusTimeLabel.text = "\(myBonusLabel)x"
-            } else {
-                self.bonusTimeLabel.text = ""
+    func updateScoreBoard(scoreViews:[JFScoreboardField:AnyObject]) {
+        for scoreViewType in scoreViews.keys {
+            switch(scoreViewType) {
+            case .Score, .ScoreRef, .Turn, .TurnRef:
+                if let label = self.labels[scoreViewType] {
+                    if let value = scoreViews[scoreViewType] as? Int {
+                        label.text = "\(value)"
+                    }
+                }
+                break
+            case .Time, .TimeRef:
+                if let label = self.labels[scoreViewType] {
+                    if let value = scoreViews[scoreViewType] as? Int {
+                        label.text = (value > 1) ? "\(value)x" : ""
+                    }
+                }
+                break
+            case .TimeProgress, .TurnProgress:
+                if let progressView = self.progressViews[scoreViewType] {
+                    if let value = scoreViews[scoreViewType] as? Float {
+                        progressView.alpha = (value <= 0) ? 0 : 1
+                        progressView.setProgress(value, animated: false)
+                        print("value:\(value)")
+                    }
+                }
+                break
             }
         }
     }

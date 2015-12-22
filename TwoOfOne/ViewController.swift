@@ -64,6 +64,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     @IBOutlet weak var bonusProgressView: UIProgressView!
     @IBOutlet weak var turnLabel: UILabel!
     @IBOutlet weak var turnRefLabel: UILabel!
+    @IBOutlet weak var turnProgressView: UIProgressView!
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var scoreRefLabel: UILabel!
     @IBOutlet weak var gameFinishView: UIView!
@@ -116,7 +117,17 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         
         self.game.vc = self
         self.gameFinishView.alpha = 0
-        self.scoreBoard = ScoreBoardView(game: self.game, moveCountLabel: turnLabel, scoreLabel: scoreLabel, bonusTimeLabel: bonusLabel, bonusProgressView:self.bonusProgressView)
+        self.scoreBoard = ScoreBoardView(game: self.game,
+            scoreViews: [
+                .Turn: self.turnLabel,
+                .TurnRef: self.turnRefLabel,
+                .Time: self.bonusLabel,
+                .TimeRef: self.bonusRefLabel,
+                .Score: self.scoreLabel,
+                .ScoreRef: self.scoreRefLabel,
+                .TimeProgress: self.bonusProgressView,
+                .TurnProgress: self.turnProgressView
+            ])
         self.game.scoreBoard = self.scoreBoard
         
         self.applyState(true)
@@ -601,7 +612,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             case 2:
                 // turns
                 if let label = subView as? UILabel {
-                    label.text = String(NSString(format: "- %i", self.game.moveCounter))
+                    label.text = String(NSString(format: "- %i", self.game.turn))
                 }
                 break
             case 3:

@@ -31,7 +31,7 @@ class Game {
     
     var vc:UIViewController = UIViewController()
     var score:Int = 0
-    var moveCounter:Int = 0
+    var turn:Int = 0
     var bonusLevel:Int = 0
     var bonusTimer:NSTimer = NSTimer()
     var bonusUpdateTimer:NSTimer = NSTimer()
@@ -58,12 +58,12 @@ class Game {
     func event(mvoeType:JFMoveType) {
         switch(mvoeType) {
         case .flipTile:
-            self.moveCounter++
+            self.turn++
             break
             
         case .flipBackTile:
             self.bonusLevel = 0
-            self.moveCounter++
+            self.turn++
             self.cancelBonusTimer()
             
         case .findPair:
@@ -82,7 +82,7 @@ class Game {
     }
     
     func totalScore() -> Int {
-        return self.score - self.moveCounter
+        return self.score - self.turn
     }
     
     //MARK: bonus handling
@@ -117,7 +117,7 @@ class Game {
         self.bonusTimer = NSTimer.scheduledTimerWithTimeInterval(self.bonusTimerInterval(), target: self, selector: "bonusTimerFire:", userInfo: nil, repeats: false)
         self.bonusUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(kUpdateInterval, target: self, selector: Selector("bonusUpdateTimerFire:"), userInfo: nil, repeats: true)
         if let sbv = self.scoreBoard {
-            sbv.updateScoreBoard(0)
+            sbv.updateScoreBoard([JFScoreboardField.TimeProgress : 0])
         }
     }
     
@@ -125,7 +125,7 @@ class Game {
         self.bonusTimer.invalidate()
         self.bonusUpdateTimer.invalidate()
         if let sbv = self.scoreBoard {
-            sbv.updateScoreBoard(0)
+            sbv.updateScoreBoard([JFScoreboardField.TimeProgress : 0])
         }
     }
     
@@ -141,12 +141,12 @@ class Game {
             let progressLeft = Float(self.bonusTimer.fireDate.timeIntervalSinceNow / self.bonusTimerInterval())
             //print("\(progressLeft)")
             if let sbv = self.scoreBoard {
-                sbv.updateScoreBoard(progressLeft)
+                sbv.updateScoreBoard([JFScoreboardField.TimeProgress : progressLeft])
             }
         } else {
             self.bonusUpdateTimer.invalidate()
             if let sbv = self.scoreBoard {
-                sbv.updateScoreBoard(0)
+                sbv.updateScoreBoard([JFScoreboardField.TimeProgress : 0])
             }
         }
     }
@@ -154,7 +154,7 @@ class Game {
     //MARK: handling scores
     func updateScoreBoard() {
         if let sbv = self.scoreBoard {
-            sbv.updateScoreBoard(self.score, moveCounter: self.moveCounter, bonusLabel: self.bonusLevel)
+            sbv.updateScoreBoard([.Score:self.score, .Turn:self.turn, .Time:self.bonusLevel])
         }
     }
     

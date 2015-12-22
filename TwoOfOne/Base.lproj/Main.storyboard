@@ -497,6 +497,7 @@
                         <outlet property="scoreLabel" destination="AA6-eQ-WCk" id="4qS-gH-tNk"/>
                         <outlet property="scoreRefLabel" destination="mTl-z3-mTY" id="5sP-PO-6bC"/>
                         <outlet property="turnLabel" destination="2Ql-ji-sXK" id="ffn-sK-R7I"/>
+                        <outlet property="turnProgressView" destination="70r-Og-Ng1" id="gIF-8J-dtT"/>
                         <outlet property="turnRefLabel" destination="ScM-I8-Tdh" id="XxB-GD-XdP"/>
                     </connections>
                 </viewController>
