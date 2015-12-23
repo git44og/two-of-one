@@ -183,8 +183,14 @@ class Game {
     */
     @objc func updateTimerFire(timer:NSTimer) {
         let timeSince = -self.startDate.timeIntervalSinceNow
+        // will be 0.5 at parTime
+        let timeProgress:Float = Float(1 - (self.parTime / (timeSince + self.parTime)))
         if let sbv = self.scoreBoard {
-            sbv.updateScoreBoard([JFScoreboardField.Time:Int(timeSince)])
+            sbv.updateScoreBoard([
+                JFScoreboardField.Time:Int(timeSince),
+                JFScoreboardField.TimeProgress:timeProgress])
+            sbv.updateScoreBoardState([
+                JFScoreboardField.TimeProgress:(self.parTime > timeSince) ? 0 : 1])
         }
     }
     

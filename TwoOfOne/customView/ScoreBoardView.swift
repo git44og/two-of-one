@@ -58,6 +58,22 @@ class ScoreBoardView {
         }
     }
     
+    func updateScoreBoardState(scoreViews:[JFScoreboardField:AnyObject]) {
+        for scoreViewType in scoreViews.keys {
+            switch(scoreViewType) {
+            case .TimeProgress, .TurnProgress, .ScoreProgress:
+                if let progressView = self.progressViews[scoreViewType] {
+                    if let value = scoreViews[scoreViewType] as? Int {
+                        progressView.tintColor = (value == 0) ? UIColor.greenColor() : UIColor.redColor()
+                    }
+                }
+                break
+            default:
+                break
+            }
+        }
+    }
+
     func updateScoreBoard(scoreViews:[JFScoreboardField:AnyObject]) {
         for scoreViewType in scoreViews.keys {
             switch(scoreViewType) {
