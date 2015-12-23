@@ -76,8 +76,28 @@ func easeAngle(angle:Double, maxTop:Double, maxBottom:Double) -> Double {
     return angle
 }
 
-// MARK: Math
+//MARK: Math
 
 func sign(number:Float) -> Float {
     return (number < 0) ? -1 : +1
+}
+
+//MARK: Formatting
+
+func formatTime(value:Int) -> String {
+    let hour = value / 3600
+    let minute = (value / 60) % 60
+    let second = value % 60
+    var hourStr = ""
+    var minuteStr = ""
+    var secondStr = ""
+    if(hour > 0) {
+        hourStr = (hour > 0) ? "\(hour):" : ""
+        minuteStr = (minute > 9) ? "\(minute):" : ((minute > 0) ? "0\(minute):" : "00:")
+        secondStr = (second > 9) ? "\(second)" : ((second > 0) ? "0\(second)" : "00")
+    } else {
+        minuteStr = (minute > 0) ? "\(minute):" : "0:"
+        secondStr = (second > 9) ? "\(second)" : ((second > 0) ? "0\(second)" : "00")
+    }
+    return "\(hourStr)\(minuteStr)\(secondStr)"
 }

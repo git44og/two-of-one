@@ -13,6 +13,7 @@ import UIKit
 enum JFScoreboardField:Int {
     case Score = 0
     case ScoreRef
+    case ScoreProgress
     case Turn
     case TurnRef
     case TurnProgress
@@ -44,7 +45,7 @@ class ScoreBoardView {
                     print("error type mismatch")
                 }
                 break
-            case .TimeProgress, .TurnProgress:
+            case .TimeProgress, .TurnProgress, .ScoreProgress:
                 if let progressView = scoreViews[scoreViewType] as? UIProgressView {
                     self.progressViews[scoreViewType] = progressView
                     progressView.alpha = 0
@@ -60,42 +61,49 @@ class ScoreBoardView {
     func updateScoreBoard(scoreViews:[JFScoreboardField:AnyObject]) {
         for scoreViewType in scoreViews.keys {
             switch(scoreViewType) {
-            case .Score, .ScoreRef, .Turn, .TurnRef:
+            case .TurnRef:
                 if let label = self.labels[scoreViewType] {
                     if let value = scoreViews[scoreViewType] as? Int {
-                        label.text = "\(value)"
+                        label.text = "Turns (par): \(value)"
+                    }
+                }
+                break
+            case .Score:
+                if let label = self.labels[scoreViewType] {
+                    if let value = scoreViews[scoreViewType] as? Int {
+                        label.text = "Score: \(value)"
+                    }
+                }
+                break
+            case .ScoreRef:
+                if let label = self.labels[scoreViewType] {
+                    if let value = scoreViews[scoreViewType] as? Int {
+                        label.text = (value > 1) ? "Points for next pair: \(value) x 5" : "Points for next pair: 5"
+                    }
+                }
+                break
+            case .Turn:
+                if let label = self.labels[scoreViewType] {
+                    if let value = scoreViews[scoreViewType] as? Int {
+                        label.text = "Turns: \(value)"
                     }
                 }
                 break
             case .Time:
                 if let label = self.labels[scoreViewType] {
                     if let value = scoreViews[scoreViewType] as? Int {
-                        label.text = (value > 1) ? "\(value)x" : ""
+                        label.text = "Time: \(formatTime(value))"
                     }
                 }
                 break
             case .TimeRef:
                 if let label = self.labels[scoreViewType] {
                     if let value = scoreViews[scoreViewType] as? Int {
-                        let hour = value / 3600
-                        let minute = (value / 60) % 60
-                        let second = value % 60
-                        var hourStr = ""
-                        var minuteStr = ""
-                        var secondStr = ""
-                        if(hour > 0) {
-                            hourStr = (hour > 0) ? "\(hour):" : ""
-                            minuteStr = (minute > 9) ? "\(minute):" : ((minute > 0) ? "0\(minute):" : "00:")
-                            secondStr = (second > 9) ? "\(second)" : ((second > 0) ? "0\(second)" : "00")
-                        } else {
-                            minuteStr = (minute > 0) ? "\(minute):" : "0:"
-                            secondStr = (second > 9) ? "\(second)" : ((second > 0) ? "0\(second)" : "00")
-                        }
-                        label.text = "\(hourStr)\(minuteStr)\(secondStr)"
+                        label.text = "Time (par): \(formatTime(value))"
                     }
                 }
                 break
-            case .TimeProgress, .TurnProgress:
+            case .TimeProgress, .TurnProgress, .ScoreProgress:
                 if let progressView = self.progressViews[scoreViewType] {
                     if let value = scoreViews[scoreViewType] as? Float {
                         progressView.alpha = (value <= 0) ? 0 : 1

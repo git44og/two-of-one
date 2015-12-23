@@ -68,6 +68,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     @IBOutlet weak var turnProgressView: UIProgressView!
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var scoreRefLabel: UILabel!
+    @IBOutlet weak var scoreProgressView: UIProgressView!
     @IBOutlet weak var gameFinishView: UIView!
     
     // Geometry
@@ -127,10 +128,12 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 .Score: self.scoreLabel,
                 .ScoreRef: self.scoreRefLabel,
                 .TimeProgress: self.bonusProgressView,
-                .TurnProgress: self.turnProgressView
+                .TurnProgress: self.turnProgressView,
+                .ScoreProgress: self.scoreProgressView
             ])
         self.game.scoreBoard = self.scoreBoard
-        
+        self.game.event(.InitGame)
+
         self.applyState(true)
     }
     

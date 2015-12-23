@@ -24,14 +24,17 @@ enum JFMoveType:Int {
     case flipBackTile
     case findPair
     case findNoPair
+    case InitGame
     case StartGame
     case FinishGame
+    case BonusInvalid
 }
 
 
 class Game {
-    
     var vc:UIViewController = UIViewController()
+    var parTurns:Int = 10
+    var parTime:NSTimeInterval = 20
     var startDate:NSDate = NSDate()
     var score:Int = 0
     var turn:Int = 0
@@ -60,9 +63,19 @@ class Game {
     //MARK: scoring
     func event(mvoeType:JFMoveType) {
         switch(mvoeType) {
+        case .InitGame:
+            if let sbv = self.scoreBoard {
+                sbv.updateScoreBoard([JFScoreboardField.TurnRef : self.parTurns, JFScoreboardField.TimeRef : self.parTime, JFScoreboardField.Time : 0])
+            }
+            
+            break
         case .StartGame:
             self.startDate = NSDate()
+            self.bonusLevel = 1
+            self.score = 0
+            self.turn = 0
             self.startUpdateTimer()
+
             break
         case .FinishGame:
             self.cancelBonusTimer()
@@ -72,9 +85,8 @@ class Game {
             break
             
         case .flipBackTile:
-            self.bonusLevel = 0
             self.turn++
-            //self.cancelBonusTimer()
+            self.event(.BonusInvalid)
             
         case .findPair:
             self.score += self.scoreOnBonus()
@@ -84,9 +96,12 @@ class Game {
             break
             
         case .findNoPair:
-            self.bonusLevel = 0
-            //self.cancelBonusTimer()
+            self.event(.BonusInvalid)
             break
+        case .BonusInvalid:
+            self.bonusLevel = 1
+            self.updateScoreBoard()
+            //self.cancelBonusTimer()
         }
         self.updateScoreBoard()
     }
@@ -98,7 +113,7 @@ class Game {
     //MARK: bonus handling
     func scoreOnBonus() -> Int {
         print("score \(kBaseScore) at level \(self.bonusLevel)")
-        return kBaseScore * (self.bonusLevel + 1)
+        return kBaseScore * (self.bonusLevel)
     }
     
     func bonusTimerInterval() -> NSTimeInterval {
@@ -148,9 +163,7 @@ class Game {
     
     // @objc prefaces method as objective-c conform
     @objc func bonusTimerFire(timer:NSTimer) {
-        self.bonusLevel = 0
-        self.updateScoreBoard()
-        self.cancelBonusTimer()
+        self.event(.BonusInvalid)
     }
     /*
     @objc func bonusUpdateTimerFire(timer:NSTimer) {
@@ -171,14 +184,14 @@ class Game {
     @objc func updateTimerFire(timer:NSTimer) {
         let timeSince = -self.startDate.timeIntervalSinceNow
         if let sbv = self.scoreBoard {
-            sbv.updateScoreBoard([JFScoreboardField.TimeRef:Int(timeSince)])
+            sbv.updateScoreBoard([JFScoreboardField.Time:Int(timeSince)])
         }
     }
     
     //MARK: handling scores
     func updateScoreBoard() {
         if let sbv = self.scoreBoard {
-            sbv.updateScoreBoard([.Score:self.score, .Turn:self.turn, .Time:self.bonusLevel])
+            sbv.updateScoreBoard([.Score:self.score, .Turn:self.turn, .ScoreRef:self.bonusLevel])
         }
     }
     
