@@ -124,7 +124,7 @@ class ScoreBoardView {
                     if let value = scoreViews[scoreViewType] as? Float {
                         progressView.alpha = (value <= 0) ? 0 : 1
                         progressView.setProgress(value, animated: false)
-                        print("value:\(value)")
+                        //print("value:\(value)")
                     }
                 }
                 break

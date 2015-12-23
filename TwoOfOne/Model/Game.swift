@@ -104,6 +104,16 @@ class Game {
             //self.cancelBonusTimer()
         }
         self.updateScoreBoard()
+        
+        // will be 0.5 at parTurn
+        let turnProgress:Float = 1 - (Float(self.parTurns) / Float(self.turn + self.parTurns))
+        //print("par:\(self.parTurns) turn:\(self.turn) prog \(turnProgress)")
+        if let sbv = self.scoreBoard {
+            sbv.updateScoreBoard([
+                JFScoreboardField.TurnProgress:turnProgress])
+            sbv.updateScoreBoardState([
+                JFScoreboardField.TurnProgress:(self.parTurns > self.turn) ? 0 : 1])
+        }
     }
     
     func totalScore() -> Int {
@@ -112,7 +122,7 @@ class Game {
     
     //MARK: bonus handling
     func scoreOnBonus() -> Int {
-        print("score \(kBaseScore) at level \(self.bonusLevel)")
+        //print("score \(kBaseScore) at level \(self.bonusLevel)")
         return kBaseScore * (self.bonusLevel)
     }
     
