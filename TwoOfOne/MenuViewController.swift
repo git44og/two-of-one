@@ -25,10 +25,12 @@ enum JFMenuAnimation:Int {
     case GameEnd
 }
 
-class MenuViewController: UIViewController {
+class MenuViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var backgroundFrontView: UIImageView!
+    @IBOutlet weak var frontView: UIView!
     @IBOutlet weak var backgroundBackView: UIImageView!
+    @IBOutlet weak var backView: UIView!
     @IBOutlet weak var buttonLayerView: UIView!
     @IBOutlet weak var debugPairsSwitch: UISwitch!
     @IBOutlet weak var enableBackOfTile: UISwitch!
@@ -39,6 +41,16 @@ class MenuViewController: UIViewController {
     var animationRefFrame = CGRect()
 
     override func viewDidLoad() {
+        let backImage = UIImageView(image: UIImage(named: "Start-Hintergrund.png"))
+        backImage.contentMode = UIViewContentMode.ScaleAspectFill
+        self.backgroundBackView = backImage
+        self.backView.addSubview(self.backgroundBackView)
+        
+        let frontImage = UIImageView(image: UIImage(named: "Start-Tonne.png"))
+        frontImage.contentMode = UIViewContentMode.ScaleAspectFill
+        self.backgroundFrontView = frontImage
+        self.frontView.addSubview(self.backgroundFrontView)
+        
         super.viewDidLoad()
         JFHighScoreObject.sharedInstance.load()
         self.menuView.vc = self
@@ -62,6 +74,9 @@ class MenuViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
+        self.backgroundBackView.frame = self.backView.frame
+        self.backgroundFrontView.frame = self.frontView.frame
+
         self.animationRefCenter = self.backgroundFrontView.center
         self.animationRefFrame = self.backgroundBackView.frame
 
@@ -236,5 +251,24 @@ class MenuViewController: UIViewController {
             }
             break
         }
+    }
+    
+    func textFieldDidBeginEditing(textField: UITextField) {
+        print("start")
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        switch(textField.tag) {
+        case 10:
+            print("time:\(textField.text)")
+            break
+        case 11:
+            print("turn:\(textField.text)")
+            break
+        default:
+            break
+        }
+        textField.resignFirstResponder()
+        return true
     }
 }
