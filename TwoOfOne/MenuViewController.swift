@@ -40,6 +40,9 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     var animationRefCenter = CGPoint()
     var animationRefFrame = CGRect()
 
+    var debugParTime:Int = 120
+    var debugParTurns:Int = 40
+    
     override func viewDidLoad() {
         let backImage = UIImageView(image: UIImage(named: "Start-Hintergrund.png"))
         backImage.contentMode = UIViewContentMode.ScaleAspectFill
@@ -114,6 +117,8 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     func onPlayPressed(sender:AnyObject, level:Int) {
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("gameScreen") as! ViewController
         vc.game.level = level
+        vc.game.parTurns = self.debugParTurns
+        vc.game.parTime = NSTimeInterval(self.debugParTime)
         vc.game.enableBackOfTiles = self.enableBackOfTile.on
         vc.game.debugPairs = self.debugPairsSwitch.on
         
@@ -253,17 +258,29 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    func textFieldDidBeginEditing(textField: UITextField) {
-        print("start")
-    }
-    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         switch(textField.tag) {
         case 10:
-            print("time:\(textField.text)")
+            if let myParTime = Int(textField.text!) {
+                if(myParTime < 1) {
+                    UIAlertView(title: "Error", message: "Wert muss grösser 0 sein", delegate: nil, cancelButtonTitle: "OK").show()
+                } else {
+                    self.debugParTime = myParTime
+                }
+            } else {
+                UIAlertView(title: "Error", message: "Erwartet Zahl", delegate: nil, cancelButtonTitle: "OK").show()
+            }
             break
         case 11:
-            print("turn:\(textField.text)")
+            if let myParTime = Int(textField.text!) {
+                if(myParTime < 1) {
+                    UIAlertView(title: "Error", message: "Wert muss grösser 0 sein", delegate: nil, cancelButtonTitle: "OK").show()
+                } else {
+                    self.debugParTurns = myParTime
+                }
+            } else {
+                UIAlertView(title: "Error", message: "Erwartet Zahl", delegate: nil, cancelButtonTitle: "OK").show()
+            }
             break
         default:
             break
