@@ -87,7 +87,7 @@ class ScoreBoardView {
             case .Score:
                 if let label = self.labels[scoreViewType] {
                     if let value = scoreViews[scoreViewType] as? Int {
-                        label.text = "Score: \(value)"
+                        label.text = "\(value)"
                     }
                 }
                 break
@@ -101,14 +101,14 @@ class ScoreBoardView {
             case .Turn:
                 if let label = self.labels[scoreViewType] {
                     if let value = scoreViews[scoreViewType] as? Int {
-                        label.text = "Turns: \(value)"
+                        label.text = "\(value)"
                     }
                 }
                 break
             case .Time:
                 if let label = self.labels[scoreViewType] {
                     if let value = scoreViews[scoreViewType] as? Int {
-                        label.text = "Time: \(formatTime(value))"
+                        label.text = "\(formatTime(value))"
                     }
                 }
                 break
