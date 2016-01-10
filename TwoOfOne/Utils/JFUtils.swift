@@ -28,6 +28,21 @@ func execOnMain(closure:()->()) {
     })
 }
 
+func isFirstLaunch(maxLaunch:Int = 1) -> Bool {
+    
+    let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+    var numLaunched: Int? = userDefaults.objectForKey("numbersLaunched") as? Int
+    if (numLaunched == nil) {
+        numLaunched = 1
+        userDefaults.setInteger(1, forKey: "numbersLaunched")
+    } else {
+        numLaunched = numLaunched! + 1
+        userDefaults.setInteger(numLaunched!, forKey: "numbersLaunched")
+    }
+    
+    return (numLaunched! <= maxLaunch)
+}
+
 func shuffleList<C: MutableCollectionType where C.Index == Int>(var list: C) -> C {
     let c = list.count
     for i in 0..<(c - 1) {
@@ -100,4 +115,108 @@ func formatTime(value:Int) -> String {
         secondStr = (second > 9) ? "\(second)" : ((second > 0) ? "0\(second)" : "00")
     }
     return "\(hourStr)\(minuteStr)\(secondStr)"
+}
+
+// adm tracking utils
+
+let kTrackingPrefix = "flyAttacks"
+
+enum ADMTrackingDataKeys: String {
+    case gcLoggedIn = "gameCenter.loginStatus"
+    case appNumLaunched = "app.numLaunched"
+    case gameScore = "game.score"
+    case gameRound = "game.level"
+    
+    func name() -> String {
+        return "\(kTrackingPrefix).\(self.rawValue)"
+    }
+}
+
+enum ADMTrackingState: String {
+    case gamePlaying = "Game"
+    case menuHome = "Home"
+    case menuGameOver = "GameOver"
+    case gameCenterLeaderboard = "GC Leaderboard"
+    case gameCenterChallenge = "GC Challenge"
+    
+    func name() -> String {
+        return "\(self.rawValue)"
+    }
+}
+
+enum ADMTrackingAction: String {
+    case gamePlay = "game.playGame"
+    case gamePlayAgain = "game.playGameAgain"
+    case gameLost = "game.gameOver"
+    case gameExit = "game.exitGame"
+    
+    case gameCenterLogin = "gamecenter.login"
+    case gameCenterLoginSuccess = "gamecenter.login.success"
+    case gameCenterLoginCancel = "gamecenter.login.cancel"
+    
+    case gameCenterLeaderboard = "gamecenter.leaderboard"
+    
+    case gameCenterChallenge = "gamecenter.challenge"
+    case gameCenterChallengeSuccess = "gamecenter.challenge.success"
+    case gameCenterChallengeCancel = "gamecenter.challenge.cancel"
+    case gameCenterChallengeFailNotLoggedIn = "gamecenter.challenge.fail.notLoggedIn"
+    case gameCenterChallengeFailNoViewController = "gamecenter.challenge.fail.noViewController"
+    
+    case shareFacebookPressed = "share.facebook.pressed"
+    case shareFacebookSuccess = "share.facebook.success"
+    case shareFacebookCancel = "share.facebook.cancel"
+    case shareTwitterPressed = "share.twitter.pressed"
+    case shareTwitterSuccess = "share.twitter.success"
+    case shareTwitterCancel = "share.twitter.cancel"
+    
+    case adImprSuccess = "ads"
+    case adImprFail = "ads.fail"
+    
+    func name() -> String {
+        return "\(kTrackingPrefix).\(self.rawValue)"
+    }
+}
+
+func admTrackState(state:ADMTrackingState, score:Int? = nil, round:Int? = nil) {
+    admTrackState(state.name(), score:score, round:round)
+}
+
+func admTrackState(stateName:String, score:Int? = nil, round:Int? = nil) {
+    let data = admParamHelper(score: score, round: round)
+    
+    //ADBMobile.trackState(stateName, data: data)
+}
+
+func admTrackAction(action:ADMTrackingAction, score:Int? = nil, round:Int? = nil) {
+    admTrackAction(action.name(), score:score, round:round)
+}
+
+func admTrackAction(actionName:String, score:Int? = nil, round:Int? = nil) {
+    let data = admParamHelper(score: score, round: round)
+    
+    //ADBMobile.trackAction(actionName, data: data)
+}
+
+func admParamHelper(score score:Int? = nil, round:Int? = nil) -> [String: String] {
+    var returnDict:[String: String] = [:]
+    let gch = CPHGameCenterHelper.sharedInstance
+    let loggedIn = gch.gameCenterActive()
+    returnDict[ADMTrackingDataKeys.gcLoggedIn.name()] = (loggedIn ? "yes" : "no")
+    
+    let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+    var numLaunched: Int? = userDefaults.objectForKey("numbersLaunched") as? Int
+    if (numLaunched == nil) {
+        numLaunched = 1
+    }
+    returnDict[ADMTrackingDataKeys.appNumLaunched.name()] = String(numLaunched!)
+    
+    if(score != nil) {
+        returnDict[ADMTrackingDataKeys.gameScore.name()] = String(score!)
+    }
+    
+    if(round != nil) {
+        returnDict[ADMTrackingDataKeys.gameRound.name()] = String(round!)
+    }
+    
+    return returnDict
 }

@@ -80,6 +80,7 @@
 		2783B0AA1BF9B50A008F1E9B /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2783B0A91BF9B50A008F1E9B /* Game.swift */; };
 		27D6639C1C0623C40029742F /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D6639B1C0623C40029742F /* MenuViewController.swift */; };
 		27D6639F1C062C360029742F /* ScoreBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D6639E1C062C360029742F /* ScoreBoardView.swift */; };
+		27D6EE431C42845E00EA1C94 /* JFGameCenterUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D6EE421C42845E00EA1C94 /* JFGameCenterUtils.swift */; };
 		27DAC6F91BF1C5F20063DC28 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DAC6F81BF1C5F20063DC28 /* CoreMotion.framework */; };
 		27DAC6FB1BF1C8710063DC28 /* Notes.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 27DAC6FA1BF1C8710063DC28 /* Notes.rtf */; };
 		B441FA6C1B974E0D00B55627 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B441FA6B1B974E0D00B55627 /* AppDelegate.swift */; };
@@ -178,6 +179,7 @@
 		2783B0A91BF9B50A008F1E9B /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Game.swift; path = Model/Game.swift; sourceTree = "<group>"; };
 		27D6639B1C0623C40029742F /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		27D6639E1C062C360029742F /* ScoreBoardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScoreBoardView.swift; path = customView/ScoreBoardView.swift; sourceTree = "<group>"; };
+		27D6EE421C42845E00EA1C94 /* JFGameCenterUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JFGameCenterUtils.swift; path = Utils/JFGameCenterUtils.swift; sourceTree = "<group>"; };
 		27DAC6F81BF1C5F20063DC28 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		27DAC6FA1BF1C8710063DC28 /* Notes.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Notes.rtf; sourceTree = "<group>"; };
 		B441FA661B974E0D00B55627 /* TwoOfOne.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwoOfOne.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -470,6 +472,7 @@
 			children = (
 				B48112511B9DEE5900E2A4F3 /* JFUtils.swift */,
 				2729F50B1BE7C6F8004E0225 /* JFGraphUtils.swift */,
+				27D6EE421C42845E00EA1C94 /* JFGameCenterUtils.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -654,6 +657,7 @@
 				B48111F01B9759F100E2A4F3 /* JFSCNView.swift in Sources */,
 				B441FA6C1B974E0D00B55627 /* AppDelegate.swift in Sources */,
 				B48112521B9DEE5900E2A4F3 /* JFUtils.swift in Sources */,
+				27D6EE431C42845E00EA1C94 /* JFGameCenterUtils.swift in Sources */,
 				2783B0AA1BF9B50A008F1E9B /* Game.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
