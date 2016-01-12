@@ -177,6 +177,11 @@ class JFSCNNode : SCNNode {
             let angle = tileAngleRad * Float(colId)
             self.tileColNodes[colId].relAngle = angle
             
+            var orientationFixiOS8:Float = -1
+            if #available(iOS 9,*) {
+                orientationFixiOS8 = 1
+            }
+            
             if(colId == baseColId) {
                 
                 self.tileColNodes[baseColId].pivot = SCNMatrix4MakeTranslation(-colDistance, 0, 0)
@@ -190,7 +195,7 @@ class JFSCNNode : SCNNode {
                 // base tile needs to be rotated by half the angle of other tiles
                 let foldAction = SCNAction.rotateByAngle(
                     CGFloat(M_PI * 1) / CGFloat(self.game.cylinderCols()),
-                    aroundAxis: SCNVector3(x: 0, y: 1, z: 0),
+                    aroundAxis: SCNVector3(x: 0, y: orientationFixiOS8, z: 0),
                     duration: singleFoldLength)
                 let waitDuration = NSTimeInterval(self.game.cylinderCols() - colId - 1) * singleFoldLength
                 let waitAction = SCNAction.waitForDuration(kFlipAnimationTime + waitDuration)
@@ -214,7 +219,7 @@ class JFSCNNode : SCNNode {
                 //action fold from sides
                 let foldAction = SCNAction.rotateByAngle(
                     CGFloat(rotationAngle),
-                    aroundAxis: SCNVector3(x: 0, y: 1, z: 0),
+                    aroundAxis: SCNVector3(x: 0, y: orientationFixiOS8, z: 0),
                     duration: singleFoldLength)
                 let waitDuration = (colId < baseColId) ? NSTimeInterval(colId) * singleFoldLength : NSTimeInterval(self.game.cylinderCols() - colId - 1) * singleFoldLength
                 if(waitDuration == 0) {
