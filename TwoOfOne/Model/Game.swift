@@ -19,6 +19,12 @@ let kTileConfig:[(row:Int, col:Int, tile:Float, corner:Float, height:Float)] =
 let kUpdateInterval:NSTimeInterval = 0.1
 let kBaseScore:Int = 5
 
+enum JFGameLevel:Int {
+    case Beginner = 1
+    case Medium = 2
+    case Expert = 3
+}
+
 enum JFMoveType:Int {
     case flipTile = 0
     case flipBackTile
@@ -28,6 +34,11 @@ enum JFMoveType:Int {
     case StartGame
     case FinishGame
     case BonusInvalid
+}
+
+struct JFProgressBlockState {
+    var index: Int
+    var bonus: Bool
 }
 
 
@@ -41,6 +52,7 @@ class Game {
     var bonusLevel:Int = 0
     var bonusTimer:NSTimer = NSTimer()
     var bonusUpdateTimer:NSTimer = NSTimer()
+    var foundPairs:Int = 0
     var level:Int = 0
     var physics:Bool = true
     var enableBackOfTiles:Bool = false
@@ -64,6 +76,10 @@ class Game {
     func event(mvoeType:JFMoveType) {
         switch(mvoeType) {
         case .InitGame:
+            self.bonusLevel = 1
+            self.score = 0
+            self.turn = 0
+            self.foundPairs = 0
             if let sbv = self.scoreBoard {
                 sbv.updateScoreBoard([JFScoreboardField.TurnRef : self.parTurns, JFScoreboardField.TimeRef : self.parTime, JFScoreboardField.Time : 0])
             }
@@ -74,6 +90,7 @@ class Game {
             self.bonusLevel = 1
             self.score = 0
             self.turn = 0
+            self.foundPairs = 0
             self.startUpdateTimer()
 
             break
@@ -90,9 +107,13 @@ class Game {
             
         case .findPair:
             self.score += self.scoreOnBonus()
+            
+            if let sbv = self.scoreBoard {
+                sbv.updateScoreBoard([JFScoreboardField.ScoreProgress:JFProgressBlockState(index: self.foundPairs, bonus: (self.bonusLevel > 1))])
+            }
+
+            self.foundPairs++
             self.bonusLevel++
-            //self.cancelBonusTimer()
-            //self.startBonusTimer()
             break
             
         case .findNoPair:
@@ -105,14 +126,20 @@ class Game {
         }
         self.updateScoreBoard()
         
-        // will be 0.5 at parTurn
-        let turnProgress:Float = 1 - (Float(self.parTurns) / Float(self.turn + self.parTurns))
+        // will be 2/3 at parTime
+        // < 2/3 linear, > 2/3 curved
+        var turnProgress:Float = 1
+        if(self.turn <= self.parTurns) {
+            turnProgress = (1 / Float(self.parTurns)) * (2 / 3) * Float(self.turn)
+            print("flat: \(turnProgress)")
+        } else {
+            turnProgress = 1 - ((Float(self.parTurns) * 1 / 3) / Float(self.turn))
+            print("curve: \(turnProgress)")
+        }
         //print("par:\(self.parTurns) turn:\(self.turn) prog \(turnProgress)")
         if let sbv = self.scoreBoard {
             sbv.updateScoreBoard([
                 JFScoreboardField.TurnProgress:turnProgress])
-            sbv.updateScoreBoardState([
-                JFScoreboardField.TurnProgress:(self.parTurns > self.turn) ? 0 : 1])
         }
     }
     
@@ -193,14 +220,21 @@ class Game {
     */
     @objc func updateTimerFire(timer:NSTimer) {
         let timeSince = -self.startDate.timeIntervalSinceNow
-        // will be 0.5 at parTime
-        let timeProgress:Float = Float(1 - (self.parTime / (timeSince + self.parTime)))
+        // will be 2/3 at parTime
+        // < 2/3 linear, > 2/3 curved
+        var timeProgress:Float = 1
+        if(timeSince <= self.parTime) {
+            timeProgress = Float((1 / self.parTime) * (2 / 3) * timeSince)
+            //print("flat: \(timeProgress)")
+        } else {
+            timeProgress = Float(1 - ((self.parTime * 1 / 3) / timeSince))
+            //print("curve: \(timeProgress)")
+        }
+        //let timeProgress:Float = Float(1 - ((self.parTime / (timeSince + self.parTime)) * 2/3))
         if let sbv = self.scoreBoard {
             sbv.updateScoreBoard([
                 JFScoreboardField.Time:Int(timeSince),
                 JFScoreboardField.TimeProgress:timeProgress])
-            sbv.updateScoreBoardState([
-                JFScoreboardField.TimeProgress:(self.parTime > timeSince) ? 0 : 1])
         }
     }
     

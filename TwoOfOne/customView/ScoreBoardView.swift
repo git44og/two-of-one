@@ -26,7 +26,8 @@ class ScoreBoardView {
     
     var game:Game
     var labels:[JFScoreboardField:UILabel] = [:]
-    var progressViews:[JFScoreboardField:UIProgressView] = [:]
+    var progressViews:[JFScoreboardField:JFProgressView] = [:]
+    var progressBlockViews:[JFScoreboardField:JFScoreBlockView] = [:]
     
     init() {
         
@@ -45,11 +46,20 @@ class ScoreBoardView {
                     print("error type mismatch")
                 }
                 break
-            case .TimeProgress, .TurnProgress, .ScoreProgress:
-                if let progressView = scoreViews[scoreViewType] as? UIProgressView {
+            case .TimeProgress, .TurnProgress:
+                if let progressView = scoreViews[scoreViewType] as? JFProgressView {
                     self.progressViews[scoreViewType] = progressView
-                    progressView.alpha = 0
+                    progressView.alpha = 1
                     progressView.progress = 0
+                } else {
+                    print("error type mismatch")
+                }
+                break
+            case .ScoreProgress:
+                if let progressView = scoreViews[scoreViewType] as? JFScoreBlockView {
+                    progressView.length = self.game.cylinderCols() * self.game.cylinderRows() / 2
+                    self.progressBlockViews[scoreViewType] = progressView
+                    progressView.alpha = 1
                 } else {
                     print("error type mismatch")
                 }
@@ -58,23 +68,7 @@ class ScoreBoardView {
         }
     }
     
-    func updateScoreBoardState(scoreViews:[JFScoreboardField:AnyObject]) {
-        for scoreViewType in scoreViews.keys {
-            switch(scoreViewType) {
-            case .TimeProgress, .TurnProgress, .ScoreProgress:
-                if let progressView = self.progressViews[scoreViewType] {
-                    if let value = scoreViews[scoreViewType] as? Int {
-                        progressView.tintColor = (value == 0) ? UIColor.greenColor() : UIColor.redColor()
-                    }
-                }
-                break
-            default:
-                break
-            }
-        }
-    }
-
-    func updateScoreBoard(scoreViews:[JFScoreboardField:AnyObject]) {
+    func updateScoreBoard(scoreViews:[JFScoreboardField:Any]) {
         for scoreViewType in scoreViews.keys {
             switch(scoreViewType) {
             case .TurnRef:
@@ -119,11 +113,19 @@ class ScoreBoardView {
                     }
                 }
                 break
-            case .TimeProgress, .TurnProgress, .ScoreProgress:
+            case .TimeProgress, .TurnProgress:
                 if let progressView = self.progressViews[scoreViewType] {
                     if let value = scoreViews[scoreViewType] as? Float {
-                        progressView.alpha = (value <= 0) ? 0 : 1
+                        //progressView.alpha = (value <= 0) ? 0 : 1
                         progressView.setProgress(value, animated: false)
+                        //print("value:\(value)")
+                    }
+                }
+                break
+            case .ScoreProgress:
+                if let progressView = self.progressBlockViews[scoreViewType] {
+                    if let value = scoreViews[scoreViewType] as? JFProgressBlockState {
+                        progressView.pair(value.index, bonus: value.bonus)
                         //print("value:\(value)")
                     }
                 }

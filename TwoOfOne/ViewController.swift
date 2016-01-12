@@ -56,19 +56,19 @@ enum JFAlterViewIdentifier:Int {
 
 class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDelegate, SCNPhysicsContactDelegate {
     
+    @IBOutlet weak var bonusProgressBarView: JFProgressView!
     @IBOutlet weak var sceneView: SCNView!
     @IBOutlet weak var menuButton: UIButton!
     @IBOutlet weak var gameMenuView: UIView!
     @IBOutlet weak var gameScoreBoardView: UIView!
     @IBOutlet weak var bonusLabel: UILabel!
     @IBOutlet weak var bonusRefLabel: UILabel!
-    @IBOutlet weak var bonusProgressView: UIProgressView!
+    @IBOutlet weak var turnProgressBarView: JFProgressView!
     @IBOutlet weak var turnLabel: UILabel!
     @IBOutlet weak var turnRefLabel: UILabel!
-    @IBOutlet weak var turnProgressView: UIProgressView!
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var scoreRefLabel: UILabel!
-    @IBOutlet weak var scoreProgressView: UIProgressView!
+    @IBOutlet weak var scoreBlockBarView: JFScoreBlockView!
     @IBOutlet weak var gameFinishView: UIView!
     
     // Geometry
@@ -127,9 +127,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 .TimeRef: self.bonusRefLabel,
                 .Score: self.scoreLabel,
                 .ScoreRef: self.scoreRefLabel,
-                .TimeProgress: self.bonusProgressView,
-                .TurnProgress: self.turnProgressView,
-                .ScoreProgress: self.scoreProgressView
+                .TimeProgress: self.bonusProgressBarView,
+                .TurnProgress: self.turnProgressBarView,
+                .ScoreProgress: self.scoreBlockBarView
             ])
         self.game.scoreBoard = self.scoreBoard
         self.game.event(.InitGame)
@@ -533,7 +533,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     //MARK: animaton
     
     @objc func tilesStartFalling(timer:NSTimer) {
-        print("func tilesStartFalling")
+        //print("func tilesStartFalling")
         if let tiles = timer.userInfo as? [AnyObject] {
             if(tiles.count == 2) {
                 for i in 0...1 {
@@ -546,7 +546,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     }
     
     @objc func tilesTurnBack(timer:NSTimer) {
-        print("func tilesTurnBack")
+        //print("func tilesTurnBack")
         if let tiles = timer.userInfo as? [AnyObject] {
             if(tiles.count == 2) {
                 for i in 0...1 {
@@ -611,6 +611,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     }
     
     func gameSolved() {
+        
+        self.game.cancelBonusTimer()
+        
         JFHighScoreObject.sharedInstance.setScore(self.game.totalScore(), level: self.game.level)
         for subView in self.gameFinishView.subviews {
             switch(subView.tag) {
@@ -641,6 +644,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     }
     
     func gameExit() {
+        
+        self.game.cancelBonusTimer()
+        
         self.removeGestureRecognizers()
         
         self.animation(false) { () -> Void in
