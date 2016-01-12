@@ -9,7 +9,11 @@
 import Foundation
 import GameKit
 
-let kHighScoreLeaderboardIdentifier:String = "com.jfischer77.flyAttacks.HighScores"
+let kHighScoreLeaderboardIdentifier:[JFGameLevel: String] = [
+    JFGameLevel.Beginner: "com.jfischer77.twoofone.classic.beginner",
+    JFGameLevel.Medium: "com.jfischer77.twoofone.classic.medium",
+    JFGameLevel.Expert: "com.jfischer77.twoofone.classic.expert"]
+
 
 class CPHGameCenterHelper : NSObject, GKGameCenterControllerDelegate {
     
@@ -52,7 +56,7 @@ class CPHGameCenterHelper : NSObject, GKGameCenterControllerDelegate {
     
     func showLeaderBoard(viewController:UIViewController) {
         let gcViewController: GKGameCenterViewController = GKGameCenterViewController()
-        gcViewController.leaderboardIdentifier = kHighScoreLeaderboardIdentifier
+        gcViewController.leaderboardIdentifier = kHighScoreLeaderboardIdentifier[JFGameLevel.Beginner]!
         gcViewController.viewState = GKGameCenterViewControllerState.Leaderboards
         gcViewController.gameCenterDelegate = self
         viewController.presentViewController(gcViewController, animated: true, completion:nil)
@@ -69,7 +73,7 @@ class CPHGameCenterHelper : NSObject, GKGameCenterControllerDelegate {
             viewController.presentViewController(alertView, animated: true, completion: nil);
             return
         }
-        let gkScore:GKScore = GKScore(leaderboardIdentifier: kHighScoreLeaderboardIdentifier)
+        let gkScore:GKScore = GKScore(leaderboardIdentifier: kHighScoreLeaderboardIdentifier[JFGameLevel.Beginner]!)
         let challengeVC = gkScore.challengeComposeControllerWithMessage("Try to beat this.", players: []) { (composeController:UIViewController, didIssueChallenge:Bool, sentPlayerIDs:[String]?) -> Void in
             if(didIssueChallenge) {
                 admTrackAction(ADMTrackingAction.gameCenterChallengeSuccess)
@@ -105,7 +109,7 @@ class CPHGameCenterHelper : NSObject, GKGameCenterControllerDelegate {
             return
         }
         
-        let gkScore:GKScore = GKScore(leaderboardIdentifier: kHighScoreLeaderboardIdentifier)
+        let gkScore:GKScore = GKScore(leaderboardIdentifier: kHighScoreLeaderboardIdentifier[JFGameLevel.Beginner]!)
         gkScore.value = score
         GKScore.reportScores([gkScore], withCompletionHandler: { (error:NSError?) -> Void in
             self.lastError = error
