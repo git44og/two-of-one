@@ -62,12 +62,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     @IBOutlet weak var gameMenuView: UIView!
     @IBOutlet weak var gameScoreBoardView: UIView!
     @IBOutlet weak var bonusLabel: UILabel!
-    @IBOutlet weak var bonusRefLabel: UILabel!
     @IBOutlet weak var turnProgressBarView: JFProgressView!
     @IBOutlet weak var turnLabel: UILabel!
-    @IBOutlet weak var turnRefLabel: UILabel!
     @IBOutlet weak var scoreLabel: UILabel!
-    @IBOutlet weak var scoreRefLabel: UILabel!
     @IBOutlet weak var scoreBlockBarView: JFScoreBlockView!
     @IBOutlet weak var gameFinishView: UIView!
     
@@ -122,11 +119,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.scoreBoard = ScoreBoardView(game: self.game,
             scoreViews: [
                 .Turn: self.turnLabel,
-                .TurnRef: self.turnRefLabel,
                 .Time: self.bonusLabel,
-                .TimeRef: self.bonusRefLabel,
                 .Score: self.scoreLabel,
-                .ScoreRef: self.scoreRefLabel,
                 .TimeProgress: self.bonusProgressBarView,
                 .TurnProgress: self.turnProgressBarView,
                 .ScoreProgress: self.scoreBlockBarView

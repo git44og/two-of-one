@@ -220,9 +220,6 @@ class Game {
     func cancelBonusTimer() {
         self.bonusTimer.invalidate()
         self.bonusUpdateTimer.invalidate()
-        if let sbv = self.scoreBoard {
-            sbv.updateScoreBoard([JFScoreboardField.TimeProgress : 0])
-        }
     }
     
     // @objc prefaces method as objective-c conform

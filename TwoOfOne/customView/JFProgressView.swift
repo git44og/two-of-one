@@ -15,13 +15,13 @@ enum JFProgressViewType:Int {
 }
 
 let kProgressViewSizeSeparator:CGFloat = 1
-let kProgressViewGreenColor = UIColor.greenColor()
-let kProgressViewRedColor = UIColor.redColor()
+let kProgressViewGreenColor = UIColor(red: 171/255, green: 202/255, blue: 65/255, alpha: 1.0)
+let kProgressViewRedColor = UIColor(red: 220/255, green: 65/255, blue: 136/255, alpha: 1.0)
 let kProgressViewSeparatorColor = UIColor.whiteColor()
 
 let kScoreBlockViewSeparator:CGFloat = 1
-let kScoreBlockViewBonusColor = UIColor.yellowColor()
-let kScoreBlockViewNormalColor = UIColor.greenColor()
+let kScoreBlockViewBonusColor = UIColor(red: 7/255, green: 152/255, blue: 153/255, alpha: 1.0)
+let kScoreBlockViewNormalColor = UIColor(red: 171/255, green: 202/255, blue: 65/255, alpha: 1.0)
 
 class JFProgressView: UIView {
     
