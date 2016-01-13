@@ -286,7 +286,7 @@
                                             <constraint firstItem="OML-76-i66" firstAttribute="leading" secondItem="NzE-qs-zFo" secondAttribute="leading" id="fr0-2c-duu"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bfd-zO-dpw" userLabel="TurnView">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bfd-zO-dpw" userLabel="TurnView">
                                         <rect key="frame" x="154" y="0.0" width="134" height="24"/>
                                         <subviews>
                                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TurnsBar.png" translatesAutoresizingMaskIntoConstraints="NO" id="oo7-wK-OhY">
@@ -300,7 +300,7 @@
                                                 <rect key="frame" x="5" y="17" width="86" height="1"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Ql-ji-sXK">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Ql-ji-sXK">
                                                 <rect key="frame" x="49" y="0.0" width="80" height="22"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="22" id="7ZW-DE-8S2"/>
@@ -320,17 +320,17 @@
                                             <constraint firstItem="2Ql-ji-sXK" firstAttribute="top" secondItem="bfd-zO-dpw" secondAttribute="top" id="yWX-38-ANi"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7JZ-pZ-Rc3" userLabel="ScoreView">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7JZ-pZ-Rc3" userLabel="ScoreView">
                                         <rect key="frame" x="293" y="0.0" width="134" height="24"/>
                                         <subviews>
-                                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="PointsBar.png" translatesAutoresizingMaskIntoConstraints="NO" id="jAP-d7-6Lw">
+                                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PointsBar.png" translatesAutoresizingMaskIntoConstraints="NO" id="jAP-d7-6Lw">
                                                 <rect key="frame" x="0.0" y="0.0" width="139" height="24"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="24" id="ESu-HL-y2M"/>
                                                     <constraint firstAttribute="width" constant="139" id="yJa-8H-NbJ"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AA6-eQ-WCk">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AA6-eQ-WCk">
                                                 <rect key="frame" x="49" y="0.0" width="80" height="22"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="80" id="Wct-C7-Rcw"/>
@@ -347,6 +347,7 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
+                                            <constraint firstAttribute="width" constant="134" id="5iJ-GO-egO"/>
                                             <constraint firstAttribute="trailing" secondItem="AA6-eQ-WCk" secondAttribute="trailing" constant="5" id="CmP-2I-TZ0"/>
                                             <constraint firstItem="jAP-d7-6Lw" firstAttribute="top" secondItem="7JZ-pZ-Rc3" secondAttribute="top" id="NTS-N8-gjg"/>
                                             <constraint firstItem="jAP-d7-6Lw" firstAttribute="leading" secondItem="7JZ-pZ-Rc3" secondAttribute="leading" id="Tav-iu-9EC"/>
@@ -365,6 +366,7 @@
                                     <constraint firstAttribute="width" constant="427" id="6s5-N1-bld"/>
                                     <constraint firstAttribute="trailing" secondItem="7JZ-pZ-Rc3" secondAttribute="trailing" id="8RV-fd-HgS"/>
                                     <constraint firstItem="iak-Yr-gpS" firstAttribute="centerX" secondItem="UUO-MK-4fP" secondAttribute="centerX" id="Eym-9X-UdO"/>
+                                    <constraint firstItem="7JZ-pZ-Rc3" firstAttribute="leading" secondItem="bfd-zO-dpw" secondAttribute="trailing" constant="5" id="HOn-um-ygD"/>
                                     <constraint firstItem="bfd-zO-dpw" firstAttribute="leading" secondItem="NzE-qs-zFo" secondAttribute="trailing" constant="5" id="IJ5-ux-TQ6"/>
                                     <constraint firstItem="NzE-qs-zFo" firstAttribute="top" secondItem="UUO-MK-4fP" secondAttribute="top" id="Qrm-Hy-5l0"/>
                                     <constraint firstItem="7JZ-pZ-Rc3" firstAttribute="centerY" secondItem="UUO-MK-4fP" secondAttribute="centerY" id="RUj-xg-85s"/>
@@ -373,6 +375,11 @@
                                     <constraint firstItem="NzE-qs-zFo" firstAttribute="leading" secondItem="UUO-MK-4fP" secondAttribute="leading" id="oAB-hC-9UK"/>
                                     <constraint firstAttribute="height" constant="24" id="uW1-ie-qL3"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="nbG-Ic-ny3"/>
+                                    </mask>
+                                </variation>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KLf-B0-km5">
                                 <rect key="frame" x="194" y="178" width="212" height="244"/>
