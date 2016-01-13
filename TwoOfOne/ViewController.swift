@@ -618,18 +618,24 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         for subView in self.gameFinishView.subviews {
             switch(subView.tag) {
             case 1:
-                // score
+                // pair bonus
                 if let label = subView as? UILabel {
                     label.text = String(NSString(format: "%i", self.game.score))
                 }
                 break
             case 2:
-                // turns
+                // time bonus
                 if let label = subView as? UILabel {
                     label.text = String(NSString(format: "- %i", self.game.turn))
                 }
                 break
             case 3:
+                // turn bonus
+                if let label = subView as? UILabel {
+                    label.text = String(NSString(format: "%i", self.game.turn))
+                }
+                break
+            case 4:
                 // total score
                 if let label = subView as? UILabel {
                     label.text = String(NSString(format: "%i", self.game.totalScore()))
