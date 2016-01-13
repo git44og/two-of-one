@@ -501,10 +501,6 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 let timer = NSTimer.scheduledTimerWithTimeInterval(kDelayTurnBack, target: self, selector: Selector("tilesStartFalling:"), userInfo: [tile1, tile2], repeats: false)
                 self.timerForTiles.append(timer)
                 
-                if(self.cylinderNode.solved()) {
-                    self.gameSolved()
-                }
-                
                 return {
                     execOnMain({ () -> () in
                         self.game.event(.findPair)
@@ -612,7 +608,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     func gameSolved() {
         
-        self.game.cancelBonusTimer()
+        self.game.event(.FinishGame)
         
         JFHighScoreObject.sharedInstance.setScore(self.game.totalScore(), level: self.game.level)
         for subView in self.gameFinishView.subviews {
@@ -626,13 +622,13 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             case 2:
                 // time bonus
                 if let label = subView as? UILabel {
-                    label.text = String(NSString(format: "- %i", self.game.turn))
+                    label.text = String(NSString(format: "%i", self.game.timeBonus()))
                 }
                 break
             case 3:
                 // turn bonus
                 if let label = subView as? UILabel {
-                    label.text = String(NSString(format: "%i", self.game.turn))
+                    label.text = String(NSString(format: "%i", self.game.turnBonus()))
                 }
                 break
             case 4:

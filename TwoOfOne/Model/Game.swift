@@ -18,6 +18,8 @@ let kTileConfig:[(row:Int, col:Int, tile:Float, corner:Float, height:Float)] =
 ]
 let kUpdateInterval:NSTimeInterval = 0.1
 let kBaseScore:Int = 5
+let kTurnBonusRatio:Float = 3 // bonus for turns can be x-times the absolute value of the min bonus. ie if minBonus = -100, max bonus is +100 * kTurnBonusRatio
+let kTimeBonusRatio:Float = 3
 
 enum JFGameLevel:Int {
     case Beginner = 1
@@ -44,11 +46,12 @@ struct JFProgressBlockState {
 
 class Game {
     var vc:UIViewController = UIViewController()
-    var parTurns:Int = 10
-    var parTime:NSTimeInterval = 20
+    var parTurns:Int = 40
+    var parTime:NSTimeInterval = 120
     var startDate:NSDate = NSDate()
     var score:Int = 0
     var turn:Int = 0
+    var time:Int = 0
     var bonusLevel:Int = 0
     var bonusTimer:NSTimer = NSTimer()
     var bonusUpdateTimer:NSTimer = NSTimer()
@@ -64,7 +67,7 @@ class Game {
     // debug
     var debugPairs:Bool = false
     
-    init(vc:UIViewController) {
+    init(vc:ViewController) {
         self.vc = vc
         self.updateScoreBoard()
     }
@@ -95,6 +98,7 @@ class Game {
 
             break
         case .FinishGame:
+            self.time = Int(-self.startDate.timeIntervalSinceNow)
             self.cancelBonusTimer()
             break
         case .flipTile:
@@ -114,6 +118,13 @@ class Game {
 
             self.foundPairs++
             self.bonusLevel++
+            
+            if let myVc = vc as? ViewController {
+                if(myVc.cylinderNode.solved()) {
+                    myVc.gameSolved()
+                }
+            }
+
             break
             
         case .findNoPair:
@@ -131,10 +142,10 @@ class Game {
         var turnProgress:Float = 1
         if(self.turn <= self.parTurns) {
             turnProgress = (1 / Float(self.parTurns)) * (2 / 3) * Float(self.turn)
-            print("flat: \(turnProgress)")
+            //print("flat: \(turnProgress)")
         } else {
             turnProgress = 1 - ((Float(self.parTurns) * 1 / 3) / Float(self.turn))
-            print("curve: \(turnProgress)")
+            //print("curve: \(turnProgress)")
         }
         //print("par:\(self.parTurns) turn:\(self.turn) prog \(turnProgress)")
         if let sbv = self.scoreBoard {
@@ -143,8 +154,24 @@ class Game {
         }
     }
     
+    func turnBonus() -> Int {
+        let offset = Float(self.parTurns) / kTurnBonusRatio
+        let minBonusFactor = (Float(self.cylinderCols() * self.cylinderRows()) / 2) * Float(kBaseScore)
+        let bonusFactor = (1 / ((Float(self.turn) + offset) / (Float(self.parTurns) + offset))) - 1
+        let bonus = bonusFactor * minBonusFactor
+        return Int(bonus)
+    }
+    
+    func timeBonus() -> Int {
+        let offset = Float(self.parTime) / kTimeBonusRatio
+        let minBonusFactor = (Float(self.cylinderCols() * self.cylinderRows()) / 2) * Float(kBaseScore)
+        let bonusFactor = (1 / ((Float(self.time) + offset) / (Float(self.parTime) + offset))) - 1
+        let bonus = bonusFactor * minBonusFactor
+        return Int(bonus)
+    }
+    
     func totalScore() -> Int {
-        return self.score - self.turn
+        return self.score + self.timeBonus() + self.turnBonus()
     }
     
     //MARK: bonus handling
