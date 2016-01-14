@@ -32,7 +32,7 @@ class CPHGameCenterHelper : NSObject, GKGameCenterControllerDelegate {
             self.lastError = error
             if(localPlayer.authenticated) {
                 //println("logged in")
-                admTrackAction(ADMTrackingAction.gameCenterLoginSuccess)
+                //admTrackAction(ADMTrackingAction.gameCenterLoginSuccess)
                 self.gameCenterFeaturesEnabled = true
             } else if(viewController != nil) {
                 //println("login screen")
@@ -42,11 +42,10 @@ class CPHGameCenterHelper : NSObject, GKGameCenterControllerDelegate {
                 })
             } else {
                 //println("not logged in")
-                admTrackAction(ADMTrackingAction.gameCenterLoginCancel)
+                //admTrackAction(ADMTrackingAction.gameCenterLoginCancel)
                 self.gameCenterFeaturesEnabled = false
             }
         }
-        //((UIViewController!, NSError!) -> Void)!
     }
     
     func gameCenterActive() -> Bool {
@@ -61,13 +60,13 @@ class CPHGameCenterHelper : NSObject, GKGameCenterControllerDelegate {
         gcViewController.gameCenterDelegate = self
         viewController.presentViewController(gcViewController, animated: true, completion:nil)
         
-        //admTrackState(ADMTrackingState.gameCenterLeaderboard)
+        admTrackState(ADMTrackingState.gameCenterLeaderboard)
     }
     
     func challenge(viewController:UIViewController) {
-        //admTrackState(ADMTrackingState.gameCenterChallenge)
+        admTrackState(ADMTrackingState.gameCenterChallenge)
         if(!self.gameCenterActive()) {
-            admTrackAction(ADMTrackingAction.gameCenterChallengeFailNotLoggedIn)
+            //admTrackAction(ADMTrackingAction.gameCenterChallengeFailNotLoggedIn)
             let alertView = UIAlertController(title: "Game Center Unavailable", message: "Player is not signed in", preferredStyle: UIAlertControllerStyle.Alert);
             alertView.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil));
             viewController.presentViewController(alertView, animated: true, completion: nil);
@@ -78,7 +77,7 @@ class CPHGameCenterHelper : NSObject, GKGameCenterControllerDelegate {
             if(didIssueChallenge) {
                 admTrackAction(ADMTrackingAction.gameCenterChallengeSuccess)
             } else {
-                admTrackAction(ADMTrackingAction.gameCenterChallengeCancel)
+                //admTrackAction(ADMTrackingAction.gameCenterChallengeCancel)
             }
             if let rootVc = composeController.presentingViewController {
                 rootVc.dismissViewControllerAnimated(true, completion: { () -> Void in

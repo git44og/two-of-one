@@ -119,7 +119,7 @@ func formatTime(value:Int) -> String {
 
 // adm tracking utils
 
-let kTrackingPrefix = "flyAttacks"
+let kTrackingPrefix = "twoofone"
 
 enum ADMTrackingDataKeys: String {
     case gcLoggedIn = "gameCenter.loginStatus"
@@ -135,7 +135,8 @@ enum ADMTrackingDataKeys: String {
 enum ADMTrackingState: String {
     case gamePlaying = "Game"
     case menuHome = "Home"
-    case menuGameOver = "GameFinish"
+    case gameCenterChallenge = "GCChallenge"
+    case gameCenterLeaderboard = "GCLeaderBoard"
     
     func name() -> String {
         return "\(self.rawValue)"
@@ -144,6 +145,7 @@ enum ADMTrackingState: String {
 
 enum ADMTrackingAction: String {
     case gamePlay = "game.playGame"
+    case gamePlayAgain = "game.playAgain"
     case gameFinish = "game.gameOver"
     case gameExit = "game.exitGame"
     
@@ -152,6 +154,7 @@ enum ADMTrackingAction: String {
     case gameCenterLeaderboard = "gamecenter.leaderboard"
     
     case gameCenterChallenge = "gamecenter.challenge"
+    case gameCenterChallengeSuccess = "gamecenter.challenge.success"
     
     case shareFacebookPressed = "share.facebook.pressed"
     case shareFacebookSuccess = "share.facebook.success"
