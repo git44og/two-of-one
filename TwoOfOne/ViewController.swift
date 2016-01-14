@@ -107,6 +107,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     var startingAttitudeRoll:Double?
     var startingAttitudePitch:Double?
     var timerForTiles:[NSTimer] = []
+    var isInitialSimulation:Bool = true
+    var isSimulationAfterPan:Bool = false
     
     override func viewDidLoad() {
         
@@ -177,7 +179,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.centerNode.physicsField = gravityField
         self.centerNode.name = "gravity"
         self.sceneView.scene?.rootNode.addChildNode(self.centerNode)
-        self.centerNode.opacity = 1.0
+        self.centerNode.opacity = 0.0
         self.centerNode.physicsField?.categoryBitMask = 1
     }
     
@@ -440,6 +442,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.translationX = Float(sender.translationInView(sender.view!).x)
         
         if(sender.state == UIGestureRecognizerState.Ended) {
+            self.isSimulationAfterPan = true
             self.panActive = false
             self.panPaused = false
         }
@@ -751,14 +754,23 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             // add center weight node
             if((!self.panActive) && ((self.cylinderNode.physicsBody?.velocity.x > -kRestingSpeed) && (self.cylinderNode.physicsBody?.velocity.x < kRestingSpeed))) {
                 let targetPos = ((round((location.x + self.cylinderNode.widthHalfTile) / self.cylinderNode.distBetweenFlatSpot) + 0) * self.cylinderNode.distBetweenFlatSpot) - self.cylinderNode.widthHalfTile
-                if(!SCNVector3EqualToVector3(SCNVector3Make(targetPos, 0, -kCylinderCenter.z), self.centerNode.position)) {
+                if(self.isSimulationAfterPan || !SCNVector3EqualToVector3(SCNVector3Make(targetPos, 0, -kCylinderCenter.z), self.centerNode.position)) {
+                    self.isSimulationAfterPan = false
                     self.centerNode.position = SCNVector3Make(targetPos, 0, -kCylinderCenter.z)
                     self.centerNode.physicsBody?.resetTransform()
-                    self.centerNode.physicsField?.strength = 10000
+                    self.centerNode.physicsField?.strength = 8000
                 }
-                //self.centerNode.opacity = 1
+                //self.centerNode.opacity = 0
                 //print("v:\(self.cylinderNode.physicsBody?.velocity)")
             }
+            
+            if(self.isInitialSimulation) {
+                // give cylinder a little push to start rolling and start gravity effect
+                self.isInitialSimulation = false
+                self.centerNode.physicsField?.strength = 2000
+                cylinderNode.physicsBody?.velocity = SCNVector3Make(0.00001, 0, 0)
+            }
+            
             break
         }
     }
