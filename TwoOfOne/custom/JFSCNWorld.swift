@@ -57,9 +57,7 @@ class JFSCNWorld : SCNNode {
         
         super.init()
         
-        let tileGap = (self.game.cylinderHeight() - (self.game.cylinderTileWidth() * Float(self.game.cylinderRows()))) / (Float(self.game.cylinderRows()) - 1)
-        
-        let backWall = JFSCNWall(size: JFGridSize(width: self.game.cylinderCols() + 2, height: self.game.cylinderRows() + 10), game:self.game, type: JFWallTileType.back)
+        let backWall = JFSCNWall(size: JFGridSize(width: self.game.cylinderCols() + 20, height: self.game.cylinderRows() + 10), game:self.game, type: JFWallTileType.back)
         backWall.position = SCNVector3Make(0, 0, -kDistanceWall - kCylinderCenter.z)
         self.addChildNode(backWall)
         
