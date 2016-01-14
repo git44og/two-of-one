@@ -169,9 +169,11 @@ class JFHighScoreObject {
     //MARK: accessors
     func setScore(score:Int, level:Int) -> Bool {
         if(self.personalScores.count > level) {
-            self.personalScores[level] = score
-            self.save()
-            return true
+            if(self.personalScores[level] < score) {
+                self.personalScores[level] = score
+                self.save()
+                return true
+            }
         }
         return false
     }
