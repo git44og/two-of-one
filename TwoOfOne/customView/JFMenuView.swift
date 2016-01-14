@@ -76,14 +76,16 @@ class JFMenuView : UIView {
             self.addSubview(label)
         }
         
-        for i in 0...2 {
+        var i = 0
+        for level in [JFGameLevel.Beginner, JFGameLevel.Medium, JFGameLevel.Expert] {
             label = UILabel()
             label.tag = 121 + i
-            label.text = String(JFHighScoreObject.sharedInstance.score(i))
+            label.text = String(JFHighScoreObject.sharedInstance.score(level))
             label.textAlignment = .Right
             label.textColor = UIColor.whiteColor()
             label.backgroundColor = UIColor.clearColor()
             self.addSubview(label)
+            i++
         }
     }
     
@@ -124,13 +126,13 @@ class JFMenuView : UIView {
         if let senderButton = sender as? UIButton {
             switch(senderButton) {
             case self.playEasyButton:
-                vc.onPlayPressed(senderButton, level:0)
+                vc.onPlayPressed(senderButton, level:.Beginner)
                 break
             case self.playMediumButton:
-                vc.onPlayPressed(senderButton, level:1)
+                vc.onPlayPressed(senderButton, level:.Medium)
                 break
             case self.playExpertButton:
-                vc.onPlayPressed(senderButton, level:2)
+                vc.onPlayPressed(senderButton, level:.Expert)
                 break
             case self.gameCenterButton:
                 vc.onGameCenterPressed(senderButton)
@@ -147,7 +149,7 @@ let kPersonalHighScore = "pScore"
 
 class JFHighScoreObject {
     
-    var personalScores:[Int] = [0, 0, 0]
+    var personalScores:[JFGameLevel: Int] = [.Beginner: 0, .Medium: 0, .Expert: 0]
     
     class var sharedInstance: JFHighScoreObject {
         struct Static {
@@ -167,8 +169,12 @@ class JFHighScoreObject {
     }
 
     //MARK: accessors
-    func setScore(score:Int, level:Int) -> Bool {
-        if(self.personalScores.count > level) {
+    func setScore(score:Int, level:JFGameLevel) -> Bool {
+        
+        let gch = CPHGameCenterHelper.sharedInstance
+        gch.submitScore(Int64(score), level:level)
+
+        if let _ = self.personalScores[level] {
             if(self.personalScores[level] < score) {
                 self.personalScores[level] = score
                 self.save()
@@ -178,9 +184,9 @@ class JFHighScoreObject {
         return false
     }
     
-    func score(level:Int) -> Int {
-        if(self.personalScores.count > level) {
-            return self.personalScores[level]
+    func score(level:JFGameLevel) -> Int {
+        if let _ = self.personalScores[level] {
+            return self.personalScores[level]!
         }
         return 0
     }
@@ -188,20 +194,20 @@ class JFHighScoreObject {
     //MARK: load/save
     func load() {
         if let pScores = NSUserDefaults.standardUserDefaults().objectForKey(kPersonalHighScore) as? NSArray {
-            for i in 0...2 {
-                if let score = pScores.objectAtIndex(i) as? NSNumber {
-                    self.personalScores[i] = score.integerValue
+            for level in [JFGameLevel.Beginner, JFGameLevel.Medium, JFGameLevel.Expert] {
+                if let score = pScores.objectAtIndex(level.rawValue) as? NSNumber {
+                    self.personalScores[level] = score.integerValue
                 }
             }
         } else {
-            self.personalScores = [0, 0, 0]
+            self.personalScores = [.Beginner: 0, .Medium: 0, .Expert: 0]
         }
     }
     
     func save() {
         let pScores = NSMutableArray()
-        for i in 0...2 {
-            let score = NSNumber(integer: self.personalScores[i])
+        for level in [JFGameLevel.Beginner, JFGameLevel.Medium, JFGameLevel.Expert] {
+            let score = NSNumber(integer: self.personalScores[level]!)
             pScores.addObject(score)
         }
         NSUserDefaults.standardUserDefaults().setObject(pScores, forKey: kPersonalHighScore)

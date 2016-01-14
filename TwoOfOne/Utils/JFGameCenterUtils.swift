@@ -53,9 +53,9 @@ class CPHGameCenterHelper : NSObject, GKGameCenterControllerDelegate {
         return localPlayer.authenticated
     }
     
-    func showLeaderBoard(viewController:UIViewController) {
+    func showLeaderBoard(viewController:UIViewController, level:JFGameLevel) {
         let gcViewController: GKGameCenterViewController = GKGameCenterViewController()
-        gcViewController.leaderboardIdentifier = kHighScoreLeaderboardIdentifier[JFGameLevel.Beginner]!
+        gcViewController.leaderboardIdentifier = kHighScoreLeaderboardIdentifier[level]!
         gcViewController.viewState = GKGameCenterViewControllerState.Leaderboards
         gcViewController.gameCenterDelegate = self
         viewController.presentViewController(gcViewController, animated: true, completion:nil)
@@ -63,7 +63,7 @@ class CPHGameCenterHelper : NSObject, GKGameCenterControllerDelegate {
         admTrackState(ADMTrackingState.gameCenterLeaderboard)
     }
     
-    func challenge(viewController:UIViewController) {
+    func challenge(viewController:UIViewController, level:JFGameLevel) {
         admTrackState(ADMTrackingState.gameCenterChallenge)
         if(!self.gameCenterActive()) {
             //admTrackAction(ADMTrackingAction.gameCenterChallengeFailNotLoggedIn)
@@ -72,7 +72,8 @@ class CPHGameCenterHelper : NSObject, GKGameCenterControllerDelegate {
             viewController.presentViewController(alertView, animated: true, completion: nil);
             return
         }
-        let gkScore:GKScore = GKScore(leaderboardIdentifier: kHighScoreLeaderboardIdentifier[JFGameLevel.Beginner]!)
+
+        let gkScore:GKScore = GKScore(leaderboardIdentifier: kHighScoreLeaderboardIdentifier[level]!)
         let challengeVC = gkScore.challengeComposeControllerWithMessage("Try to beat this.", players: []) { (composeController:UIViewController, didIssueChallenge:Bool, sentPlayerIDs:[String]?) -> Void in
             if(didIssueChallenge) {
                 admTrackAction(ADMTrackingAction.gameCenterChallengeSuccess)
@@ -102,13 +103,13 @@ class CPHGameCenterHelper : NSObject, GKGameCenterControllerDelegate {
         }
     }
     
-    func submitScore(score:Int64) {
+    func submitScore(score:Int64, level:JFGameLevel) {
         if(!self.gameCenterActive()) {
             //print("Player not authenticated")
             return
         }
         
-        let gkScore:GKScore = GKScore(leaderboardIdentifier: kHighScoreLeaderboardIdentifier[JFGameLevel.Beginner]!)
+        let gkScore:GKScore = GKScore(leaderboardIdentifier: kHighScoreLeaderboardIdentifier[level]!)
         gkScore.value = score
         GKScore.reportScores([gkScore], withCompletionHandler: { (error:NSError?) -> Void in
             self.lastError = error

@@ -44,6 +44,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     var debugParTurns:Int = 40
     
     override func viewDidLoad() {
+        
         let backImage = UIImageView(image: UIImage(named: "Start-Hintergrund.png"))
         backImage.contentMode = UIViewContentMode.ScaleAspectFill
         self.backgroundBackView = backImage
@@ -55,6 +56,10 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         self.frontView.addSubview(self.backgroundFrontView)
         
         super.viewDidLoad()
+        
+        let gch:CPHGameCenterHelper = CPHGameCenterHelper.sharedInstance
+        gch.authenticateLocalPlayer(self)
+
         JFHighScoreObject.sharedInstance.load()
         self.menuView.vc = self
         
@@ -116,9 +121,9 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     }
 
     
-    func onPlayPressed(sender:AnyObject, level:Int) {
+    func onPlayPressed(sender:AnyObject, level:JFGameLevel) {
         
-        admTrackAction(ADMTrackingAction.gamePlay, level:level)
+        admTrackAction(ADMTrackingAction.gamePlay, level:level.rawValue)
         
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("gameScreen") as! ViewController
         vc.game.level = level
@@ -136,7 +141,8 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         
         admTrackAction(ADMTrackingAction.gameCenter)
         
-        print("load gamecenter")
+        let gch = CPHGameCenterHelper.sharedInstance
+        gch.showLeaderBoard(self, level: JFGameLevel.Expert)
     }
     
     @IBAction func onSwitchChange(sender: AnyObject) {

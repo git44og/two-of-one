@@ -22,9 +22,9 @@ let kTurnBonusRatio:Float = 3 // bonus for turns can be x-times the absolute val
 let kTimeBonusRatio:Float = 3
 
 enum JFGameLevel:Int {
-    case Beginner = 1
-    case Medium = 2
-    case Expert = 3
+    case Beginner = 0
+    case Medium = 1
+    case Expert = 2
 }
 
 enum JFMoveType:Int {
@@ -56,7 +56,7 @@ class Game {
     var bonusTimer:NSTimer = NSTimer()
     var bonusUpdateTimer:NSTimer = NSTimer()
     var foundPairs:Int = 0
-    var level:Int = 0
+    var level:JFGameLevel = .Beginner
     var physics:Bool = true
     var enableBackOfTiles:Bool = false
     var scoreBoard:ScoreBoardView? {
@@ -271,18 +271,29 @@ class Game {
     
     //MARK: appearance
     func cylinderRows() -> Int {
-        return kTileConfig[self.level].row
+        return self.levelConfig().row
     }
     
     func cylinderCols() -> Int {
-        return kTileConfig[self.level].col
+        return self.levelConfig().col
     }
     
     func cylinderTileWidth() -> Float {
-        return kTileConfig[self.level].tile
+        return self.levelConfig().tile
     }
 
     func cylinderHeight() -> Float {
-        return kTileConfig[self.level].height
+        return self.levelConfig().height
+    }
+    
+    func levelConfig() -> (row:Int, col:Int, tile:Float, corner:Float, height:Float) {
+        switch(self.level) {
+        case .Beginner:
+            return kTileConfig[0]
+        case .Medium:
+            return kTileConfig[1]
+        case .Expert:
+            return kTileConfig[2]
+        }
     }
 }

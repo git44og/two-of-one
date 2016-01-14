@@ -609,7 +609,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         
         self.game.event(.FinishGame)
         
-        admTrackAction(ADMTrackingAction.gameFinish, score: self.game.time, level: self.game.level)
+        admTrackAction(ADMTrackingAction.gameFinish, score: self.game.time, level: self.game.level.rawValue)
         
         JFHighScoreObject.sharedInstance.setScore(self.game.totalScore(), level: self.game.level)
         for subView in self.gameFinishView.subviews {
@@ -648,7 +648,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     func gameExit() {
         
-        admTrackAction(ADMTrackingAction.gameExit, score: self.game.time, level: self.game.level)
+        admTrackAction(ADMTrackingAction.gameExit, score: self.game.time, level: self.game.level.rawValue)
         
         self.game.cancelBonusTimer()
         
@@ -676,7 +676,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     @IBAction func onGameFinishPlayAgainPressed(sender: AnyObject) {
         
-        admTrackAction(ADMTrackingAction.gamePlayAgain, score: self.game.time, level: self.game.level)
+        admTrackAction(ADMTrackingAction.gamePlayAgain, score: self.game.time, level: self.game.level.rawValue)
         
         self.animation(false) { () -> Void in
             let vc = self.storyboard?.instantiateViewControllerWithIdentifier("gameScreen") as! ViewController
