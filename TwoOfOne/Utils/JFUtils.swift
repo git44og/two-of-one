@@ -184,7 +184,7 @@ func admTrackState(state:ADMTrackingState, score:Int? = nil, round:Int? = nil) {
 func admTrackState(stateName:String, score:Int? = nil, round:Int? = nil) {
     let data = admParamHelper(score: score, round: round)
     
-    //ADBMobile.trackState(stateName, data: data)
+    ADBMobile.trackState(stateName, data: data)
 }
 
 func admTrackAction(action:ADMTrackingAction, score:Int? = nil, round:Int? = nil) {
@@ -194,7 +194,7 @@ func admTrackAction(action:ADMTrackingAction, score:Int? = nil, round:Int? = nil
 func admTrackAction(actionName:String, score:Int? = nil, round:Int? = nil) {
     let data = admParamHelper(score: score, round: round)
     
-    //ADBMobile.trackAction(actionName, data: data)
+    ADBMobile.trackAction(actionName, data: data)
 }
 
 func admParamHelper(score score:Int? = nil, round:Int? = nil) -> [String: String] {
