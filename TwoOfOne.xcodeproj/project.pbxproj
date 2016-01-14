@@ -78,7 +78,6 @@
 		277B23311C1749300036176E /* Home_Frame.png in Resources */ = {isa = PBXBuildFile; fileRef = 277B23271C1749300036176E /* Home_Frame.png */; };
 		277B23331C180BFF0036176E /* JFMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277B23321C180BFF0036176E /* JFMenuView.swift */; };
 		2783B0AA1BF9B50A008F1E9B /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2783B0A91BF9B50A008F1E9B /* Game.swift */; };
-		27CE8BE01C480ED000AA93F7 /* standard.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CE8BDF1C480ED000AA93F7 /* standard.m */; };
 		27CE8BE71C480FF500AA93F7 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27CE8BE61C480FF500AA93F7 /* libsqlite3.tbd */; };
 		27CE8BE91C48103100AA93F7 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27CE8BE81C48103100AA93F7 /* SystemConfiguration.framework */; };
 		27D6639C1C0623C40029742F /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D6639B1C0623C40029742F /* MenuViewController.swift */; };
@@ -185,7 +184,6 @@
 		277B23321C180BFF0036176E /* JFMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JFMenuView.swift; path = customView/JFMenuView.swift; sourceTree = "<group>"; };
 		2783B0A91BF9B50A008F1E9B /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Game.swift; path = Model/Game.swift; sourceTree = "<group>"; };
 		27CE8BDE1C480ECF00AA93F7 /* TwoOfOne-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TwoOfOne-Bridging-Header.h"; sourceTree = "<group>"; };
-		27CE8BDF1C480ED000AA93F7 /* standard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = standard.m; sourceTree = "<group>"; };
 		27CE8BE61C480FF500AA93F7 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		27CE8BE81C48103100AA93F7 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		27D6639B1C0623C40029742F /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
@@ -447,7 +445,6 @@
 				B441FA741B974E0D00B55627 /* LaunchScreen.xib */,
 				B441FA691B974E0D00B55627 /* Supporting Files */,
 				27DAC6FA1BF1C8710063DC28 /* Notes.rtf */,
-				27CE8BDF1C480ED000AA93F7 /* standard.m */,
 			);
 			path = TwoOfOne;
 			sourceTree = "<group>";
@@ -706,7 +703,6 @@
 				27D6639C1C0623C40029742F /* MenuViewController.swift in Sources */,
 				277B23331C180BFF0036176E /* JFMenuView.swift in Sources */,
 				B48111F01B9759F100E2A4F3 /* JFSCNView.swift in Sources */,
-				27CE8BE01C480ED000AA93F7 /* standard.m in Sources */,
 				B441FA6C1B974E0D00B55627 /* AppDelegate.swift in Sources */,
 				B48112521B9DEE5900E2A4F3 /* JFUtils.swift in Sources */,
 				27D6EE4A1C43850000EA1C94 /* JFProgressView.swift in Sources */,
