@@ -532,6 +532,11 @@
 					B441FA651B974E0D00B55627 = {
 						CreatedOnToolsVersion = 6.4;
 						DevelopmentTeam = 43VV89DXJ4;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					B441FA7A1B974E0D00B55627 = {
 						CreatedOnToolsVersion = 6.4;
