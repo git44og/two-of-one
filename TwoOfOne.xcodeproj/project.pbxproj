@@ -78,12 +78,7 @@
 		277B23311C1749300036176E /* Home_Frame.png in Resources */ = {isa = PBXBuildFile; fileRef = 277B23271C1749300036176E /* Home_Frame.png */; };
 		277B23331C180BFF0036176E /* JFMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277B23321C180BFF0036176E /* JFMenuView.swift */; };
 		2783B0AA1BF9B50A008F1E9B /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2783B0A91BF9B50A008F1E9B /* Game.swift */; };
-		27CE8BD71C480DB000AA93F7 /* ADBMobileConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 27CE8BD21C480DB000AA93F7 /* ADBMobileConfig.json */; };
-		27CE8BD81C480DB000AA93F7 /* AdobeMobileLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27CE8BD31C480DB000AA93F7 /* AdobeMobileLibrary.a */; };
-		27CE8BDD1C480DDD00AA93F7 /* AdobeMobileLibrary_Extension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27CE8BDC1C480DDD00AA93F7 /* AdobeMobileLibrary_Extension.a */; };
 		27CE8BE01C480ED000AA93F7 /* standard.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CE8BDF1C480ED000AA93F7 /* standard.m */; };
-		27CE8BE41C480F4300AA93F7 /* AdobeMobileLibrary_TV.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27CE8BE21C480F4300AA93F7 /* AdobeMobileLibrary_TV.a */; };
-		27CE8BE51C480F4300AA93F7 /* AdobeMobileLibrary_Watch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27CE8BE31C480F4300AA93F7 /* AdobeMobileLibrary_Watch.a */; };
 		27CE8BE71C480FF500AA93F7 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27CE8BE61C480FF500AA93F7 /* libsqlite3.tbd */; };
 		27CE8BE91C48103100AA93F7 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27CE8BE81C48103100AA93F7 /* SystemConfiguration.framework */; };
 		27D6639C1C0623C40029742F /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D6639B1C0623C40029742F /* MenuViewController.swift */; };
@@ -93,6 +88,8 @@
 		27DAC6F91BF1C5F20063DC28 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DAC6F81BF1C5F20063DC28 /* CoreMotion.framework */; };
 		27DAC6FB1BF1C8710063DC28 /* Notes.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 27DAC6FA1BF1C8710063DC28 /* Notes.rtf */; };
 		27F9536B1C4810A300A6E4F6 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F9536A1C4810A300A6E4F6 /* GameKit.framework */; };
+		27F953731C48122900A6E4F6 /* ADBMobileConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 27F9536E1C48122900A6E4F6 /* ADBMobileConfig.json */; };
+		27F953741C48122900A6E4F6 /* AdobeMobileLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F9536F1C48122900A6E4F6 /* AdobeMobileLibrary.a */; };
 		B441FA6C1B974E0D00B55627 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B441FA6B1B974E0D00B55627 /* AppDelegate.swift */; };
 		B441FA6E1B974E0D00B55627 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B441FA6D1B974E0D00B55627 /* ViewController.swift */; };
 		B441FA711B974E0D00B55627 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B441FA6F1B974E0D00B55627 /* Main.storyboard */; };
@@ -187,14 +184,8 @@
 		277B23271C1749300036176E /* Home_Frame.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Home_Frame.png; sourceTree = "<group>"; };
 		277B23321C180BFF0036176E /* JFMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JFMenuView.swift; path = customView/JFMenuView.swift; sourceTree = "<group>"; };
 		2783B0A91BF9B50A008F1E9B /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Game.swift; path = Model/Game.swift; sourceTree = "<group>"; };
-		27CE8BD11C480DB000AA93F7 /* ADBMobile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADBMobile.h; sourceTree = "<group>"; };
-		27CE8BD21C480DB000AA93F7 /* ADBMobileConfig.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ADBMobileConfig.json; sourceTree = "<group>"; };
-		27CE8BD31C480DB000AA93F7 /* AdobeMobileLibrary.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = AdobeMobileLibrary.a; sourceTree = "<group>"; };
-		27CE8BDC1C480DDD00AA93F7 /* AdobeMobileLibrary_Extension.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = AdobeMobileLibrary_Extension.a; sourceTree = "<group>"; };
 		27CE8BDE1C480ECF00AA93F7 /* TwoOfOne-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TwoOfOne-Bridging-Header.h"; sourceTree = "<group>"; };
 		27CE8BDF1C480ED000AA93F7 /* standard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = standard.m; sourceTree = "<group>"; };
-		27CE8BE21C480F4300AA93F7 /* AdobeMobileLibrary_TV.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = AdobeMobileLibrary_TV.a; sourceTree = "<group>"; };
-		27CE8BE31C480F4300AA93F7 /* AdobeMobileLibrary_Watch.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = AdobeMobileLibrary_Watch.a; sourceTree = "<group>"; };
 		27CE8BE61C480FF500AA93F7 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		27CE8BE81C48103100AA93F7 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		27D6639B1C0623C40029742F /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
@@ -204,6 +195,9 @@
 		27DAC6F81BF1C5F20063DC28 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		27DAC6FA1BF1C8710063DC28 /* Notes.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Notes.rtf; sourceTree = "<group>"; };
 		27F9536A1C4810A300A6E4F6 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		27F9536D1C48122900A6E4F6 /* ADBMobile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADBMobile.h; sourceTree = "<group>"; };
+		27F9536E1C48122900A6E4F6 /* ADBMobileConfig.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ADBMobileConfig.json; sourceTree = "<group>"; };
+		27F9536F1C48122900A6E4F6 /* AdobeMobileLibrary.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = AdobeMobileLibrary.a; sourceTree = "<group>"; };
 		B441FA661B974E0D00B55627 /* TwoOfOne.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwoOfOne.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B441FA6A1B974E0D00B55627 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B441FA6B1B974E0D00B55627 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -228,11 +222,8 @@
 				27CE8BE91C48103100AA93F7 /* SystemConfiguration.framework in Frameworks */,
 				27CE8BE71C480FF500AA93F7 /* libsqlite3.tbd in Frameworks */,
 				271BE0CF1C0CBF8000C8757E /* AudioToolbox.framework in Frameworks */,
-				27CE8BD81C480DB000AA93F7 /* AdobeMobileLibrary.a in Frameworks */,
-				27CE8BDD1C480DDD00AA93F7 /* AdobeMobileLibrary_Extension.a in Frameworks */,
-				27CE8BE41C480F4300AA93F7 /* AdobeMobileLibrary_TV.a in Frameworks */,
-				27CE8BE51C480F4300AA93F7 /* AdobeMobileLibrary_Watch.a in Frameworks */,
 				27DAC6F91BF1C5F20063DC28 /* CoreMotion.framework in Frameworks */,
+				27F953741C48122900A6E4F6 /* AdobeMobileLibrary.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,19 +379,6 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
-		27CE8BD01C480DB000AA93F7 /* AdobeMobileLibrary */ = {
-			isa = PBXGroup;
-			children = (
-				27CE8BD11C480DB000AA93F7 /* ADBMobile.h */,
-				27CE8BD21C480DB000AA93F7 /* ADBMobileConfig.json */,
-				27CE8BD31C480DB000AA93F7 /* AdobeMobileLibrary.a */,
-				27CE8BDC1C480DDD00AA93F7 /* AdobeMobileLibrary_Extension.a */,
-				27CE8BE21C480F4300AA93F7 /* AdobeMobileLibrary_TV.a */,
-				27CE8BE31C480F4300AA93F7 /* AdobeMobileLibrary_Watch.a */,
-			);
-			path = AdobeMobileLibrary;
-			sourceTree = "<group>";
-		};
 		27CE8BE11C480EE900AA93F7 /* Obj-c */ = {
 			isa = PBXGroup;
 			children = (
@@ -417,6 +395,16 @@
 				27D6EE491C43850000EA1C94 /* JFProgressView.swift */,
 			);
 			name = CustomView;
+			sourceTree = "<group>";
+		};
+		27F9536C1C48122900A6E4F6 /* AdobeMobileLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				27F9536D1C48122900A6E4F6 /* ADBMobile.h */,
+				27F9536E1C48122900A6E4F6 /* ADBMobileConfig.json */,
+				27F9536F1C48122900A6E4F6 /* AdobeMobileLibrary.a */,
+			);
+			path = AdobeMobileLibrary;
 			sourceTree = "<group>";
 		};
 		B441FA5D1B974E0D00B55627 = {
@@ -467,7 +455,7 @@
 		B441FA691B974E0D00B55627 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				27CE8BD01C480DB000AA93F7 /* AdobeMobileLibrary */,
+				27F9536C1C48122900A6E4F6 /* AdobeMobileLibrary */,
 				271BE0C31C0CBC6400C8757E /* Sounds */,
 				B48111F11B98AA4D00E2A4F3 /* Images */,
 				B441FA6A1B974E0D00B55627 /* Info.plist */,
@@ -627,7 +615,7 @@
 				274B7FE71C07745C00E33096 /* 03_22.png in Resources */,
 				274B7FE11C07745C00E33096 /* 02_16.png in Resources */,
 				277B23301C1749300036176E /* Home-Schriftgröße.png in Resources */,
-				27CE8BD71C480DB000AA93F7 /* ADBMobileConfig.json in Resources */,
+				27F953731C48122900A6E4F6 /* ADBMobileConfig.json in Resources */,
 				2728C0371C402CC9005E8892 /* HomeIcon_up.png in Resources */,
 				272D28CA1C3F9B600011B2A7 /* PointsBar-Medium_Sample.png in Resources */,
 				274B7FDA1C07745C00E33096 /* 01_09.png in Resources */,
@@ -862,6 +850,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/TwoOfOne/AdobeMobileLibrary",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jfischer77.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

@@ -61,11 +61,11 @@ class CPHGameCenterHelper : NSObject, GKGameCenterControllerDelegate {
         gcViewController.gameCenterDelegate = self
         viewController.presentViewController(gcViewController, animated: true, completion:nil)
         
-        admTrackState(ADMTrackingState.gameCenterLeaderboard)
+        //admTrackState(ADMTrackingState.gameCenterLeaderboard)
     }
     
     func challenge(viewController:UIViewController) {
-        admTrackState(ADMTrackingState.gameCenterChallenge)
+        //admTrackState(ADMTrackingState.gameCenterChallenge)
         if(!self.gameCenterActive()) {
             admTrackAction(ADMTrackingAction.gameCenterChallengeFailNotLoggedIn)
             let alertView = UIAlertController(title: "Game Center Unavailable", message: "Player is not signed in", preferredStyle: UIAlertControllerStyle.Alert);
