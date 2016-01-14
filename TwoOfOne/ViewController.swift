@@ -135,6 +135,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     override func viewDidAppear(animated: Bool) {
         
+        admTrackState(ADMTrackingState.gamePlaying)
+        
         self.sceneSizeFactor = (Float)(sceneView.frame.size.height / sceneView.frame.size.width * 1.35)
         
         let scene = SCNScene()
@@ -607,6 +609,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         
         self.game.event(.FinishGame)
         
+        admTrackAction(ADMTrackingAction.gameFinish, score: self.game.time, level: self.game.level)
+        
         JFHighScoreObject.sharedInstance.setScore(self.game.totalScore(), level: self.game.level)
         for subView in self.gameFinishView.subviews {
             switch(subView.tag) {
@@ -644,6 +648,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     func gameExit() {
         
+        admTrackAction(ADMTrackingAction.gameExit, score: self.game.time, level: self.game.level)
+        
         self.game.cancelBonusTimer()
         
         self.removeGestureRecognizers()
@@ -669,6 +675,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     }
     
     @IBAction func onGameFinishPlayAgainPressed(sender: AnyObject) {
+        
+        admTrackAction(ADMTrackingAction.gamePlayAgain, score: self.game.time, level: self.game.level)
+        
         self.animation(false) { () -> Void in
             let vc = self.storyboard?.instantiateViewControllerWithIdentifier("gameScreen") as! ViewController
             vc.game.level = self.game.level

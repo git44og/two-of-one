@@ -125,7 +125,7 @@ enum ADMTrackingDataKeys: String {
     case gcLoggedIn = "gameCenter.loginStatus"
     case appNumLaunched = "app.numLaunched"
     case gameScore = "game.score"
-    case gameRound = "game.level"
+    case gameLevel = "game.level"
     
     func name() -> String {
         return "\(kTrackingPrefix).\(self.rawValue)"
@@ -135,9 +135,7 @@ enum ADMTrackingDataKeys: String {
 enum ADMTrackingState: String {
     case gamePlaying = "Game"
     case menuHome = "Home"
-    case menuGameOver = "GameOver"
-    case gameCenterLeaderboard = "GC Leaderboard"
-    case gameCenterChallenge = "GC Challenge"
+    case menuGameOver = "GameFinish"
     
     func name() -> String {
         return "\(self.rawValue)"
@@ -146,21 +144,14 @@ enum ADMTrackingState: String {
 
 enum ADMTrackingAction: String {
     case gamePlay = "game.playGame"
-    case gamePlayAgain = "game.playGameAgain"
-    case gameLost = "game.gameOver"
+    case gameFinish = "game.gameOver"
     case gameExit = "game.exitGame"
     
+    case gameCenter = "gamecenter.access"
     case gameCenterLogin = "gamecenter.login"
-    case gameCenterLoginSuccess = "gamecenter.login.success"
-    case gameCenterLoginCancel = "gamecenter.login.cancel"
-    
     case gameCenterLeaderboard = "gamecenter.leaderboard"
     
     case gameCenterChallenge = "gamecenter.challenge"
-    case gameCenterChallengeSuccess = "gamecenter.challenge.success"
-    case gameCenterChallengeCancel = "gamecenter.challenge.cancel"
-    case gameCenterChallengeFailNotLoggedIn = "gamecenter.challenge.fail.notLoggedIn"
-    case gameCenterChallengeFailNoViewController = "gamecenter.challenge.fail.noViewController"
     
     case shareFacebookPressed = "share.facebook.pressed"
     case shareFacebookSuccess = "share.facebook.success"
@@ -169,35 +160,32 @@ enum ADMTrackingAction: String {
     case shareTwitterSuccess = "share.twitter.success"
     case shareTwitterCancel = "share.twitter.cancel"
     
-    case adImprSuccess = "ads"
-    case adImprFail = "ads.fail"
-    
     func name() -> String {
         return "\(kTrackingPrefix).\(self.rawValue)"
     }
 }
 
-func admTrackState(state:ADMTrackingState, score:Int? = nil, round:Int? = nil) {
-    admTrackState(state.name(), score:score, round:round)
+func admTrackState(state:ADMTrackingState, score:Int? = nil, level:Int? = nil) {
+    admTrackState(state.name(), score:score, level:level)
 }
 
-func admTrackState(stateName:String, score:Int? = nil, round:Int? = nil) {
-    let data = admParamHelper(score: score, round: round)
+func admTrackState(stateName:String, score:Int? = nil, level:Int? = nil) {
+    let data = admParamHelper(score: score, level: level)
     
     ADBMobile.trackState(stateName, data: data)
 }
 
-func admTrackAction(action:ADMTrackingAction, score:Int? = nil, round:Int? = nil) {
-    admTrackAction(action.name(), score:score, round:round)
+func admTrackAction(action:ADMTrackingAction, score:Int? = nil, level:Int? = nil) {
+    admTrackAction(action.name(), score:score, level:level)
 }
 
-func admTrackAction(actionName:String, score:Int? = nil, round:Int? = nil) {
-    let data = admParamHelper(score: score, round: round)
+func admTrackAction(actionName:String, score:Int? = nil, level:Int? = nil) {
+    let data = admParamHelper(score: score, level: level)
     
     ADBMobile.trackAction(actionName, data: data)
 }
 
-func admParamHelper(score score:Int? = nil, round:Int? = nil) -> [String: String] {
+func admParamHelper(score score:Int? = nil, level:Int? = nil) -> [String: String] {
     var returnDict:[String: String] = [:]
     let gch = CPHGameCenterHelper.sharedInstance
     let loggedIn = gch.gameCenterActive()
@@ -214,8 +202,8 @@ func admParamHelper(score score:Int? = nil, round:Int? = nil) -> [String: String
         returnDict[ADMTrackingDataKeys.gameScore.name()] = String(score!)
     }
     
-    if(round != nil) {
-        returnDict[ADMTrackingDataKeys.gameRound.name()] = String(round!)
+    if(level != nil) {
+        returnDict[ADMTrackingDataKeys.gameLevel.name()] = String(level!)
     }
     
     return returnDict

@@ -77,6 +77,8 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
+        admTrackState(ADMTrackingState.menuHome)
+        
         self.backgroundBackView.frame = self.backView.frame
         self.backgroundFrontView.frame = self.frontView.frame
 
@@ -115,6 +117,9 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
 
     
     func onPlayPressed(sender:AnyObject, level:Int) {
+        
+        admTrackAction(ADMTrackingAction.gamePlay, level:level)
+        
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("gameScreen") as! ViewController
         vc.game.level = level
         vc.game.parTurns = self.debugParTurns
@@ -128,6 +133,9 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     }
     
     func onGameCenterPressed(sender:AnyObject) {
+        
+        admTrackAction(ADMTrackingAction.gameCenter)
+        
         print("load gamecenter")
     }
     
