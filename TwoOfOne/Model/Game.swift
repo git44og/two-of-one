@@ -102,17 +102,18 @@ class Game {
             self.updateScoreBoard()
             break
         case .flipTile:
-            self.turn++
-            self.updateScoreBoardTurns()
+            //self.turn++
+            //self.updateScoreBoardTurns()
             break
             
         case .flipBackTile:
-            self.turn++
+            //self.turn++
             self.event(.BonusInvalid)
-            self.updateScoreBoardTurns()
+            //self.updateScoreBoardTurns()
             
         case .findPair:
             self.score += self.scoreOnBonus()
+            self.turn++
             
             if let pairingTiles = info as? [JFTileNode] {
                 pairingTiles[0].scoredWithTile = self.scoreOnBonus()
@@ -136,6 +137,8 @@ class Game {
             break
             
         case .findNoPair:
+            self.turn++
+            self.updateScoreBoardTurns()
             self.event(.BonusInvalid)
             break
         case .BonusInvalid:

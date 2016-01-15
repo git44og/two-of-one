@@ -460,6 +460,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             // don't turn
             return false
         } else if(hitNode.turned) {
+            // turning back tiles deactivated
+            /*
             hitNode.flip(completion: { () -> Void in
                 execOnMain({ () -> () in
                     self.game.event(.flipBackTile)
@@ -470,6 +472,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                     self.turnedNodes.removeAtIndex(j)
                 }
             }
+            */
             return true
         } else {
             self.turnedNodes.append(hitNode)
