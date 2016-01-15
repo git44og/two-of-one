@@ -459,9 +459,8 @@ class JFTileNode: SCNNode {
     var nodeId:CGPoint
     var tileNodes:[JFTileNodeFaceType:SCNNode] = [:]
     var appearAction:SCNAction = SCNAction()
-    
-    //MARK: tmp
-    var vanished:Bool = false
+    var size: CGSize
+    var scoredWithTile:Int = 0
     var lock:Bool = false
     
     init(x:Int, y:Int, id:Int, size:CGSize, parent:JFSCNNode, colNode:JFCylinderColNode) {
@@ -470,6 +469,7 @@ class JFTileNode: SCNNode {
         self.typeId = id
         self.cylinderNode = parent
         self.colNode = colNode
+        self.size = size
         
         super.init()
         
@@ -480,13 +480,14 @@ class JFTileNode: SCNNode {
         tileBaseShape.firstMaterial?.diffuse.contents = UIColor.clearColor()
         self.geometry = tileBaseShape
         
-       // add visible nodes
+        // add visible nodes
         self.addFaces(size)
         self.setupForAppearanceAnimation()
         self.adjustNodesVisibility()
     }
     
     required init?(coder aDecoder: NSCoder) {
+        self.size = CGSize()
         self.cylinderNode = JFSCNNode()
         self.colNode = JFCylinderColNode()
         fatalError("init(coder:) has not been implemented")
@@ -626,6 +627,49 @@ class JFTileNode: SCNNode {
             self.position = kTileRestingPosition
             completion
         }
+    }
+    
+    func showScoreTile() {
+        
+        var tileImage:UIImage
+        if let tmp = UIImage(named: "\(self.scoredWithTile)_points") {
+            tileImage = tmp
+        } else {
+            tileImage = UIImage()
+        }
+        
+        let extrusionDepth = self.size.width * kTileExtrusion
+        
+        let cornerRadius = self.size.width * kTileCornerradius
+        let path = UIBezierPath(roundedRect: CGRect(x: self.size.width / -2, y: self.size.height / -2, width: self.size.width, height: self.size.height), cornerRadius: cornerRadius)
+        let tileBaseShape = SCNShape(path: path, extrusionDepth: extrusionDepth)
+        
+        tileBaseShape.firstMaterial?.diffuse.contents = UIColor.clearColor()
+        let scoreTile = SCNNode(geometry: tileBaseShape)
+        self.colNode.addChildNode(scoreTile)
+        scoreTile.transform = self.transform
+        scoreTile.opacity = 0
+        
+        var materialFaces:[SCNMaterial] = [SCNMaterial(), SCNMaterial(), SCNMaterial()]
+        materialFaces[0].diffuse.contents = tileImage
+        materialFaces[1].diffuse.contents = tileImage
+        materialFaces[2].diffuse.contents = UIColor.whiteColor()
+        scoreTile.geometry?.materials = materialFaces
+        
+        scoreTile.runAction(SCNAction.sequence([
+            SCNAction.waitForDuration(0.1),
+            SCNAction.fadeInWithDuration(0.3),
+            SCNAction.fadeOutWithDuration(2.0),
+            SCNAction.removeFromParentNode()
+            ]))
+//        scoreTile.runAction(SCNAction.sequence([
+//            SCNAction.waitForDuration(0.1),
+//            SCNAction.fadeInWithDuration(0.3),
+//            SCNAction.fadeOpacityTo(0.7, duration: 0.5),
+//            SCNAction.waitForDuration(0.8),
+//            SCNAction.fadeOutWithDuration(1.0),
+//            SCNAction.removeFromParentNode()
+//            ]))
     }
     
     func tmpSetId(tileId:Int) -> String {

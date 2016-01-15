@@ -65,6 +65,21 @@
 		274B7FED1C07745C00E33096 /* 03_28.png in Resources */ = {isa = PBXBuildFile; fileRef = 274B7FCF1C07745C00E33096 /* 03_28.png */; };
 		274B7FEE1C07745C00E33096 /* 03_29.png in Resources */ = {isa = PBXBuildFile; fileRef = 274B7FD01C07745C00E33096 /* 03_29.png */; };
 		274B7FEF1C07745C00E33096 /* 03_30.png in Resources */ = {isa = PBXBuildFile; fileRef = 274B7FD11C07745C00E33096 /* 03_30.png */; };
+		2764B10B1C48D4B700817F64 /* 10_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2764B10A1C48D4B700817F64 /* 10_Points.png */; };
+		2764B11A1C48D4BF00817F64 /* 20_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2764B10C1C48D4BF00817F64 /* 20_Points.png */; };
+		2764B11B1C48D4BF00817F64 /* 30_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2764B10D1C48D4BF00817F64 /* 30_Points.png */; };
+		2764B11C1C48D4BF00817F64 /* 40_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2764B10E1C48D4BF00817F64 /* 40_Points.png */; };
+		2764B11D1C48D4BF00817F64 /* 50_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2764B10F1C48D4BF00817F64 /* 50_Points.png */; };
+		2764B11E1C48D4BF00817F64 /* 60_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2764B1101C48D4BF00817F64 /* 60_Points.png */; };
+		2764B11F1C48D4BF00817F64 /* 70_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2764B1111C48D4BF00817F64 /* 70_Points.png */; };
+		2764B1201C48D4BF00817F64 /* 80_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2764B1121C48D4BF00817F64 /* 80_Points.png */; };
+		2764B1211C48D4BF00817F64 /* 90_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2764B1131C48D4BF00817F64 /* 90_Points.png */; };
+		2764B1221C48D4BF00817F64 /* 100_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2764B1141C48D4BF00817F64 /* 100_Points.png */; };
+		2764B1231C48D4BF00817F64 /* 110_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2764B1151C48D4BF00817F64 /* 110_Points.png */; };
+		2764B1241C48D4BF00817F64 /* 120_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2764B1161C48D4BF00817F64 /* 120_Points.png */; };
+		2764B1251C48D4BF00817F64 /* 130_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2764B1171C48D4BF00817F64 /* 130_Points.png */; };
+		2764B1261C48D4BF00817F64 /* 140_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2764B1181C48D4BF00817F64 /* 140_Points.png */; };
+		2764B1271C48D4BF00817F64 /* 150_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2764B1191C48D4BF00817F64 /* 150_Points.png */; };
 		27696DDB1BE923EB0047E18D /* JFSCNWorld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27696DDA1BE923EB0047E18D /* JFSCNWorld.swift */; };
 		277B23281C1749300036176E /* Easy_down.png in Resources */ = {isa = PBXBuildFile; fileRef = 277B231D1C1749300036176E /* Easy_down.png */; };
 		277B23291C1749300036176E /* Easy_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 277B231E1C1749300036176E /* Easy_up.png */; };
@@ -170,6 +185,21 @@
 		274B7FCF1C07745C00E33096 /* 03_28.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 03_28.png; sourceTree = "<group>"; };
 		274B7FD01C07745C00E33096 /* 03_29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 03_29.png; sourceTree = "<group>"; };
 		274B7FD11C07745C00E33096 /* 03_30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 03_30.png; sourceTree = "<group>"; };
+		2764B10A1C48D4B700817F64 /* 10_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 10_Points.png; path = TwoOfOne/Images/ScoreTiles/10_Points.png; sourceTree = SOURCE_ROOT; };
+		2764B10C1C48D4BF00817F64 /* 20_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 20_Points.png; path = TwoOfOne/Images/ScoreTiles/20_Points.png; sourceTree = SOURCE_ROOT; };
+		2764B10D1C48D4BF00817F64 /* 30_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 30_Points.png; path = TwoOfOne/Images/ScoreTiles/30_Points.png; sourceTree = SOURCE_ROOT; };
+		2764B10E1C48D4BF00817F64 /* 40_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 40_Points.png; path = TwoOfOne/Images/ScoreTiles/40_Points.png; sourceTree = SOURCE_ROOT; };
+		2764B10F1C48D4BF00817F64 /* 50_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 50_Points.png; path = TwoOfOne/Images/ScoreTiles/50_Points.png; sourceTree = SOURCE_ROOT; };
+		2764B1101C48D4BF00817F64 /* 60_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 60_Points.png; path = TwoOfOne/Images/ScoreTiles/60_Points.png; sourceTree = SOURCE_ROOT; };
+		2764B1111C48D4BF00817F64 /* 70_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 70_Points.png; path = TwoOfOne/Images/ScoreTiles/70_Points.png; sourceTree = SOURCE_ROOT; };
+		2764B1121C48D4BF00817F64 /* 80_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 80_Points.png; path = TwoOfOne/Images/ScoreTiles/80_Points.png; sourceTree = SOURCE_ROOT; };
+		2764B1131C48D4BF00817F64 /* 90_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 90_Points.png; path = TwoOfOne/Images/ScoreTiles/90_Points.png; sourceTree = SOURCE_ROOT; };
+		2764B1141C48D4BF00817F64 /* 100_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 100_Points.png; path = TwoOfOne/Images/ScoreTiles/100_Points.png; sourceTree = SOURCE_ROOT; };
+		2764B1151C48D4BF00817F64 /* 110_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 110_Points.png; path = TwoOfOne/Images/ScoreTiles/110_Points.png; sourceTree = SOURCE_ROOT; };
+		2764B1161C48D4BF00817F64 /* 120_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 120_Points.png; path = TwoOfOne/Images/ScoreTiles/120_Points.png; sourceTree = SOURCE_ROOT; };
+		2764B1171C48D4BF00817F64 /* 130_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 130_Points.png; path = TwoOfOne/Images/ScoreTiles/130_Points.png; sourceTree = SOURCE_ROOT; };
+		2764B1181C48D4BF00817F64 /* 140_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 140_Points.png; path = TwoOfOne/Images/ScoreTiles/140_Points.png; sourceTree = SOURCE_ROOT; };
+		2764B1191C48D4BF00817F64 /* 150_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 150_Points.png; path = TwoOfOne/Images/ScoreTiles/150_Points.png; sourceTree = SOURCE_ROOT; };
 		27696DDA1BE923EB0047E18D /* JFSCNWorld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JFSCNWorld.swift; path = custom/JFSCNWorld.swift; sourceTree = "<group>"; };
 		277B231D1C1749300036176E /* Easy_down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Easy_down.png; sourceTree = "<group>"; };
 		277B231E1C1749300036176E /* Easy_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Easy_up.png; sourceTree = "<group>"; };
@@ -335,6 +365,28 @@
 			path = Images/TIleSets/Set00;
 			sourceTree = "<group>";
 		};
+		2764B0CD1C48D46100817F64 /* ScoreTiles */ = {
+			isa = PBXGroup;
+			children = (
+				2764B10A1C48D4B700817F64 /* 10_Points.png */,
+				2764B10C1C48D4BF00817F64 /* 20_Points.png */,
+				2764B10D1C48D4BF00817F64 /* 30_Points.png */,
+				2764B10E1C48D4BF00817F64 /* 40_Points.png */,
+				2764B10F1C48D4BF00817F64 /* 50_Points.png */,
+				2764B1101C48D4BF00817F64 /* 60_Points.png */,
+				2764B1111C48D4BF00817F64 /* 70_Points.png */,
+				2764B1121C48D4BF00817F64 /* 80_Points.png */,
+				2764B1131C48D4BF00817F64 /* 90_Points.png */,
+				2764B1141C48D4BF00817F64 /* 100_Points.png */,
+				2764B1151C48D4BF00817F64 /* 110_Points.png */,
+				2764B1161C48D4BF00817F64 /* 120_Points.png */,
+				2764B1171C48D4BF00817F64 /* 130_Points.png */,
+				2764B1181C48D4BF00817F64 /* 140_Points.png */,
+				2764B1191C48D4BF00817F64 /* 150_Points.png */,
+			);
+			path = ScoreTiles;
+			sourceTree = "<group>";
+		};
 		277B231B1C1749300036176E /* MenuScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -486,6 +538,7 @@
 				273C60611C15F291004552DD /* Start.png */,
 				273C605D1C15F241004552DD /* Start-Hintergrund.png */,
 				273C605E1C15F241004552DD /* Start-Tonne.png */,
+				2764B0CD1C48D46100817F64 /* ScoreTiles */,
 				B48112071B9DEDB800E2A4F3 /* TileSets */,
 			);
 			name = Images;
@@ -608,10 +661,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				2728C0421C402CDC005E8892 /* ScoreBar_Sample.png in Resources */,
+				2764B11F1C48D4BF00817F64 /* 70_Points.png in Resources */,
 				272D28C21C3F9B600011B2A7 /* Home_up.png in Resources */,
 				274B7FE71C07745C00E33096 /* 03_22.png in Resources */,
 				274B7FE11C07745C00E33096 /* 02_16.png in Resources */,
+				2764B1251C48D4BF00817F64 /* 130_Points.png in Resources */,
+				2764B11E1C48D4BF00817F64 /* 60_Points.png in Resources */,
 				277B23301C1749300036176E /* Home-Schriftgröße.png in Resources */,
+				2764B1241C48D4BF00817F64 /* 120_Points.png in Resources */,
 				27F953731C48122900A6E4F6 /* ADBMobileConfig.json in Resources */,
 				2728C0371C402CC9005E8892 /* HomeIcon_up.png in Resources */,
 				272D28CA1C3F9B600011B2A7 /* PointsBar-Medium_Sample.png in Resources */,
@@ -620,11 +677,13 @@
 				273C60621C15F291004552DD /* Start.png in Resources */,
 				2728C0351C402CC9005E8892 /* HomeIcon_down.png in Resources */,
 				272D28C11C3F9B600011B2A7 /* Home_down.png in Resources */,
+				2764B11D1C48D4BF00817F64 /* 50_Points.png in Resources */,
 				274B7FEF1C07745C00E33096 /* 03_30.png in Resources */,
 				274B7FD51C07745C00E33096 /* 01_04.png in Resources */,
 				272D28C91C3F9B600011B2A7 /* PointsBar-Expert_Sample.png in Resources */,
 				274B7FE61C07745C00E33096 /* 03_21.png in Resources */,
 				272D28CC1C3F9B600011B2A7 /* TimeBar_Sample.png in Resources */,
+				2764B1211C48D4BF00817F64 /* 90_Points.png in Resources */,
 				274B7FDF1C07745C00E33096 /* 02_14.png in Resources */,
 				277B232A1C1749300036176E /* Expert_down.png in Resources */,
 				274B7FEB1C07745C00E33096 /* 03_26.png in Resources */,
@@ -632,10 +691,12 @@
 				274B7FED1C07745C00E33096 /* 03_28.png in Resources */,
 				27DAC6FB1BF1C8710063DC28 /* Notes.rtf in Resources */,
 				272D28CD1C3F9B600011B2A7 /* TurnsBar_Sample.png in Resources */,
+				2764B1261C48D4BF00817F64 /* 140_Points.png in Resources */,
 				2728C03F1C402CC9005E8892 /* TurnsBar.png in Resources */,
 				277B23311C1749300036176E /* Home_Frame.png in Resources */,
 				272D28C71C3F9B600011B2A7 /* Scoreframe.png in Resources */,
 				274B7FEA1C07745C00E33096 /* 03_25.png in Resources */,
+				2764B1201C48D4BF00817F64 /* 80_Points.png in Resources */,
 				274B7FD41C07745C00E33096 /* 01_03.png in Resources */,
 				274B7FD81C07745C00E33096 /* 01_07.png in Resources */,
 				271BE0CA1C0CBC6400C8757E /* aufdecken.aif in Resources */,
@@ -646,20 +707,27 @@
 				2728C03B1C402CC9005E8892 /* ScoreBar.png in Resources */,
 				274B7FD91C07745C00E33096 /* 01_08.png in Resources */,
 				272D28C01C3F9B600011B2A7 /* Scoreframe-sample.png in Resources */,
+				2764B11C1C48D4BF00817F64 /* 40_Points.png in Resources */,
 				B441FA711B974E0D00B55627 /* Main.storyboard in Resources */,
 				277B23281C1749300036176E /* Easy_down.png in Resources */,
 				274B7FEC1C07745C00E33096 /* 03_27.png in Resources */,
 				274B7FE21C07745C00E33096 /* 02_17.png in Resources */,
 				B441FA761B974E0D00B55627 /* LaunchScreen.xib in Resources */,
 				277B232F1C1749300036176E /* Medium_up.png in Resources */,
+				2764B1231C48D4BF00817F64 /* 110_Points.png in Resources */,
+				2764B11B1C48D4BF00817F64 /* 30_Points.png in Resources */,
 				277B232C1C1749300036176E /* GameCenter_down.png in Resources */,
 				271BE0CC1C0CBC6400C8757E /* Rollen02.wav in Resources */,
+				2764B11A1C48D4BF00817F64 /* 20_Points.png in Resources */,
 				277B232B1C1749300036176E /* Expert_up.png in Resources */,
 				2728C0391C402CC9005E8892 /* PointsBar.png in Resources */,
+				2764B1271C48D4BF00817F64 /* 150_Points.png in Resources */,
 				273C60601C15F241004552DD /* Start-Tonne.png in Resources */,
 				277B232D1C1749300036176E /* GameCenter_up.png in Resources */,
 				272D28C51C3F9B600011B2A7 /* NewGame_down.png in Resources */,
+				2764B1221C48D4BF00817F64 /* 100_Points.png in Resources */,
 				274B7FD61C07745C00E33096 /* 01_05.png in Resources */,
+				2764B10B1C48D4B700817F64 /* 10_Points.png in Resources */,
 				271BE0CD1C0CBC6400C8757E /* zudecken.aif in Resources */,
 				274B7FE31C07745C00E33096 /* 02_18.png in Resources */,
 				2728C03D1C402CC9005E8892 /* TimeBar.png in Resources */,

@@ -17,7 +17,7 @@ let kTileConfig:[(row:Int, col:Int, tile:Float, corner:Float, height:Float)] =
     (row:6, col:10, tile:100 * kConfigScale, corner:6, height:660 * kConfigScale),
 ]
 let kUpdateInterval:NSTimeInterval = 0.1
-let kBaseScore:Int = 5
+let kBaseScore:Int = 10
 let kTurnBonusRatio:Float = 3 // bonus for turns can be x-times the absolute value of the min bonus. ie if minBonus = -100, max bonus is +100 * kTurnBonusRatio
 let kTimeBonusRatio:Float = 3
 
@@ -76,16 +76,14 @@ class Game {
     }
     
     //MARK: scoring
-    func event(mvoeType:JFMoveType) {
+    func event(mvoeType:JFMoveType, info:Any? = nil) {
         switch(mvoeType) {
         case .InitGame:
             self.bonusLevel = 1
             self.score = 0
             self.turn = 0
             self.foundPairs = 0
-            if let sbv = self.scoreBoard {
-                sbv.updateScoreBoard([JFScoreboardField.TurnRef : self.parTurns, JFScoreboardField.TimeRef : self.parTime, JFScoreboardField.Time : 0])
-            }
+            self.updateScoreBoard()
             
             break
         case .StartGame:
@@ -95,23 +93,33 @@ class Game {
             self.turn = 0
             self.foundPairs = 0
             self.startUpdateTimer()
+            self.updateScoreBoard()
 
             break
         case .FinishGame:
             self.time = Int(-self.startDate.timeIntervalSinceNow)
             self.cancelBonusTimer()
+            self.updateScoreBoard()
             break
         case .flipTile:
             self.turn++
+            self.updateScoreBoardTurns()
             break
             
         case .flipBackTile:
             self.turn++
             self.event(.BonusInvalid)
+            self.updateScoreBoardTurns()
             
         case .findPair:
             self.score += self.scoreOnBonus()
             
+            if let pairingTiles = info as? [JFTileNode] {
+                pairingTiles[0].scoredWithTile = self.scoreOnBonus()
+                pairingTiles[1].scoredWithTile = self.scoreOnBonus()
+            }
+            
+            self.updateScoreBoardTurns()
             if let sbv = self.scoreBoard {
                 sbv.updateScoreBoard([JFScoreboardField.ScoreProgress:JFProgressBlockState(index: self.foundPairs, bonus: (self.bonusLevel > 1))])
             }
@@ -133,9 +141,7 @@ class Game {
         case .BonusInvalid:
             self.bonusLevel = 1
             self.updateScoreBoard()
-            //self.cancelBonusTimer()
         }
-        self.updateScoreBoard()
         
         // will be 2/3 at parTime
         // < 2/3 linear, > 2/3 curved
@@ -266,6 +272,12 @@ class Game {
     func updateScoreBoard() {
         if let sbv = self.scoreBoard {
             sbv.updateScoreBoard([.Score:self.score, .Turn:self.turn, .ScoreRef:self.bonusLevel])
+        }
+    }
+    
+    func updateScoreBoardTurns() {
+        if let sbv = self.scoreBoard {
+            sbv.updateScoreBoard([.Turn:self.turn])
         }
     }
     

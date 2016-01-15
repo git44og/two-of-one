@@ -502,7 +502,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 
                 return {
                     execOnMain({ () -> () in
-                        self.game.event(.findPair)
+                        self.game.event(.findPair, info:[tile1, tile2])
                     })
                 }
             } else {
@@ -529,10 +529,12 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     @objc func tilesStartFalling(timer:NSTimer) {
         //print("func tilesStartFalling")
+        self.game.updateScoreBoard()
         if let tiles = timer.userInfo as? [AnyObject] {
             if(tiles.count == 2) {
                 for i in 0...1 {
                     if let tile = tiles[i] as? JFTileNode {
+                        tile.showScoreTile()
                         tile.tileFalls()
                     }
                 }
@@ -542,6 +544,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     @objc func tilesTurnBack(timer:NSTimer) {
         //print("func tilesTurnBack")
+        self.game.updateScoreBoard()
         if let tiles = timer.userInfo as? [AnyObject] {
             if(tiles.count == 2) {
                 for i in 0...1 {
