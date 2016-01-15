@@ -34,8 +34,14 @@ class JFProgressView: UIView {
                 progress = 0
             }
             
-            self.progressBar[0]!.progress = max(self.parProgress - progress, 0) / self.parProgress
-            self.progressBar[1]!.progress = max(progress - self.parProgress, 0) / (1 - self.parProgress)
+            UIView.animateWithDuration(0.3,
+                delay: 0,
+                options: UIViewAnimationOptions.CurveLinear,
+                animations: { () -> Void in
+                    self.progressBar[0]!.progress = max(self.parProgress - self.progress, 0) / self.parProgress
+                    self.progressBar[1]!.progress = max(self.progress - self.parProgress, 0) / (1 - self.parProgress)
+                },
+                completion:nil)
         }
     }
     var progressBar:[Int:JFProgressViewBar] = [:]
