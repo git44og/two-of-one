@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         application.statusBarHidden = true
         ADBMobile.collectLifecycleData()
+        JFImageLoader.sharedInstance
         
         return true
     }

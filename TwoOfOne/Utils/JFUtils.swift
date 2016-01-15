@@ -211,3 +211,21 @@ func admParamHelper(score score:Int? = nil, level:Int? = nil) -> [String: String
     
     return returnDict
 }
+
+// class to preload images
+class JFImageLoader : NSObject {
+    
+    static let sharedInstance = JFImageLoader()
+    var images:[String:UIImage] = [:]
+    
+    override init() {
+        super.init()
+        
+        // load score images
+        for i in 1 ... 15 {
+            let imageId = i * 10
+            let imageName = "\(imageId)_points"
+            self.images[imageName] = UIImage(named: imageName)
+        }
+    }
+}
