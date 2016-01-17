@@ -630,11 +630,8 @@ class JFTileNode: SCNNode {
     }
     
     func showScoreTile() {
-        
-        
-        
         var tileImage:UIImage
-        if let tmp = JFImageLoader.sharedInstance.images["\(self.scoredWithTile)_points"] {
+        if let tmp = JFImageLoader.sharedInstance.images["\(self.scoredWithTile)_Points"] {
             tileImage = tmp
         } else {
             tileImage = UIImage()
