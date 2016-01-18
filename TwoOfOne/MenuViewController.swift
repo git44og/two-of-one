@@ -49,11 +49,13 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         backImage.contentMode = UIViewContentMode.ScaleAspectFill
         self.backgroundBackView = backImage
         self.backView.addSubview(self.backgroundBackView)
-        
+        self.backgroundBackView.frame = self.backView.frame
+
         let frontImage = UIImageView(image: UIImage(named: "Start-Tonne.png"))
         frontImage.contentMode = UIViewContentMode.ScaleAspectFill
         self.backgroundFrontView = frontImage
         self.frontView.addSubview(self.backgroundFrontView)
+        self.backgroundFrontView.frame = self.frontView.frame
         
         super.viewDidLoad()
         
