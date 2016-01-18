@@ -630,6 +630,12 @@ class JFTileNode: SCNNode {
     }
     
     func showScoreTile() {
+//        --- problem if tiles hasn't turned fully
+        if(false) {
+        if(self.scoredWithTile == 0) {
+            print("")
+        }
+        }
         var tileImage:UIImage
         if let tmp = JFImageLoader.sharedInstance.images["\(self.scoredWithTile)_Points"] {
             tileImage = tmp
