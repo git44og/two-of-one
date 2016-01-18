@@ -618,10 +618,15 @@ class JFTileNode: SCNNode {
         let movePush = SCNAction.moveBy(SCNVector3Make(0, 0, self.cylinderNode.shapeRadius / -1.5), duration: 1.0)
         movePush.timingMode = SCNActionTimingMode.Linear
         
-        let rotationVector = SCNVector3Make(-1, 0, 0)
+        var orientationFixiOS8:Float = -1
+        if #available(iOS 9,*) {
+            orientationFixiOS8 = 1
+        }
+
+        let rotationVector = SCNVector3Make(orientationFixiOS8, 0, 0)
         //print("from x:\(self.rotation.x) y:\(self.rotation.y) z:\(self.rotation.z) z:\(self.rotation.w)")
         //print("to   x:\(rotationVector.x) y:\(rotationVector.y) z:\(rotationVector.z)")
-        let rotatePush = SCNAction.rotateByAngle(CGFloat(M_PI) * 1, aroundAxis: SCNVector3Make(rotationVector.x, 0, rotationVector.z), duration: 1.0)
+        let rotatePush = SCNAction.rotateByAngle(CGFloat(-M_PI), aroundAxis: SCNVector3Make(rotationVector.x, 0, rotationVector.z), duration: 1.0)
         rotatePush.timingMode = SCNActionTimingMode.EaseIn
         self.runAction(SCNAction.group([moveFall, movePush, rotatePush])) { () -> Void in
             self.opacity = 0
