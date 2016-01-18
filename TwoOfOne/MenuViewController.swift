@@ -49,13 +49,11 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         backImage.contentMode = UIViewContentMode.ScaleAspectFill
         self.backgroundBackView = backImage
         self.backView.addSubview(self.backgroundBackView)
-        self.backgroundBackView.frame = self.backView.frame
 
         let frontImage = UIImageView(image: UIImage(named: "Start-Tonne.png"))
         frontImage.contentMode = UIViewContentMode.ScaleAspectFill
         self.backgroundFrontView = frontImage
         self.frontView.addSubview(self.backgroundFrontView)
-        self.backgroundFrontView.frame = self.frontView.frame
         
         super.viewDidLoad()
         
@@ -68,6 +66,11 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         self.enableBackOfTile.on = NSUserDefaults.standardUserDefaults().boolForKey(kOptionsEnableBackOfTile)
         self.debugPairsSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey(kOptionsEnableDebug)
         
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        // adjustments below need to happen before viewDidAPpear is called
         switch(self.menuAnimation) {
         case .None:
             self.applyMenuState(.Ready)
@@ -79,6 +82,13 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
             self.applyMenuState(.Playing)
             break
         }
+        
+        self.backgroundBackView.frame = self.backView.frame
+        self.backgroundFrontView.frame = self.frontView.frame
+        
+        self.animationRefCenter = self.backgroundFrontView.center
+        self.animationRefFrame = self.backgroundBackView.frame
+
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -86,12 +96,6 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         
         admTrackState(ADMTrackingState.menuHome)
         
-        self.backgroundBackView.frame = self.backView.frame
-        self.backgroundFrontView.frame = self.frontView.frame
-
-        self.animationRefCenter = self.backgroundFrontView.center
-        self.animationRefFrame = self.backgroundBackView.frame
-
         switch(self.menuAnimation) {
         case .None:
             self.applyMenuState(.Ready)
