@@ -581,8 +581,13 @@ class JFTileNode: SCNNode {
         self.tileNodes[JFTileNodeFaceType.open]?.removeAllActions()
         self.tileNodes[JFTileNodeFaceType.closed]?.removeAllActions()
         
+        var orientationFixiOS8:Float = -1
+        if #available(iOS 9,*) {
+            orientationFixiOS8 = 1
+        }
+
         // run aminations
-        let rotationAction = SCNAction.rotateByAngle(rotationAngle, aroundAxis: SCNVector3(x: 0, y: 1, z: 0), duration: rotationDuration)
+        let rotationAction = SCNAction.rotateByAngle(rotationAngle, aroundAxis: SCNVector3(x: 0, y: orientationFixiOS8, z: 0), duration: rotationDuration)
         // action below might rotate around angle other than y
         //let rotationAction = SCNAction.rotateToX(0, y: CGFloat(rotationTargetAngle), z: 0, duration: rotationDuration, shortestUnitArc:true)
         // action below doesn't rotate back properly
