@@ -642,7 +642,7 @@ class JFTileNode: SCNNode {
         tileBaseShape.firstMaterial?.diffuse.contents = UIColor.clearColor()
         let scoreTile = SCNNode(geometry: tileBaseShape)
         self.colNode.addChildNode(scoreTile)
-        scoreTile.transform = self.transform
+        scoreTile.position = self.position
         scoreTile.opacity = 0
         
         var materialFaces:[SCNMaterial] = [SCNMaterial(), SCNMaterial(), SCNMaterial()]

@@ -39,8 +39,8 @@ let kMaxOutPitch:Double = Double(M_PI / 4)
 let kMinRotationRate:Double = 0.02
 
 // tile rotation
-let kDelayTurnBack: NSTimeInterval = 1.0 //1.0
-let kDurationTileTurn: NSTimeInterval = 0.3 //0.3
+let kDelayTurnBack: NSTimeInterval = 3.0 //1.0
+let kDurationTileTurn: NSTimeInterval = 1.3 //0.3
 
 enum JFGameMode:Int {
     case Menu = 0
