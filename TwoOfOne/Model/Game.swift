@@ -56,7 +56,12 @@ class Game {
     var bonusTimer:NSTimer = NSTimer()
     var bonusUpdateTimer:NSTimer = NSTimer()
     var foundPairs:Int = 0
-    var level:JFGameLevel = .Beginner
+    var level:JFGameLevel = .Beginner {
+        didSet {
+            self.parTime = NSTimeInterval(self.cylinderCols() * self.cylinderRows() * 4)
+            self.parTurns = self.cylinderCols() * self.cylinderRows() * 2
+        }
+    }
     var physics:Bool = true
     var enableBackOfTiles:Bool = false
     var scoreBoard:ScoreBoardView? {

@@ -133,8 +133,12 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("gameScreen") as! ViewController
         vc.game.level = level
-        vc.game.parTurns = self.debugParTurns
-        vc.game.parTime = NSTimeInterval(self.debugParTime)
+        if(true) {
+            print("")
+        } else {
+            vc.game.parTurns = self.debugParTurns
+            vc.game.parTime = NSTimeInterval(self.debugParTime)
+        }
         vc.game.enableBackOfTiles = self.enableBackOfTile.on
         vc.game.debugPairs = self.debugPairsSwitch.on
         
