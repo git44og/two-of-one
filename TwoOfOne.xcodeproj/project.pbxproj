@@ -35,6 +35,14 @@
 		273C605F1C15F241004552DD /* Start-Hintergrund.png in Resources */ = {isa = PBXBuildFile; fileRef = 273C605D1C15F241004552DD /* Start-Hintergrund.png */; };
 		273C60601C15F241004552DD /* Start-Tonne.png in Resources */ = {isa = PBXBuildFile; fileRef = 273C605E1C15F241004552DD /* Start-Tonne.png */; };
 		273C60621C15F291004552DD /* Start.png in Resources */ = {isa = PBXBuildFile; fileRef = 273C60611C15F291004552DD /* Start.png */; };
+		2744255C1C50084E00ED6BEB /* 5_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 274425541C50084E00ED6BEB /* 5_Points.png */; };
+		2744255D1C50084E00ED6BEB /* 15_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 274425551C50084E00ED6BEB /* 15_Points.png */; };
+		2744255E1C50084E00ED6BEB /* 25_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 274425561C50084E00ED6BEB /* 25_Points.png */; };
+		2744255F1C50084E00ED6BEB /* 35_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 274425571C50084E00ED6BEB /* 35_Points.png */; };
+		274425601C50084E00ED6BEB /* 45_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 274425581C50084E00ED6BEB /* 45_Points.png */; };
+		274425611C50084E00ED6BEB /* 55_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 274425591C50084E00ED6BEB /* 55_Points.png */; };
+		274425621C50084E00ED6BEB /* 65_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2744255A1C50084E00ED6BEB /* 65_Points.png */; };
+		274425631C50084E00ED6BEB /* 75_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 2744255B1C50084E00ED6BEB /* 75_Points.png */; };
 		274B7FD21C07745C00E33096 /* 01_01.png in Resources */ = {isa = PBXBuildFile; fileRef = 274B7FB41C07745B00E33096 /* 01_01.png */; };
 		274B7FD31C07745C00E33096 /* 01_02.png in Resources */ = {isa = PBXBuildFile; fileRef = 274B7FB51C07745B00E33096 /* 01_02.png */; };
 		274B7FD41C07745C00E33096 /* 01_03.png in Resources */ = {isa = PBXBuildFile; fileRef = 274B7FB61C07745C00E33096 /* 01_03.png */; };
@@ -155,6 +163,14 @@
 		273C605D1C15F241004552DD /* Start-Hintergrund.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Start-Hintergrund.png"; path = "Images/Start-Hintergrund.png"; sourceTree = "<group>"; };
 		273C605E1C15F241004552DD /* Start-Tonne.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Start-Tonne.png"; path = "Images/Start-Tonne.png"; sourceTree = "<group>"; };
 		273C60611C15F291004552DD /* Start.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Start.png; path = Images/Start.png; sourceTree = "<group>"; };
+		274425541C50084E00ED6BEB /* 5_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 5_Points.png; path = TwoOfOne/Images/ScoreTiles/5_Points.png; sourceTree = SOURCE_ROOT; };
+		274425551C50084E00ED6BEB /* 15_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 15_Points.png; path = TwoOfOne/Images/ScoreTiles/15_Points.png; sourceTree = SOURCE_ROOT; };
+		274425561C50084E00ED6BEB /* 25_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 25_Points.png; path = TwoOfOne/Images/ScoreTiles/25_Points.png; sourceTree = SOURCE_ROOT; };
+		274425571C50084E00ED6BEB /* 35_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 35_Points.png; path = TwoOfOne/Images/ScoreTiles/35_Points.png; sourceTree = SOURCE_ROOT; };
+		274425581C50084E00ED6BEB /* 45_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 45_Points.png; path = TwoOfOne/Images/ScoreTiles/45_Points.png; sourceTree = SOURCE_ROOT; };
+		274425591C50084E00ED6BEB /* 55_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 55_Points.png; path = TwoOfOne/Images/ScoreTiles/55_Points.png; sourceTree = SOURCE_ROOT; };
+		2744255A1C50084E00ED6BEB /* 65_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 65_Points.png; path = TwoOfOne/Images/ScoreTiles/65_Points.png; sourceTree = SOURCE_ROOT; };
+		2744255B1C50084E00ED6BEB /* 75_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 75_Points.png; path = TwoOfOne/Images/ScoreTiles/75_Points.png; sourceTree = SOURCE_ROOT; };
 		274B7FB41C07745B00E33096 /* 01_01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 01_01.png; sourceTree = "<group>"; };
 		274B7FB51C07745B00E33096 /* 01_02.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 01_02.png; sourceTree = "<group>"; };
 		274B7FB61C07745C00E33096 /* 01_03.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 01_03.png; sourceTree = "<group>"; };
@@ -368,6 +384,14 @@
 		2764B0CD1C48D46100817F64 /* ScoreTiles */ = {
 			isa = PBXGroup;
 			children = (
+				274425541C50084E00ED6BEB /* 5_Points.png */,
+				274425551C50084E00ED6BEB /* 15_Points.png */,
+				274425561C50084E00ED6BEB /* 25_Points.png */,
+				274425571C50084E00ED6BEB /* 35_Points.png */,
+				274425581C50084E00ED6BEB /* 45_Points.png */,
+				274425591C50084E00ED6BEB /* 55_Points.png */,
+				2744255A1C50084E00ED6BEB /* 65_Points.png */,
+				2744255B1C50084E00ED6BEB /* 75_Points.png */,
 				2764B10A1C48D4B700817F64 /* 10_Points.png */,
 				2764B10C1C48D4BF00817F64 /* 20_Points.png */,
 				2764B10D1C48D4BF00817F64 /* 30_Points.png */,
@@ -664,6 +688,7 @@
 				2764B11F1C48D4BF00817F64 /* 70_Points.png in Resources */,
 				272D28C21C3F9B600011B2A7 /* Home_up.png in Resources */,
 				274B7FE71C07745C00E33096 /* 03_22.png in Resources */,
+				2744255F1C50084E00ED6BEB /* 35_Points.png in Resources */,
 				274B7FE11C07745C00E33096 /* 02_16.png in Resources */,
 				2764B1251C48D4BF00817F64 /* 130_Points.png in Resources */,
 				2764B11E1C48D4BF00817F64 /* 60_Points.png in Resources */,
@@ -685,6 +710,7 @@
 				272D28CC1C3F9B600011B2A7 /* TimeBar_Sample.png in Resources */,
 				2764B1211C48D4BF00817F64 /* 90_Points.png in Resources */,
 				274B7FDF1C07745C00E33096 /* 02_14.png in Resources */,
+				274425611C50084E00ED6BEB /* 55_Points.png in Resources */,
 				277B232A1C1749300036176E /* Expert_down.png in Resources */,
 				274B7FEB1C07745C00E33096 /* 03_26.png in Resources */,
 				274B7FD31C07745C00E33096 /* 01_02.png in Resources */,
@@ -694,6 +720,7 @@
 				2764B1261C48D4BF00817F64 /* 140_Points.png in Resources */,
 				2728C03F1C402CC9005E8892 /* TurnsBar.png in Resources */,
 				277B23311C1749300036176E /* Home_Frame.png in Resources */,
+				274425631C50084E00ED6BEB /* 75_Points.png in Resources */,
 				272D28C71C3F9B600011B2A7 /* Scoreframe.png in Resources */,
 				274B7FEA1C07745C00E33096 /* 03_25.png in Resources */,
 				2764B1201C48D4BF00817F64 /* 80_Points.png in Resources */,
@@ -703,6 +730,7 @@
 				274B7FE41C07745C00E33096 /* 02_19.png in Resources */,
 				272D28C81C3F9B600011B2A7 /* PointsBar-Easy_Sample.png in Resources */,
 				271BE0CB1C0CBC6400C8757E /* Rollen.wav in Resources */,
+				2744255E1C50084E00ED6BEB /* 25_Points.png in Resources */,
 				274B7FD71C07745C00E33096 /* 01_06.png in Resources */,
 				2728C03B1C402CC9005E8892 /* ScoreBar.png in Resources */,
 				274B7FD91C07745C00E33096 /* 01_08.png in Resources */,
@@ -718,6 +746,7 @@
 				2764B11B1C48D4BF00817F64 /* 30_Points.png in Resources */,
 				277B232C1C1749300036176E /* GameCenter_down.png in Resources */,
 				271BE0CC1C0CBC6400C8757E /* Rollen02.wav in Resources */,
+				2744255D1C50084E00ED6BEB /* 15_Points.png in Resources */,
 				2764B11A1C48D4BF00817F64 /* 20_Points.png in Resources */,
 				277B232B1C1749300036176E /* Expert_up.png in Resources */,
 				2728C0391C402CC9005E8892 /* PointsBar.png in Resources */,
@@ -740,12 +769,15 @@
 				274B7FDE1C07745C00E33096 /* 02_13.png in Resources */,
 				274B7FEE1C07745C00E33096 /* 03_29.png in Resources */,
 				B441FA731B974E0D00B55627 /* Images.xcassets in Resources */,
+				2744255C1C50084E00ED6BEB /* 5_Points.png in Resources */,
+				274425601C50084E00ED6BEB /* 45_Points.png in Resources */,
 				272D28C61C3F9B600011B2A7 /* NewGame_up.png in Resources */,
 				274B7FE81C07745C00E33096 /* 03_23.png in Resources */,
 				274B7FE01C07745C00E33096 /* 02_15.png in Resources */,
 				274B7FD21C07745C00E33096 /* 01_01.png in Resources */,
 				274B7FDC1C07745C00E33096 /* 01_11.png in Resources */,
 				274B7FE51C07745C00E33096 /* 02_20.png in Resources */,
+				274425621C50084E00ED6BEB /* 65_Points.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

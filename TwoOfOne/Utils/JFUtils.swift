@@ -222,8 +222,8 @@ class JFImageLoader : NSObject {
         super.init()
         
         // load score images
-        for i in 1 ... 15 {
-            let imageId = i * 10
+        for i in 1 ... 16 {
+            let imageId = i * 5
             let imageName = "\(imageId)_Points"
             self.images[imageName] = UIImage(named: imageName)
         }
