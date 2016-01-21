@@ -167,25 +167,41 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     }
 
     func applyMenuState(state:JFMenuState) {
+        self.applyMenuStateFront(state)
+        self.applyMenuStateBackground(state)
+    }
+    
+    func applyMenuStateFront(state:JFMenuState) {
         switch(state) {
         case .PreLaunch:
             self.buttonLayerView.alpha = 0
+            break
+        case .Ready:
+            self.buttonLayerView.alpha = 1
+            break
+        case .Playing:
+            self.buttonLayerView.alpha = 0
+            break
+        }
+    }
+    
+    func applyMenuStateBackground(state:JFMenuState) {
+        switch(state) {
+        case .PreLaunch:
             self.backgroundFrontView.alpha = 1
             self.backgroundBackView.alpha = 1
             self.backgroundFrontView.center = animationRefCenter
             self.backgroundBackView.frame = animationRefFrame
             break
         case .Ready:
-            self.buttonLayerView.alpha = 1
             self.backgroundFrontView.alpha = 1
             self.backgroundBackView.alpha = 1
-            self.backgroundFrontView.center = CGPoint(x: animationRefCenter.x * 2, y: animationRefCenter.y)
+            self.backgroundFrontView.center = CGPoint(x: animationRefCenter.x * 2.08, y: animationRefCenter.y)
             self.backgroundBackView.frame = CGRect(
                 origin: animationRefFrame.origin,
                 size: CGSize(width: animationRefFrame.size.width * 1.2, height: animationRefFrame.size.height * 1.2))
             break
         case .Playing:
-            self.buttonLayerView.alpha = 0
             self.backgroundFrontView.alpha = 0
             self.backgroundBackView.alpha = 0
             self.backgroundFrontView.center = CGPoint(x: animationRefCenter.x * 10, y: animationRefCenter.y)
@@ -223,12 +239,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
                 delay: 0,
                 options: option,
                 animations: { () -> Void in
-                    self.backgroundFrontView.alpha = 0
-                    self.backgroundBackView.alpha = 0
-                    self.backgroundFrontView.center = CGPoint(x: self.animationRefCenter.x * 10, y: self.animationRefCenter.y)
-                    self.backgroundBackView.frame = CGRect(
-                        origin: self.animationRefFrame.origin,
-                        size: CGSize(width: self.animationRefFrame.size.width * 6, height: self.animationRefFrame.size.height * 6))
+                    self.applyMenuStateBackground(endState)
                 }) { (Bool) -> Void in
                     execDelay(0, closure: { () -> () in
                         if let myCompletion = completion {
@@ -249,12 +260,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
                 delay: 0,
                 options: option,
                 animations: { () -> Void in
-                    self.backgroundFrontView.alpha = 1
-                    self.backgroundBackView.alpha = 1
-                    self.backgroundFrontView.center = CGPoint(x: self.animationRefCenter.x * 2, y: self.animationRefCenter.y)
-                    self.backgroundBackView.frame = CGRect(
-                        origin: self.animationRefFrame.origin,
-                        size: CGSize(width: self.animationRefFrame.size.width * 1.2, height: self.animationRefFrame.size.height * 1.2))
+                    self.applyMenuStateBackground(endState)
                 }) { (Bool) -> Void in
                     execDelay(0, closure: { () -> () in
                         if let myCompletion = completion {
