@@ -143,8 +143,9 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
                 vc.game.parTime = NSTimeInterval(self.debugParTime)
             }
         }
-        vc.game.enableBackOfTiles = self.enableBackOfTile.on
-        vc.game.debugPairs = self.debugPairsSwitch.on
+        
+        vc.game.enableBackOfTiles = NSUserDefaults.standardUserDefaults().boolForKey(kOptionsEnableBackOfTile)
+        vc.game.debugPairs = NSUserDefaults.standardUserDefaults().boolForKey(kOptionsEnableDebug)
         
         self.animation(.Ready, endState: .Playing) { () -> Void in
             self.presentViewController(vc, animated: false, completion: nil)

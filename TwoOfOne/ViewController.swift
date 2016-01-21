@@ -688,7 +688,8 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         self.animation(false) { () -> Void in
             let vc = self.storyboard?.instantiateViewControllerWithIdentifier("gameScreen") as! ViewController
             vc.game.level = self.game.level
-            vc.game.debugPairs = self.game.debugPairs
+            vc.game.enableBackOfTiles = NSUserDefaults.standardUserDefaults().boolForKey(kOptionsEnableBackOfTile)
+            vc.game.debugPairs = NSUserDefaults.standardUserDefaults().boolForKey(kOptionsEnableDebug)
             self.presentViewController(vc, animated: false, completion: nil)
         }
     }
