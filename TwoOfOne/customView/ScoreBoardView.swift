@@ -38,7 +38,15 @@ class ScoreBoardView {
         self.game = game
         for scoreViewType in scoreViews.keys {
             switch(scoreViewType) {
-            case .Score, .ScoreRef, .Turn, .TurnRef, .Time, .TimeRef:
+            case .Score, .ScoreRef, .Turn, .TurnRef, .TimeRef:
+                if let label = scoreViews[scoreViewType] as? UILabel {
+                    self.labels[scoreViewType] = label
+                    label.text = ""
+                } else {
+                    print("error type mismatch")
+                }
+                break
+            case .Time:
                 if let label = scoreViews[scoreViewType] as? UILabel {
                     self.labels[scoreViewType] = label
                     label.text = ""

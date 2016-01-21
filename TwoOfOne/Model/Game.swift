@@ -89,7 +89,7 @@ class Game {
             self.turn = 0
             self.foundPairs = 0
             self.updateScoreBoard()
-            
+            self.updateScoreBoardTime(0)
             break
         case .StartGame:
             self.startDate = NSDate()
@@ -258,6 +258,24 @@ class Game {
     */
     @objc func updateTimerFire(timer:NSTimer) {
         let timeSince = -self.startDate.timeIntervalSinceNow
+        self.updateScoreBoardTime(timeSince);
+    }
+    
+    //MARK: handling scores
+    func updateScoreBoard() {
+        if let sbv = self.scoreBoard {
+            sbv.updateScoreBoard([.Score:self.score, .Turn:self.turn, .ScoreRef:self.bonusLevel])
+        }
+    }
+    
+    func updateScoreBoardTurns() {
+        if let sbv = self.scoreBoard {
+            sbv.updateScoreBoard([.Turn:self.turn])
+        }
+    }
+    
+    // update time label
+    func updateScoreBoardTime(timeSince: NSTimeInterval) {
         // will be 2/3 at parTime
         // < 2/3 linear, > 2/3 curved
         var timeProgress:Float = 1
@@ -273,19 +291,6 @@ class Game {
             sbv.updateScoreBoard([
                 JFScoreboardField.Time:Int(timeSince),
                 JFScoreboardField.TimeProgress:timeProgress])
-        }
-    }
-    
-    //MARK: handling scores
-    func updateScoreBoard() {
-        if let sbv = self.scoreBoard {
-            sbv.updateScoreBoard([.Score:self.score, .Turn:self.turn, .ScoreRef:self.bonusLevel])
-        }
-    }
-    
-    func updateScoreBoardTurns() {
-        if let sbv = self.scoreBoard {
-            sbv.updateScoreBoard([.Turn:self.turn])
         }
     }
     

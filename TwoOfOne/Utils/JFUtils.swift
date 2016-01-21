@@ -108,10 +108,10 @@ func formatTime(value:Int) -> String {
     var secondStr = ""
     if(hour > 0) {
         hourStr = (hour > 0) ? "\(hour):" : ""
-        minuteStr = (minute > 9) ? "\(minute):" : ((minute > 0) ? "0\(minute):" : "00:")
-        secondStr = (second > 9) ? "\(second)" : ((second > 0) ? "0\(second)" : "00")
+        minuteStr = (minute > 9) ? "\(minute)" : ((minute > 0) ? "0\(minute)" : "00")
+        secondStr = ""
     } else {
-        minuteStr = (minute > 0) ? "\(minute):" : "0:"
+        minuteStr = (minute > 9) ? "\(minute):" : ((minute > 0) ? "0\(minute):" : "00:")
         secondStr = (second > 9) ? "\(second)" : ((second > 0) ? "0\(second)" : "00")
     }
     return "\(hourStr)\(minuteStr)\(secondStr)"
