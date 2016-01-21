@@ -679,25 +679,12 @@ class JFTileNode: SCNNode {
 //            ]))
     }
     
-    func tmpSetId(tileId:Int) -> String {
-        switch(tileId) {
-        case 1..<13:
-            return "01"
-        case 13..<21:
-            return "02"
-        case 21..<31:
-            return "03"
-        default:
-            return "00"
-        }
-    }
-    
     func openTileImage() -> UIImage {
         if(self.typeId > 30) {
             print("tile number out of bounds: \(self.typeId)")
         }
         let tileId = (self.typeId % 30 + 1)
-        let setId = self.tmpSetId(tileId)
+        let setId = "01"
         let tileIdStr = (tileId < 10) ? "0\(tileId)" : String(tileId)
         return UIImage(named: "\(setId)_\(tileIdStr)")!
     }
