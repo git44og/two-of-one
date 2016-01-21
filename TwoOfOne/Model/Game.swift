@@ -58,8 +58,8 @@ class Game {
     var foundPairs:Int = 0
     var level:JFGameLevel = .Beginner {
         didSet {
-            self.parTime = NSTimeInterval(self.cylinderCols() * self.cylinderRows() * 4)
-            self.parTurns = self.cylinderCols() * self.cylinderRows() * 2
+            self.parTime = NSTimeInterval(self.cylinderCols() * self.cylinderRows() * 5)
+            self.parTurns = Int(Float(self.cylinderCols() * self.cylinderRows()) * 2.5)
         }
     }
     var physics:Bool = true

@@ -40,8 +40,8 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     var animationRefCenter = CGPoint()
     var animationRefFrame = CGRect()
 
-    var debugParTime:Int = 120
-    var debugParTurns:Int = 40
+    var debugParTime:Int = 0
+    var debugParTurns:Int = 0
     
     override func viewDidLoad() {
         
@@ -136,8 +136,12 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         if(true) {
             print("")
         } else {
-            vc.game.parTurns = self.debugParTurns
-            vc.game.parTime = NSTimeInterval(self.debugParTime)
+            if(self.debugParTurns > 0) {
+                vc.game.parTurns = self.debugParTurns
+            }
+            if(self.debugParTime > 0) {
+                vc.game.parTime = NSTimeInterval(self.debugParTime)
+            }
         }
         vc.game.enableBackOfTiles = self.enableBackOfTile.on
         vc.game.debugPairs = self.debugPairsSwitch.on
@@ -288,6 +292,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
             if let myParTime = Int(textField.text!) {
                 if(myParTime < 1) {
                     UIAlertView(title: "Error", message: "Wert muss grösser 0 sein", delegate: nil, cancelButtonTitle: "OK").show()
+                    self.debugParTime = 0
                 } else {
                     self.debugParTime = myParTime
                 }
@@ -299,6 +304,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
             if let myParTime = Int(textField.text!) {
                 if(myParTime < 1) {
                     UIAlertView(title: "Error", message: "Wert muss grösser 0 sein", delegate: nil, cancelButtonTitle: "OK").show()
+                    self.debugParTurns = 0
                 } else {
                     self.debugParTurns = myParTime
                 }
