@@ -508,6 +508,9 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 let timer = NSTimer.scheduledTimerWithTimeInterval(kDelayTurnBack, target: self, selector: Selector("tilesStartFalling:"), userInfo: [tile1, tile2], repeats: false)
                 self.timerForTiles.append(timer)
 
+                let timerGameFinish = NSTimer.scheduledTimerWithTimeInterval(kDelayTurnBack, target: self, selector: Selector("checkGameSolved:"), userInfo: [tile1, tile2], repeats: false)
+                self.timerForTiles.append(timerGameFinish)
+                
                 return{}
     
             } else {
@@ -531,6 +534,13 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     }
 
     //MARK: animaton
+    
+    @objc func checkGameSolved(timer:NSTimer) {
+        print("func checkGameSolved")
+        if(self.cylinderNode.solved()) {
+            self.gameSolved()
+        }
+    }
     
     @objc func tilesStartFalling(timer:NSTimer) {
         print("func tilesStartFalling")
