@@ -135,6 +135,11 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     override func viewDidAppear(animated: Bool) {
         
+        if(self.gameMode == .Playing) {
+            // this state can be reached after sharing
+            return
+        }
+        
         admTrackState(ADMTrackingState.gamePlaying)
         
         self.sceneSizeFactor = (Float)(sceneView.frame.size.height / sceneView.frame.size.width * 1.35)
@@ -707,6 +712,26 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     @IBAction func onGameFinisSharePressed(sender: AnyObject) {
         // share game score
+        let shareText = "Just scored \(self.game.totalScore()) points playing TwoOfOne."
+        let shareImage = UIImage(named: "twoOfOne")!
+        let controller = UIActivityViewController(activityItems: [shareText, shareImage], applicationActivities: nil);
+        if #available(iOS 9.0, *) {
+            controller.excludedActivityTypes = [UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll, UIActivityTypeAddToReadingList, UIActivityTypeAirDrop, UIActivityTypeOpenInIBooks]
+        } else {
+            controller.excludedActivityTypes = [UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll, UIActivityTypeAddToReadingList, UIActivityTypeAirDrop]
+        };
+        
+        controller.completionWithItemsHandler = { (activityType:String?, completed:Bool, returnedItems:[AnyObject]?, activityError:NSError?) -> Void in
+            if let _ = activityType {
+                if(completed) {
+                    admTrackShareAction(activityType!, score: self.game.time, level: self.game.level.rawValue)
+                }
+            }
+        }
+        
+        self.presentViewController(controller, animated: true, completion: nil);
+        
+        
     }
     
     //MARK: UIAlertViewDelegate

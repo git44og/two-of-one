@@ -126,6 +126,7 @@ enum ADMTrackingDataKeys: String {
     case appNumLaunched = "app.numLaunched"
     case gameScore = "game.score"
     case gameLevel = "game.level"
+    case shareService = "share"
     
     func name() -> String {
         return "\(kTrackingPrefix).\(self.rawValue)"
@@ -156,12 +157,8 @@ enum ADMTrackingAction: String {
     case gameCenterChallenge = "gamecenter.challenge"
     case gameCenterChallengeSuccess = "gamecenter.challenge.success"
     
-    case shareFacebookPressed = "share.facebook.pressed"
-    case shareFacebookSuccess = "share.facebook.success"
-    case shareFacebookCancel = "share.facebook.cancel"
-    case shareTwitterPressed = "share.twitter.pressed"
-    case shareTwitterSuccess = "share.twitter.success"
-    case shareTwitterCancel = "share.twitter.cancel"
+    case sharePressed = "share.pressed"
+    case shareSuccess = "share.success"
     
     func name() -> String {
         return "\(kTrackingPrefix).\(self.rawValue)"
@@ -180,6 +177,18 @@ func admTrackState(stateName:String, score:Int? = nil, level:Int? = nil) {
 
 func admTrackAction(action:ADMTrackingAction, score:Int? = nil, level:Int? = nil) {
     admTrackAction(action.name(), score:score, level:level)
+}
+
+func admTrackShareAction(service:String, score:Int? = nil, level:Int? = nil) {
+    
+    var data = admParamHelper(score: score, level: level)
+    data[ADMTrackingDataKeys.shareService.name()] = service
+    ADBMobile.trackAction(ADMTrackingAction.shareSuccess.name(), data: data)
+    
+    if(false) {
+        print("")
+        // track this event
+    }
 }
 
 func admTrackAction(actionName:String, score:Int? = nil, level:Int? = nil) {
