@@ -449,6 +449,7 @@ enum JFTileNodeFaceType:Int {
 class JFTileNode: SCNNode {
     var turned:Bool = false
     var found:Bool = false
+    var isSecondOfPair:Bool = false
     var cylinderNode: JFSCNNode
     var colNode: JFCylinderColNode
     var typeId:Int = 0
@@ -784,6 +785,8 @@ enum JFSoundType:Int {
     case HitWall
     case TurnTile
     case TurnTileBack
+    case FoundPair
+    case FinishGame
 }
 
 
@@ -807,6 +810,8 @@ class JFSoundManager {
     var hitWallSound:SystemSoundID = 0
     var turnTileSound:SystemSoundID = 0
     var turnTileBackSound:SystemSoundID = 0
+    var foundPairSound:SystemSoundID = 0
+    var finishGameSound:SystemSoundID = 0
     
     func preloadSounds() {
         var soundUrl = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("Rollen", ofType: "wav")!)
@@ -817,6 +822,10 @@ class JFSoundManager {
         AudioServicesCreateSystemSoundID(soundUrl, &self.turnTileSound)
         soundUrl = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("zudecken", ofType: "aif")!)
         AudioServicesCreateSystemSoundID(soundUrl, &self.turnTileBackSound)
+        soundUrl = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("pop_drip", ofType: "wav")!)
+        AudioServicesCreateSystemSoundID(soundUrl, &self.finishGameSound)
+        soundUrl = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("digi_plink", ofType: "wav")!)
+        AudioServicesCreateSystemSoundID(soundUrl, &self.foundPairSound)
     }
     
     func play(type:JFSoundType) {
@@ -832,6 +841,12 @@ class JFSoundManager {
             break
         case .TurnTileBack:
             AudioServicesPlaySystemSound(self.turnTileBackSound)
+            break
+        case .FinishGame:
+            AudioServicesPlaySystemSound(self.finishGameSound)
+            break
+        case .FoundPair:
+            AudioServicesPlaySystemSound(self.foundPairSound)
             break
         }
     }

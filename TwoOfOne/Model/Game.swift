@@ -102,11 +102,21 @@ class Game {
 
             break
         case .FinishGame:
+            
+            JFSoundManager.sharedInstance.play(.FinishGame)
+
             self.time = Int(-self.startDate.timeIntervalSinceNow)
             self.cancelBonusTimer()
             self.updateScoreBoard()
             break
         case .flipTile:
+            
+            if let tile = info as? JFTileNode {
+                if(tile.isSecondOfPair) {
+                    JFSoundManager.sharedInstance.play(.FoundPair)
+                }
+            }
+            
             //self.turn++
             //self.updateScoreBoardTurns()
             break
@@ -117,6 +127,7 @@ class Game {
             //self.updateScoreBoardTurns()
             
         case .findPair:
+            
             self.score += self.scoreOnBonus()
             self.turn++
             

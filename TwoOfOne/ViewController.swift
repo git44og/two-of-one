@@ -480,7 +480,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
             hitNode.flip(completion: { () -> Void in
                 checkPairCompletion()
                 execOnMain({ () -> () in
-                    self.game.event(.flipTile)
+                    self.game.event(.flipTile, info:hitNode)
                 })
             })
             return true
@@ -499,6 +499,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
                 tile2.lock = true
                 tile1.found = true
                 tile2.found = true
+                tile2.isSecondOfPair = true
                 
                 execOnMain({ () -> () in
                     self.game.event(.findPair, info:[tile1, tile2])
