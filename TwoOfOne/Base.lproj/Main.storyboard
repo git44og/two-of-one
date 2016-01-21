@@ -382,10 +382,10 @@
                                 </variation>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KLf-B0-km5">
-                                <rect key="frame" x="194" y="178" width="212" height="244"/>
+                                <rect key="frame" x="194" y="155" width="212" height="291"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Scoreframe.png" translatesAutoresizingMaskIntoConstraints="NO" id="opy-Ap-wDq">
-                                        <rect key="frame" x="0.0" y="0.0" width="212" height="244"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="212" height="291"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="350" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wOZ-st-fwP">
                                         <rect key="frame" x="98" y="38" width="100" height="21"/>
@@ -427,39 +427,54 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xgM-1T-tq5">
-                                        <rect key="frame" x="6" y="149" width="200" height="40"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u9H-aN-6D0" userLabel="Share">
+                                        <rect key="frame" x="6" y="148" width="200" height="40"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="gqh-qI-m4Y"/>
+                                        </constraints>
+                                        <state key="normal" title="Play Again" image="Share_up.png">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted" image="Share_down.png"/>
+                                        <connections>
+                                            <action selector="onGameFinisSharePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Smi-kK-J3I"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xgM-1T-tq5" userLabel="Home Again">
+                                        <rect key="frame" x="6" y="196" width="200" height="40"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="EYr-94-Fll"/>
                                         </constraints>
-                                        <state key="normal" title="Play Again" image="NewGame_up.png">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted" image="NewGame_down.png"/>
-                                        <connections>
-                                            <action selector="onGameFinishPlayAgainPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="KRi-P4-jl9"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TyX-8h-tf8" userLabel="Home Button">
-                                        <rect key="frame" x="6" y="197" width="200" height="40"/>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="mNq-I4-X9U"/>
-                                        </constraints>
-                                        <state key="normal" image="Home_up.png">
+                                        <state key="normal" title="Play Again" image="Home_up.png">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <state key="highlighted" image="Home_down.png"/>
                                         <connections>
-                                            <action selector="onGameFinishMenuPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dd4-wZ-dO2"/>
+                                            <action selector="onGameFinishMenuPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nnW-KD-yok"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TyX-8h-tf8" userLabel="Play Button">
+                                        <rect key="frame" x="6" y="244" width="200" height="40"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="mNq-I4-X9U"/>
+                                        </constraints>
+                                        <state key="normal" image="NewGame_up.png">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted" image="NewGame_down.png"/>
+                                        <connections>
+                                            <action selector="onGameFinishPlayAgainPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7Sy-eO-DGN"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="wOZ-st-fwP" secondAttribute="trailing" constant="14" id="0TZ-yr-dyN"/>
-                                    <constraint firstAttribute="height" constant="244" id="A1R-RZ-itA"/>
+                                    <constraint firstItem="u9H-aN-6D0" firstAttribute="leading" secondItem="KLf-B0-km5" secondAttribute="leading" constant="6" id="1tw-ma-NHJ"/>
+                                    <constraint firstAttribute="height" constant="291" id="A1R-RZ-itA"/>
                                     <constraint firstItem="TyX-8h-tf8" firstAttribute="leading" secondItem="KLf-B0-km5" secondAttribute="leading" constant="6" id="BeT-Zu-9Mp"/>
                                     <constraint firstAttribute="trailing" secondItem="kOk-ai-kTd" secondAttribute="trailing" constant="14" id="QoJ-oy-fjI"/>
                                     <constraint firstItem="wOZ-st-fwP" firstAttribute="top" secondItem="KLf-B0-km5" secondAttribute="top" constant="38" id="Tac-pa-H0J"/>
@@ -467,11 +482,13 @@
                                     <constraint firstAttribute="width" constant="212" id="bd4-F5-hkt"/>
                                     <constraint firstItem="kOk-ai-kTd" firstAttribute="top" secondItem="I7X-9f-P0U" secondAttribute="bottom" constant="2" id="dnz-3V-ZAh"/>
                                     <constraint firstItem="72d-VQ-chB" firstAttribute="top" secondItem="wOZ-st-fwP" secondAttribute="bottom" constant="2" id="hK2-fF-gaG"/>
+                                    <constraint firstItem="u9H-aN-6D0" firstAttribute="centerX" secondItem="KLf-B0-km5" secondAttribute="centerX" id="jzH-61-ceq"/>
                                     <constraint firstAttribute="trailing" secondItem="72d-VQ-chB" secondAttribute="trailing" constant="14" id="kbN-xs-NIW"/>
                                     <constraint firstItem="TyX-8h-tf8" firstAttribute="centerX" secondItem="KLf-B0-km5" secondAttribute="centerX" id="lTV-ed-eeB"/>
                                     <constraint firstAttribute="trailing" secondItem="I7X-9f-P0U" secondAttribute="trailing" constant="14" id="lpH-S5-dhp"/>
                                     <constraint firstItem="TyX-8h-tf8" firstAttribute="top" secondItem="xgM-1T-tq5" secondAttribute="bottom" constant="8" id="m3r-Db-AIY"/>
                                     <constraint firstItem="I7X-9f-P0U" firstAttribute="top" secondItem="72d-VQ-chB" secondAttribute="bottom" constant="2" id="nju-th-RSO"/>
+                                    <constraint firstItem="xgM-1T-tq5" firstAttribute="top" secondItem="u9H-aN-6D0" secondAttribute="bottom" constant="8" id="pfv-Ph-gHT"/>
                                     <constraint firstAttribute="bottom" secondItem="TyX-8h-tf8" secondAttribute="bottom" constant="7" id="tvM-Qk-IBE"/>
                                     <constraint firstItem="xgM-1T-tq5" firstAttribute="leading" secondItem="KLf-B0-km5" secondAttribute="leading" constant="6" id="uhg-KU-s4L"/>
                                 </constraints>
@@ -489,7 +506,6 @@
                             <constraint firstAttribute="centerX" secondItem="8bU-nU-zAy" secondAttribute="centerX" id="iWA-2a-ecb"/>
                             <constraint firstItem="qym-OP-nNB" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-10" id="j4c-H2-8JT"/>
                             <constraint firstItem="8bU-nU-zAy" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="lhp-Nl-cO8"/>
-                            <constraint firstItem="KLf-B0-km5" firstAttribute="top" relation="greaterThanOrEqual" secondItem="UUO-MK-4fP" secondAttribute="bottom" constant="15" id="wz8-TN-Iog"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="8bU-nU-zAy" secondAttribute="bottom" id="zm4-h7-n4W"/>
                         </constraints>
                     </view>
@@ -523,7 +539,9 @@
         <image name="NewGame_up.png" width="400" height="80"/>
         <image name="PointsBar.png" width="268" height="48"/>
         <image name="ScoreBar.png" width="853" height="48"/>
-        <image name="Scoreframe.png" width="424" height="487"/>
+        <image name="Scoreframe.png" width="424" height="583"/>
+        <image name="Share_down.png" width="400" height="80"/>
+        <image name="Share_up.png" width="400" height="80"/>
         <image name="TimeBar.png" width="298" height="48"/>
         <image name="TurnsBar.png" width="268" height="48"/>
     </resources>

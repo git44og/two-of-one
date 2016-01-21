@@ -705,6 +705,10 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
         }
     }
     
+    @IBAction func onGameFinisSharePressed(sender: AnyObject) {
+        // share game score
+    }
+    
     //MARK: UIAlertViewDelegate
     
     func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
