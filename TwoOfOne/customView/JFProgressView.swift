@@ -14,11 +14,13 @@ enum JFProgressViewType:Int {
     case Score
 }
 
+let kProgressViewBackgroundColor = UIColor(white: 0, alpha: 0.9)
 let kProgressViewSizeSeparator:CGFloat = 1
 let kProgressViewGreenColor = UIColor(red: 171/255, green: 202/255, blue: 65/255, alpha: 1.0)
 let kProgressViewRedColor = UIColor(red: 220/255, green: 65/255, blue: 136/255, alpha: 1.0)
 let kProgressViewSeparatorColor = UIColor.whiteColor()
 
+let kScoreBlockViewBackgroundColor = UIColor(white: 0, alpha: 0.9)
 let kScoreBlockViewSeparator:CGFloat = 1
 let kScoreBlockViewBonusColor = UIColor(red: 7/255, green: 152/255, blue: 153/255, alpha: 1.0)
 let kScoreBlockViewNormalColor = UIColor(red: 171/255, green: 202/255, blue: 65/255, alpha: 1.0)
@@ -122,7 +124,7 @@ class JFProgressViewBar: UIView {
         
         self.bar.backgroundColor = barColor
         self.addSubview(self.bar)
-        self.backgroundColor = UIColor(white: 0, alpha: 0.9)
+        self.backgroundColor = kProgressViewBackgroundColor
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -161,7 +163,7 @@ class JFScoreBlockView: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = kScoreBlockViewBackgroundColor
     }
     
     func setBlockViews() {

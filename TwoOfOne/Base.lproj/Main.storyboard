@@ -263,7 +263,7 @@
                                                 </constraints>
                                             </imageView>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nCZ-2d-b7Y" customClass="JFProgressView" customModule="TwoOfOne" customModuleProvider="target">
-                                                <rect key="frame" x="5" y="17" width="86" height="1"/>
+                                                <rect key="frame" x="5" y="17" width="86" height="1.5"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wxO-bX-gRX">
@@ -297,7 +297,7 @@
                                                 </constraints>
                                             </imageView>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9hP-hn-lIK" customClass="JFProgressView" customModule="TwoOfOne" customModuleProvider="target">
-                                                <rect key="frame" x="5" y="17" width="86" height="1"/>
+                                                <rect key="frame" x="5" y="17" width="86" height="1.5"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Ql-ji-sXK">
@@ -341,7 +341,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J3q-rg-8tz" customClass="JFScoreBlockView" customModule="TwoOfOne" customModuleProvider="target">
-                                                <rect key="frame" x="5" y="17" width="86" height="1"/>
+                                                <rect key="frame" x="5" y="17" width="86" height="1.5"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             </view>
                                         </subviews>
