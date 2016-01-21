@@ -143,12 +143,6 @@ class Game {
 
             self.foundPairs++
             self.bonusLevel++
-            
-            if let myVc = vc as? ViewController {
-                if(myVc.cylinderNode.solved()) {
-                    myVc.gameSolved()
-                }
-            }
 
             break
             
