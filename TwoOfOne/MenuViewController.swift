@@ -235,6 +235,9 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         
         switch(endState) {
         case .Playing:
+            
+            let delay:NSTimeInterval = (startState == .PreLaunch) ? 1 : 0
+            
             UIView.animateWithDuration(duration,
                 delay: 0,
                 options: option,
