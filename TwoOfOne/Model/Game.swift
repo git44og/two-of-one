@@ -21,6 +21,9 @@ let kBaseScore:Int = 10
 let kTurnBonusRatio:Float = 3 // bonus for turns can be x-times the absolute value of the min bonus. ie if minBonus = -100, max bonus is +100 * kTurnBonusRatio
 let kTimeBonusRatio:Float = 3
 
+// if debug mode is true, settings panel is shown on home screen
+let kIsDebugMode = false
+
 enum JFGameLevel:Int {
     case Beginner = 0
     case Medium = 1

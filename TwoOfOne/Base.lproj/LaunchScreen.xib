@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -20,17 +20,37 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="bFg-WG-dS9" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="8VW-zq-KLe"/>
                 <constraint firstItem="qsZ-kQ-AZg" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="9BE-2w-YVx"/>
+                <constraint firstItem="qsZ-kQ-AZg" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Dlv-r9-BfH"/>
+                <constraint firstItem="bFg-WG-dS9" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Ep8-5E-zvu"/>
+                <constraint firstItem="bFg-WG-dS9" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="NRk-hM-kfv"/>
+                <constraint firstAttribute="trailing" secondItem="bFg-WG-dS9" secondAttribute="trailing" id="OpJ-Hd-yvI"/>
                 <constraint firstItem="bFg-WG-dS9" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="WMX-ts-iho"/>
                 <constraint firstItem="bFg-WG-dS9" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="X8N-Ih-ujB"/>
+                <constraint firstItem="qsZ-kQ-AZg" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="XKQ-kP-hgb"/>
                 <constraint firstAttribute="bottom" secondItem="qsZ-kQ-AZg" secondAttribute="bottom" id="Yw5-aX-8iI"/>
                 <constraint firstItem="qsZ-kQ-AZg" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="haZ-iG-LRd"/>
                 <constraint firstItem="bFg-WG-dS9" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="ktw-G2-2Qf"/>
+                <constraint firstAttribute="trailing" secondItem="qsZ-kQ-AZg" secondAttribute="trailing" id="rI8-ER-nyN"/>
+                <constraint firstItem="qsZ-kQ-AZg" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="u5K-ip-T4a"/>
                 <constraint firstItem="qsZ-kQ-AZg" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="uGc-b0-4bw"/>
                 <constraint firstAttribute="bottom" secondItem="bFg-WG-dS9" secondAttribute="bottom" id="yf3-l8-hoy"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="8VW-zq-KLe"/>
+                    <exclude reference="OpJ-Hd-yvI"/>
+                    <exclude reference="WMX-ts-iho"/>
+                    <exclude reference="ktw-G2-2Qf"/>
+                    <exclude reference="9BE-2w-YVx"/>
+                    <exclude reference="rI8-ER-nyN"/>
+                    <exclude reference="u5K-ip-T4a"/>
+                    <exclude reference="uGc-b0-4bw"/>
+                </mask>
+            </variation>
             <point key="canvasLocation" x="548" y="455"/>
         </view>
     </objects>

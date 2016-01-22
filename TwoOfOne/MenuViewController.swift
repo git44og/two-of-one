@@ -36,6 +36,8 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var enableBackOfTile: UISwitch!
     @IBOutlet weak var menuView: JFMenuView!
     
+    @IBOutlet weak var debugMenuView: UIView!
+    
     var menuAnimation:JFMenuAnimation = .Startup
     var animationRefCenter = CGPoint()
     var animationRefFrame = CGRect()
@@ -89,6 +91,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         self.animationRefCenter = self.backgroundFrontView.center
         self.animationRefFrame = self.backgroundBackView.frame
 
+        self.debugMenuView.hidden = !kIsDebugMode
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -133,20 +136,19 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("gameScreen") as! ViewController
         vc.game.level = level
-        if(true) {
-            print("")
-        } else {
+        
+        // setup game in debugging mode
+        if(kIsDebugMode) {
             if(self.debugParTurns > 0) {
                 vc.game.parTurns = self.debugParTurns
             }
             if(self.debugParTime > 0) {
                 vc.game.parTime = NSTimeInterval(self.debugParTime)
             }
+            vc.game.enableBackOfTiles = NSUserDefaults.standardUserDefaults().boolForKey(kOptionsEnableBackOfTile)
+            vc.game.debugPairs = NSUserDefaults.standardUserDefaults().boolForKey(kOptionsEnableDebug)
         }
-        
-        vc.game.enableBackOfTiles = NSUserDefaults.standardUserDefaults().boolForKey(kOptionsEnableBackOfTile)
-        vc.game.debugPairs = NSUserDefaults.standardUserDefaults().boolForKey(kOptionsEnableDebug)
-        
+
         self.animation(.Ready, endState: .Playing) { () -> Void in
             self.presentViewController(vc, animated: false, completion: nil)
         }
@@ -236,8 +238,6 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         switch(endState) {
         case .Playing:
             
-            let delay:NSTimeInterval = (startState == .PreLaunch) ? 1 : 0
-            
             UIView.animateWithDuration(duration,
                 delay: 0,
                 options: option,
@@ -259,8 +259,9 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
                 completion:nil)
             break
         case .Ready:
+            let delay:NSTimeInterval = (startState == .PreLaunch) ? 1 : 0
             UIView.animateWithDuration(duration,
-                delay: 0,
+                delay: delay,
                 options: option,
                 animations: { () -> Void in
                     self.applyMenuStateBackground(endState)
@@ -272,7 +273,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
                     })
             }
             UIView.animateWithDuration((duration / 2),
-                delay: (duration / 2),
+                delay: delay + ((duration / 2)),
                 options: UIViewAnimationOptions.CurveEaseIn,
                 animations: { () -> Void in
                     self.buttonLayerView.alpha = 1
