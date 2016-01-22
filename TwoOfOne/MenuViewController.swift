@@ -196,7 +196,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         case .Ready:
             self.backgroundFrontView.alpha = 1
             self.backgroundBackView.alpha = 1
-            self.backgroundFrontView.center = CGPoint(x: animationRefCenter.x * 2.08, y: animationRefCenter.y)
+            self.backgroundFrontView.center = CGPoint(x: animationRefCenter.x * 2.11, y: animationRefCenter.y)
             self.backgroundBackView.frame = CGRect(
                 origin: animationRefFrame.origin,
                 size: CGSize(width: animationRefFrame.size.width * 1.2, height: animationRefFrame.size.height * 1.2))
