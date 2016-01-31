@@ -184,11 +184,6 @@ func admTrackShareAction(service:String, score:Int? = nil, level:Int? = nil) {
     var data = admParamHelper(score: score, level: level)
     data[ADMTrackingDataKeys.shareService.name()] = service
     ADBMobile.trackAction(ADMTrackingAction.shareSuccess.name(), data: data)
-    
-    if(false) {
-        print("")
-        // track this event
-    }
 }
 
 func admTrackAction(actionName:String, score:Int? = nil, level:Int? = nil) {

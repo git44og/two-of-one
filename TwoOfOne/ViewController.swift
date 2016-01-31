@@ -715,7 +715,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate, UIAlertViewDel
     
     @IBAction func onGameFinisSharePressed(sender: AnyObject) {
         // share game score
-        let shareText = "Just scored \(self.game.totalScore()) points playing TwoOfOne."
+        let shareText = "Just scored \(self.game.totalScore()) points playing two of one."
         let shareImage = UIImage(named: "twoOfOne")!
         let controller = UIActivityViewController(activityItems: [shareText, shareImage], applicationActivities: nil);
         if #available(iOS 9.0, *) {
