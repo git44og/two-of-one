@@ -73,6 +73,16 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLayoutSubviews()
         
         // adjustments below need to happen before viewDidAPpear is called
+        self.backgroundBackView.frame = self.backView.frame
+        self.backgroundFrontView.frame = self.frontView.frame
+        
+        self.animationRefCenter = CGPoint(
+            x: max(self.backgroundFrontView.center.x, self.backgroundFrontView.center.y),
+            y: min(self.backgroundFrontView.center.x, self.backgroundFrontView.center.y))
+        self.animationRefFrame = self.backgroundBackView.frame
+
+        self.debugMenuView.hidden = !kIsDebugMode
+        
         switch(self.menuAnimation) {
         case .None:
             self.applyMenuState(.Ready)
@@ -84,14 +94,6 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
             self.applyMenuState(.Playing)
             break
         }
-        
-        self.backgroundBackView.frame = self.backView.frame
-        self.backgroundFrontView.frame = self.frontView.frame
-        
-        self.animationRefCenter = self.backgroundFrontView.center
-        self.animationRefFrame = self.backgroundBackView.frame
-
-        self.debugMenuView.hidden = !kIsDebugMode
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -196,7 +198,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
             self.backgroundBackView.frame = animationRefFrame
             break
         case .Ready:
-            self.backgroundFrontView.alpha = 1
+            self.backgroundFrontView.alpha = ((UIDevice.currentDevice().orientation == .Portrait) || (UIDevice.currentDevice().orientation == .PortraitUpsideDown)) ? 0 : 1
             self.backgroundBackView.alpha = 1
             self.backgroundFrontView.center = CGPoint(x: animationRefCenter.x * 2.11, y: animationRefCenter.y)
             self.backgroundBackView.frame = CGRect(
@@ -215,6 +217,8 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     }
     
     func animation(startState:JFMenuState, endState:JFMenuState, completion: (() -> Void)?) {
+        
+        self.menuAnimation = .None
         
         var duration:Double = 1
         var option = UIViewAnimationOptions.CurveEaseIn
