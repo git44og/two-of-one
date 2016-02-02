@@ -35,6 +35,7 @@
 		273C605F1C15F241004552DD /* Start-Hintergrund.png in Resources */ = {isa = PBXBuildFile; fileRef = 273C605D1C15F241004552DD /* Start-Hintergrund.png */; };
 		273C60601C15F241004552DD /* Start-Tonne.png in Resources */ = {isa = PBXBuildFile; fileRef = 273C605E1C15F241004552DD /* Start-Tonne.png */; };
 		273C60621C15F291004552DD /* Start.png in Resources */ = {isa = PBXBuildFile; fileRef = 273C60611C15F291004552DD /* Start.png */; };
+		273E60461C613BED00BCB8FE /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 273E60451C613BED00BCB8FE /* libsqlite3.0.tbd */; };
 		2744255C1C50084E00ED6BEB /* 5_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 274425541C50084E00ED6BEB /* 5_Points.png */; };
 		2744255D1C50084E00ED6BEB /* 15_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 274425551C50084E00ED6BEB /* 15_Points.png */; };
 		2744255E1C50084E00ED6BEB /* 25_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = 274425561C50084E00ED6BEB /* 25_Points.png */; };
@@ -106,7 +107,6 @@
 		277B23311C1749300036176E /* Home_Frame.png in Resources */ = {isa = PBXBuildFile; fileRef = 277B23271C1749300036176E /* Home_Frame.png */; };
 		277B23331C180BFF0036176E /* JFMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277B23321C180BFF0036176E /* JFMenuView.swift */; };
 		2783B0AA1BF9B50A008F1E9B /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2783B0A91BF9B50A008F1E9B /* Game.swift */; };
-		27CE8BE71C480FF500AA93F7 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27CE8BE61C480FF500AA93F7 /* libsqlite3.tbd */; };
 		27CE8BE91C48103100AA93F7 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27CE8BE81C48103100AA93F7 /* SystemConfiguration.framework */; };
 		27D6639C1C0623C40029742F /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D6639B1C0623C40029742F /* MenuViewController.swift */; };
 		27D6639F1C062C360029742F /* ScoreBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D6639E1C062C360029742F /* ScoreBoardView.swift */; };
@@ -168,6 +168,7 @@
 		273C605D1C15F241004552DD /* Start-Hintergrund.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Start-Hintergrund.png"; path = "Images/Start-Hintergrund.png"; sourceTree = "<group>"; };
 		273C605E1C15F241004552DD /* Start-Tonne.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Start-Tonne.png"; path = "Images/Start-Tonne.png"; sourceTree = "<group>"; };
 		273C60611C15F291004552DD /* Start.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Start.png; path = Images/Start.png; sourceTree = "<group>"; };
+		273E60451C613BED00BCB8FE /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		274425541C50084E00ED6BEB /* 5_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 5_Points.png; path = TwoOfOne/Images/ScoreTiles/5_Points.png; sourceTree = SOURCE_ROOT; };
 		274425551C50084E00ED6BEB /* 15_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 15_Points.png; path = TwoOfOne/Images/ScoreTiles/15_Points.png; sourceTree = SOURCE_ROOT; };
 		274425561C50084E00ED6BEB /* 25_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 25_Points.png; path = TwoOfOne/Images/ScoreTiles/25_Points.png; sourceTree = SOURCE_ROOT; };
@@ -240,7 +241,6 @@
 		277B23321C180BFF0036176E /* JFMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JFMenuView.swift; path = customView/JFMenuView.swift; sourceTree = "<group>"; };
 		2783B0A91BF9B50A008F1E9B /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Game.swift; path = Model/Game.swift; sourceTree = "<group>"; };
 		27CE8BDE1C480ECF00AA93F7 /* TwoOfOne-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TwoOfOne-Bridging-Header.h"; sourceTree = "<group>"; };
-		27CE8BE61C480FF500AA93F7 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		27CE8BE81C48103100AA93F7 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		27D6639B1C0623C40029742F /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		27D6639E1C062C360029742F /* ScoreBoardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScoreBoardView.swift; path = customView/ScoreBoardView.swift; sourceTree = "<group>"; };
@@ -272,9 +272,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				273E60461C613BED00BCB8FE /* libsqlite3.0.tbd in Frameworks */,
 				27F9536B1C4810A300A6E4F6 /* GameKit.framework in Frameworks */,
 				27CE8BE91C48103100AA93F7 /* SystemConfiguration.framework in Frameworks */,
-				27CE8BE71C480FF500AA93F7 /* libsqlite3.tbd in Frameworks */,
 				271BE0CF1C0CBF8000C8757E /* AudioToolbox.framework in Frameworks */,
 				27DAC6F91BF1C5F20063DC28 /* CoreMotion.framework in Frameworks */,
 				27F953741C48122900A6E4F6 /* AdobeMobileLibrary.a in Frameworks */,
@@ -498,9 +498,9 @@
 		B441FA5D1B974E0D00B55627 = {
 			isa = PBXGroup;
 			children = (
+				273E60451C613BED00BCB8FE /* libsqlite3.0.tbd */,
 				27F9536A1C4810A300A6E4F6 /* GameKit.framework */,
 				27CE8BE81C48103100AA93F7 /* SystemConfiguration.framework */,
-				27CE8BE61C480FF500AA93F7 /* libsqlite3.tbd */,
 				271BE0CE1C0CBF8000C8757E /* AudioToolbox.framework */,
 				271BE0C11C0CB98E00C8757E /* AVFoundation.framework */,
 				27DAC6F81BF1C5F20063DC28 /* CoreMotion.framework */,
